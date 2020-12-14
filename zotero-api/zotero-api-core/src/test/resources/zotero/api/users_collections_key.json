@@ -1,0 +1,38 @@
+{
+   "key": "FJ3SUIFZ",
+   "version": 2885,
+   "library":    {
+      "type": "user",
+      "id": 5787467,
+      "name": "uthanda",
+      "links": {"alternate":       {
+         "href": "https://www.zotero.org/uthanda",
+         "type": "text/html"
+      }}
+   },
+   "links":    {
+      "self":       {
+         "href": "https://api.zotero.org/users/5787467/collections/FJ3SUIFZ",
+         "type": "application/json"
+      },
+      "alternate":       {
+         "href": "https://www.zotero.org/uthanda/collections/FJ3SUIFZ",
+         "type": "text/html"
+      },
+      "up":       {
+         "href": "https://api.zotero.org/users/5787467/collections/9DXQSYMF",
+         "type": "application/json"
+      }
+   },
+   "meta":    {
+      "numCollections": 0,
+      "numItems": 3
+   },
+   "data":    {
+      "key": "FJ3SUIFZ",
+      "version": 2885,
+      "name": "Useful",
+      "parentCollection": "9DXQSYMF",
+      "relations": {}
+   }
+}

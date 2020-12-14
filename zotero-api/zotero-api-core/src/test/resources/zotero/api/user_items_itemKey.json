@@ -1,0 +1,94 @@
+{
+   "key": "B4ERDVS4",
+   "version": 2906,
+   "library":    {
+      "type": "user",
+      "id": 5787467,
+      "name": "uthanda",
+      "links": {"alternate":       {
+         "href": "https://www.zotero.org/uthanda",
+         "type": "text/html"
+      }}
+   },
+   "links":    {
+      "self":       {
+         "href": "https://api.zotero.org/users/5787467/items/B4ERDVS4",
+         "type": "application/json"
+      },
+      "alternate":       {
+         "href": "https://www.zotero.org/uthanda/items/B4ERDVS4",
+         "type": "text/html"
+      }
+   },
+   "meta":    {
+      "creatorSummary": "Hewelt et al.",
+      "parsedDate": "2019-11-07",
+      "numChildren": 2
+   },
+   "data":    {
+      "key": "B4ERDVS4",
+      "version": 2906,
+      "itemType": "journalArticle",
+      "title": "Toward a methodology for case modeling",
+      "creators":       [
+                  {
+            "creatorType": "author",
+            "firstName": "Marcin",
+            "lastName": "Hewelt"
+         },
+                  {
+            "creatorType": "author",
+            "firstName": "Luise",
+            "lastName": "Pufahl"
+         },
+                  {
+            "creatorType": "author",
+            "firstName": "Sankalita",
+            "lastName": "Mandal"
+         },
+                  {
+            "creatorType": "author",
+            "firstName": "Felix",
+            "lastName": "Wolff"
+         },
+                  {
+            "creatorType": "author",
+            "firstName": "Mathias",
+            "lastName": "Weske"
+         }
+      ],
+      "abstractNote": "abstractNoteContent",
+      "publicationTitle": "Software and Systems Modeling",
+      "volume": "vol1",
+      "issue": "issue1",
+      "pages": "1-2",
+      "date": "2019-11-7",
+      "series": "s1",
+      "seriesTitle": "SeriesTitle",
+      "seriesText": "SeriesText",
+      "journalAbbreviation": "Softw Syst Model",
+      "language": "en",
+      "DOI": "10.1007/s10270-019-00766-5",
+      "ISSN": "1619-1366, 1619-1374",
+      "shortTitle": "TAMFCM",
+      "url": "http://link.springer.com/10.1007/s10270-019-00766-5",
+      "accessDate": "2020-07-04T19:06:47Z",
+      "archive": "anArchive",
+      "archiveLocation": "theArchive",
+      "libraryCatalog": "DOI.org (Crossref)",
+      "callNumber": "42",
+      "rights": "rightsContent",
+      "extra": "tex.ids: hewelt_toward_2019, hewelt_towards_nodate",
+      "tags": [{"tag": "followrefs"}],
+      "collections":       [
+         "A6C8YX9M",
+         "FJ3SUIFZ"
+      ],
+      "relations": {"dc:replaces":       [
+         "http://zotero.org/users/5787467/items/GX8ZD6D9",
+         "http://zotero.org/users/5787467/items/NYA3Z5B9"
+      ]},
+      "dateAdded": "2020-07-03T10:31:52Z",
+      "dateModified": "2020-12-10T06:28:27Z"
+   }
+}

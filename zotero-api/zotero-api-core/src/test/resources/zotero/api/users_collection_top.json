@@ -1,0 +1,682 @@
+[
+      {
+      "key": "KIFET9BX",
+      "version": 1644,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/KIFET9BX",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/KIFET9BX",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 0,
+         "numItems": 1
+      },
+      "data":       {
+         "key": "KIFET9BX",
+         "version": 1644,
+         "name": "_Friends",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "NA462ES5",
+      "version": 1481,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/NA462ES5",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/NA462ES5",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 1,
+         "numItems": 0
+      },
+      "data":       {
+         "key": "NA462ES5",
+         "version": 1481,
+         "name": "Lectures",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "8I8JEKHN",
+      "version": 1481,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/8I8JEKHN",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/8I8JEKHN",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 0,
+         "numItems": 44
+      },
+      "data":       {
+         "key": "8I8JEKHN",
+         "version": 1481,
+         "name": "Audio Analysis",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "TL6N8F86",
+      "version": 1279,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/TL6N8F86",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/TL6N8F86",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 0,
+         "numItems": 4
+      },
+      "data":       {
+         "key": "TL6N8F86",
+         "version": 1279,
+         "name": "Data Integration",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "A6C8YX9M",
+      "version": 1263,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/A6C8YX9M",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/A6C8YX9M",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 0,
+         "numItems": 138
+      },
+      "data":       {
+         "key": "A6C8YX9M",
+         "version": 1263,
+         "name": "To Be Read",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "JEC4TY6L",
+      "version": 942,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/JEC4TY6L",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/JEC4TY6L",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 0,
+         "numItems": 2
+      },
+      "data":       {
+         "key": "JEC4TY6L",
+         "version": 942,
+         "name": "KM",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "GJZQLNIH",
+      "version": 935,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/GJZQLNIH",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/GJZQLNIH",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 0,
+         "numItems": 3
+      },
+      "data":       {
+         "key": "GJZQLNIH",
+         "version": 935,
+         "name": "CSCW",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "Y4ZJGJDX",
+      "version": 908,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/Y4ZJGJDX",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/Y4ZJGJDX",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 0,
+         "numItems": 19
+      },
+      "data":       {
+         "key": "Y4ZJGJDX",
+         "version": 908,
+         "name": "BPCL_PaperCites",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "9DXQSYMF",
+      "version": 837,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/9DXQSYMF",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/9DXQSYMF",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 5,
+         "numItems": 240
+      },
+      "data":       {
+         "key": "9DXQSYMF",
+         "version": 837,
+         "name": "_Lit Review",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "JUKGIBUZ",
+      "version": 831,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/JUKGIBUZ",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/JUKGIBUZ",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 0,
+         "numItems": 1
+      },
+      "data":       {
+         "key": "JUKGIBUZ",
+         "version": 831,
+         "name": "Goal-Centric Language",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "2SPYG4M2",
+      "version": 198,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/2SPYG4M2",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/2SPYG4M2",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 0,
+         "numItems": 7
+      },
+      "data":       {
+         "key": "2SPYG4M2",
+         "version": 198,
+         "name": "Reactive Programming",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "MFK7T2U7",
+      "version": 176,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/MFK7T2U7",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/MFK7T2U7",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 8,
+         "numItems": 63
+      },
+      "data":       {
+         "key": "MFK7T2U7",
+         "version": 176,
+         "name": "Data Analysis",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "JNPYXXET",
+      "version": 155,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/JNPYXXET",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/JNPYXXET",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 0,
+         "numItems": 14
+      },
+      "data":       {
+         "key": "JNPYXXET",
+         "version": 155,
+         "name": "Requirements Analysis",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "T9LXBF3K",
+      "version": 55,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/T9LXBF3K",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/T9LXBF3K",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 0,
+         "numItems": 3
+      },
+      "data":       {
+         "key": "T9LXBF3K",
+         "version": 55,
+         "name": "Entities",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "88YRARPW",
+      "version": 48,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/88YRARPW",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/88YRARPW",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 0,
+         "numItems": 4
+      },
+      "data":       {
+         "key": "88YRARPW",
+         "version": 48,
+         "name": "Modeling",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "PSD8ALZF",
+      "version": 48,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/PSD8ALZF",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/PSD8ALZF",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 0,
+         "numItems": 3
+      },
+      "data":       {
+         "key": "PSD8ALZF",
+         "version": 48,
+         "name": "Frameworks",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "Y8J5P7X7",
+      "version": 46,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/Y8J5P7X7",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/Y8J5P7X7",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 5,
+         "numItems": 30
+      },
+      "data":       {
+         "key": "Y8J5P7X7",
+         "version": 46,
+         "name": "Parallel Programming",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "EJDJVWBI",
+      "version": 46,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/EJDJVWBI",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/EJDJVWBI",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 12,
+         "numItems": 61
+      },
+      "data":       {
+         "key": "EJDJVWBI",
+         "version": 46,
+         "name": "Workflow",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "3ZWIGKGP",
+      "version": 46,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/3ZWIGKGP",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/3ZWIGKGP",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 0,
+         "numItems": 1
+      },
+      "data":       {
+         "key": "3ZWIGKGP",
+         "version": 46,
+         "name": "Patterns",
+         "parentCollection": false,
+         "relations": {}
+      }
+   },
+      {
+      "key": "Y82V25U2",
+      "version": 44,
+      "library":       {
+         "type": "user",
+         "id": 5787467,
+         "name": "uthanda",
+         "links": {"alternate":          {
+            "href": "https://www.zotero.org/uthanda",
+            "type": "text/html"
+         }}
+      },
+      "links":       {
+         "self":          {
+            "href": "https://api.zotero.org/users/5787467/collections/Y82V25U2",
+            "type": "application/json"
+         },
+         "alternate":          {
+            "href": "https://www.zotero.org/uthanda/collections/Y82V25U2",
+            "type": "text/html"
+         }
+      },
+      "meta":       {
+         "numCollections": 4,
+         "numItems": 50
+      },
+      "data":       {
+         "key": "Y82V25U2",
+         "version": 44,
+         "name": "ACM",
+         "parentCollection": false,
+         "relations": {}
+      }
+   }
+]
