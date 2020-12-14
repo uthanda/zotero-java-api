@@ -16,9 +16,9 @@ import zotero.api.internal.rest.model.ZoteroRestItem;
 public class ZoteroRestItemTest
 {
 	@Test
-	void testDeserializeCollectionItems() throws IOException
+	public void testDeserializeCollectionItems() throws IOException
 	{
-		InputStream is = ZoteroRestItemTest.class.getResourceAsStream("/litreview/zotero/api/user_collection_key_items.json");
+		InputStream is = ZoteroRestItemTest.class.getResourceAsStream("/zotero/api/user_collection_key_items.json");
 	
 		Gson gson = new Gson();
 	
@@ -30,9 +30,9 @@ public class ZoteroRestItemTest
 	}
 
 	@Test
-	void testDeserializeItemsItemKey() throws IOException
+	public void testDeserializeItemsItemKey() throws IOException
 	{
-		InputStream is = ZoteroRestItemTest.class.getResourceAsStream("/litreview/zotero/api/user_items_itemKey.json");
+		InputStream is = ZoteroRestItemTest.class.getResourceAsStream("/zotero/api/user_items_itemKey.json");
 	
 		Gson gson = new Gson();
 	
@@ -48,7 +48,7 @@ public class ZoteroRestItemTest
 	@Test
 	public void testDeserializeTop() throws IOException
 	{
-		InputStream is = ZoteroRestItemTest.class.getResourceAsStream("/litreview/zotero/api/users_collection_top.json");
+		InputStream is = ZoteroRestItemTest.class.getResourceAsStream("/zotero/api/users_collection_top.json");
 		
 		Gson gson = new Gson();
 		
@@ -62,7 +62,7 @@ public class ZoteroRestItemTest
 	@Test
 	public void testDeserialize() throws IOException
 	{
-		InputStream is = ZoteroRestItemTest.class.getResourceAsStream("/litreview/zotero/api/users_collections.json");
+		InputStream is = ZoteroRestItemTest.class.getResourceAsStream("/zotero/api/users_collections.json");
 		
 		Gson gson = new Gson();
 		

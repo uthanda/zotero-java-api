@@ -18,10 +18,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import zotero.api.internal.rest.schema.ZoteroJSONSchema.CreatorType;
-import zotero.api.internal.rest.schema.ZoteroJSONSchema.Field;
-import zotero.api.internal.rest.schema.ZoteroJSONSchema.ItemType;
-import zotero.api.internal.rest.schema.ZoteroJSONSchema.Meta;
+import zotero.api.internal.rest.schema.ZoteroRestSchema.CreatorType;
+import zotero.api.internal.rest.schema.ZoteroRestSchema.Field;
+import zotero.api.internal.rest.schema.ZoteroRestSchema.ItemType;
+import zotero.api.internal.rest.schema.ZoteroRestSchema.Meta;
 
 public class ZoteroSchema
 {
@@ -30,7 +30,7 @@ public class ZoteroSchema
 	private static ZoteroSchema currentSchema;
 	private int majorVersion;
 	private int minorVersion;
-	private ZoteroJSONSchema jsonSchema;
+	private ZoteroRestSchema jsonSchema;
 	private Map<String, ZoteroField> fields = new HashMap<>();
 	private List<ZoteroType> types;
 
@@ -38,7 +38,7 @@ public class ZoteroSchema
 	{
 		logger.debug("Loading schema from InputStream {}", is);
 
-		ZoteroJSONSchema schema = new Gson().fromJson(new InputStreamReader(is), ZoteroJSONSchema.class);
+		ZoteroRestSchema schema = new Gson().fromJson(new InputStreamReader(is), ZoteroRestSchema.class);
 		is.close();
 
 		logger.debug("Loaded ZoteroJSONSchema");
@@ -99,7 +99,7 @@ public class ZoteroSchema
 			return type;
 		}
 
-		private static ZoteroField fieldMapper(ZoteroJSONSchema.Field f, ZoteroJSONSchema.Meta meta)
+		private static ZoteroField fieldMapper(ZoteroRestSchema.Field f, ZoteroRestSchema.Meta meta)
 		{
 			String fieldId = f.field;
 			Class<?> type = String.class;
@@ -158,7 +158,7 @@ public class ZoteroSchema
 		}
 	}
 
-	private static void generateClass(ZoteroType e, ZoteroJSONSchema.Localization localization) throws IOException
+	private static void generateClass(ZoteroType e, ZoteroRestSchema.Localization localization) throws IOException
 	{
 		String name = localization.itemTypes.get(e.id);
 		String className = name.replace(" ", "");

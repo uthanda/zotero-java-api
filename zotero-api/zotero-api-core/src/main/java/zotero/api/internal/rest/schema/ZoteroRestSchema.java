@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unused")
-public class ZoteroJSONSchema
+public class ZoteroRestSchema
 {
 	private Double version;
 	private List<ItemType> itemTypes;
-	private ZoteroJSONSchema.Meta meta;
+	private ZoteroRestSchema.Meta meta;
 	private Map<String, Localization> locales;
 	private CitationStyleLanguage csl;
 
@@ -53,7 +53,7 @@ public class ZoteroJSONSchema
 
 	public static class Meta
 	{
-		Map<String, ZoteroJSONSchema.FieldType> fields;
+		Map<String, ZoteroRestSchema.FieldType> fields;
 	}
 
 	public static class FieldType
@@ -69,8 +69,8 @@ public class ZoteroJSONSchema
 	public static class ItemType
 	{
 		String itemType;
-		List<ZoteroJSONSchema.Field> fields;
-		List<ZoteroJSONSchema.CreatorType> creatorTypes;
+		List<ZoteroRestSchema.Field> fields;
+		List<ZoteroRestSchema.CreatorType> creatorTypes;
 
 		public String getItemType()
 		{
@@ -116,7 +116,7 @@ public class ZoteroJSONSchema
 		return itemTypes;
 	}
 
-	public final ZoteroJSONSchema.Meta getMeta()
+	public final ZoteroRestSchema.Meta getMeta()
 	{
 		return meta;
 	}

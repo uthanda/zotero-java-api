@@ -18,33 +18,33 @@ public class SchemaTest
 	private static ZoteroSchema schema;
 
 	@BeforeClass
-	static void setUpBeforeClass() throws Exception
+	public static void setUpBeforeClass() throws Exception
 	{
 		schema = ZoteroSchema.getCurrentSchema();
 		assertNotNull(schema);
 	}
 
 	@Test
-	void testGetMajorVersion()
+	public void testGetMajorVersion()
 	{
 		assertEquals(3, schema.getMajorVersion());
 	}
 
 	@Test
-	void testGetMinorVersion()
+	public void testGetMinorVersion()
 	{
 		assertEquals(3, schema.getMajorVersion());
 	}
 
 	@Test
-	void testGetFields()
+	public void testGetFields()
 	{
 		Map<String, ZoteroField> fields = schema.getFields();
 		assertEquals(2, fields.size());
 	}
 
 	@Test
-	void testGetTypes()
+	public void testGetTypes()
 	{
 		List<ZoteroType> fields = schema.getTypes();
 		assertEquals(36, fields.size());
