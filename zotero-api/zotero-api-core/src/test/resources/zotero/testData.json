@@ -4,9 +4,7 @@
 			"<empty>": {
 				"headers": {
 					"totalResults": 2,
-					"next": "/items/{key}/children",
-					"start": 1,
-					"key":"B4ERDVS4"
+					"next": "/items/{key}/children|1|B4ERDVS4"
 				},
 				"item": [{
 					"key": "KZT65H5M",
@@ -37,7 +35,7 @@
 						}
 					},
 					"meta": {
-					},
+						},
 					"data": {
 						"key": "KZT65H5M",
 						"version": 2902,
@@ -53,7 +51,7 @@
 						"path": "attachments:2019/2019 Toward a methodology for case modeling2.pdf",
 						"tags": [],
 						"relations": {
-						},
+							},
 						"dateAdded": "2020-12-10T06:27:05Z",
 						"dateModified": "2020-12-10T06:27:07Z"
 					}
@@ -92,7 +90,7 @@
 						}
 					},
 					"meta": {
-					},
+						},
 					"data": {
 						"key": "QFV7K969",
 						"version": 1907,
@@ -108,7 +106,7 @@
 						"path": "attachments:2019/2019 Toward a methodology for case modeling.pdf",
 						"tags": [],
 						"relations": {
-						},
+							},
 						"dateAdded": "2020-07-04T19:08:48Z",
 						"dateModified": "2020-07-06T04:54:59Z"
 					}
@@ -120,7 +118,7 @@
 		"/key=B4ERDVS4": {
 			"<empty>": {
 				"headers": {
-				},
+					},
 				"item": {
 					"key": "B4ERDVS4",
 					"version": 2906,
@@ -222,7 +220,7 @@
 		"/key=A6C8YX9M": {
 			"<empty>": {
 				"headers": {
-				},
+					},
 				"item": {
 					"key": "A6C8YX9M",
 					"version": 1263,
@@ -257,7 +255,7 @@
 						"name": "To Be Read",
 						"parentCollection": false,
 						"relations": {
-							}
+						}
 					}
 				}
 			}
@@ -265,7 +263,7 @@
 		"/key=Y82V25U2": {
 			"<empty>": {
 				"headers": {
-					},
+				},
 				"item": {
 					"key": "Y82V25U2",
 					"version": 44,
@@ -300,7 +298,7 @@
 						"name": "ACM",
 						"parentCollection": false,
 						"relations": {
-							}
+						}
 					}
 				}
 			}
@@ -348,7 +346,7 @@
 						"name": "Useful",
 						"parentCollection": "9DXQSYMF",
 						"relations": {
-							}
+						}
 					}
 				}
 			}
@@ -356,7 +354,7 @@
 		"/key=9DXQSYMF": {
 			"<empty>": {
 				"headers": {
-					},
+				},
 				"item": {
 					"key": "9DXQSYMF",
 					"version": 837,
@@ -391,7 +389,7 @@
 						"name": "_Lit Review",
 						"parentCollection": false,
 						"relations": {
-							}
+						}
 					}
 				}
 			}
@@ -526,7 +524,7 @@
 						}
 					},
 					"meta": {
-						},
+					},
 					"data": {
 						"key": "KZT65H5M",
 						"version": 2902,
@@ -542,7 +540,7 @@
 						"path": "attachments:2019/2019 Toward a methodology for case modeling2.pdf",
 						"tags": [],
 						"relations": {
-							},
+						},
 						"dateAdded": "2020-12-10T06:27:05Z",
 						"dateModified": "2020-12-10T06:27:07Z"
 					}
@@ -628,7 +626,7 @@
 						}],
 						"collections": ["FJ3SUIFZ"],
 						"relations": {
-							},
+						},
 						"dateAdded": "2020-12-06T12:14:56Z",
 						"dateModified": "2020-12-09T06:51:30Z"
 					}
@@ -712,7 +710,7 @@
 						"tags": [],
 						"collections": ["FJ3SUIFZ"],
 						"relations": {
-							},
+						},
 						"dateAdded": "2020-12-06T12:14:55Z",
 						"dateModified": "2020-12-09T06:50:19Z"
 					}
@@ -746,7 +744,7 @@
 						}
 					},
 					"meta": {
-						},
+					},
 					"data": {
 						"key": "SY4RPB76",
 						"version": 2884,
@@ -762,7 +760,7 @@
 						"path": "attachments:2019/2019 Analysis and design information system development of IT care application in.pdf",
 						"tags": [],
 						"relations": {
-							},
+						},
 						"dateAdded": "2020-12-06T12:44:33Z",
 						"dateModified": "2020-12-09T06:50:19Z"
 					}
@@ -796,7 +794,7 @@
 						}
 					},
 					"meta": {
-						},
+					},
 					"data": {
 						"key": "526R6IWN",
 						"version": 2883,
@@ -812,7 +810,7 @@
 						"path": "attachments:2019/2019 A theory of contingent business process management.pdf",
 						"tags": [],
 						"relations": {
-							},
+						},
 						"dateAdded": "2020-12-06T12:46:29Z",
 						"dateModified": "2020-12-09T06:49:21Z"
 					}
@@ -846,7 +844,7 @@
 						}
 					},
 					"meta": {
-						},
+					},
 					"data": {
 						"key": "QFV7K969",
 						"version": 1907,
@@ -862,7 +860,7 @@
 						"path": "attachments:2019/2019 Toward a methodology for case modeling.pdf",
 						"tags": [],
 						"relations": {
-							},
+						},
 						"dateAdded": "2020-07-04T19:08:48Z",
 						"dateModified": "2020-07-06T04:54:59Z"
 					}
@@ -874,7 +872,8 @@
 		"/key=Y82V25U2": {
 			"<empty>": {
 				"headers": {
-					"totalResults": 4
+					"totalResults": 4,
+					"next":"/collections/{key}/collections|2|Y82V25U2"
 				},
 				"item": [{
 					"key": "NYJCQ4NZ",
@@ -914,7 +913,7 @@
 						"name": "CMMN",
 						"parentCollection": "Y82V25U2",
 						"relations": {
-						}
+							}
 					}
 				},
 				{
@@ -955,10 +954,15 @@
 						"name": "Data Processing",
 						"parentCollection": "Y82V25U2",
 						"relations": {
-						}
+							}
 					}
+				}]
+			},
+			"/start=2": {
+				"headers": {
+					"totalResults": 4
 				},
-				{
+				"item": [{
 					"key": "M2F2X5CZ",
 					"version": 133,
 					"library": {
@@ -996,7 +1000,7 @@
 						"name": "Medical Case Management",
 						"parentCollection": "Y82V25U2",
 						"relations": {
-						}
+							}
 					}
 				},
 				{
@@ -1037,7 +1041,7 @@
 						"name": "Case Types",
 						"parentCollection": "Y82V25U2",
 						"relations": {
-						}
+							}
 					}
 				}]
 			}
@@ -1045,7 +1049,7 @@
 		"/key=FJ3SUIFZ": {
 			"<empty>": {
 				"headers": {
-				},
+					},
 				"item": []
 			}
 		}

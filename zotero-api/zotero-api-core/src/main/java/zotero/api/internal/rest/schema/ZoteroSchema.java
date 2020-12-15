@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import zotero.api.constants.ZoteroKeys;
 import zotero.api.internal.rest.schema.ZoteroRestSchema.CreatorType;
 import zotero.api.internal.rest.schema.ZoteroRestSchema.Field;
 import zotero.api.internal.rest.schema.ZoteroRestSchema.ItemType;
@@ -33,6 +35,8 @@ public class ZoteroSchema
 	private ZoteroRestSchema jsonSchema;
 	private Map<String, ZoteroField> fields = new HashMap<>();
 	private List<ZoteroType> types;
+	
+	private List<String> dateKeys = Collections.unmodifiableList(Arrays.asList(ZoteroKeys.ACCESS_DATE, ZoteroKeys.DATE_ADDED, ZoteroKeys.DATE_MODIFIED));
 
 	public static ZoteroSchema fromStream(InputStream is) throws IOException
 	{
@@ -244,5 +248,10 @@ public class ZoteroSchema
 	public final List<ZoteroType> getTypes()
 	{
 		return types;
+	}
+
+	public final List<String> getDateKeys()
+	{
+		return dateKeys;
 	}
 }

@@ -1,17 +1,21 @@
-package zotero.api.internal.rest;
+package zotero.api.internal.rest.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ZoteroAPIResponse<T> implements RestResponse<T>
+import zotero.api.internal.rest.RestResponse;
+
+public class ZoteroRestResponse<T> implements RestResponse<T>
 {
+	public static final String HEADER_LAST_MODIFIED_VERSION = "Last-Modified-Version";
+
 	private Integer totalResults;
 	private Integer lastModifyVersion;
 	private T response;
-	private Map<String,String> links;
+	private Map<String, String> links;
 	private String errorMessage;
-	private ZoteroGetUserAPIRequest<T> request;
-	
+	private ZoteroRestGetRequest<T> request;
+
 	@Override
 	public final boolean wasSuccessful()
 	{
@@ -33,21 +37,27 @@ public class ZoteroAPIResponse<T> implements RestResponse<T>
 	@Override
 	public boolean hasNext()
 	{
+		if(links == null || !links.containsKey("next")) {
+			return false;
+		}
 		return links.containsKey("next");
 	}
-	
+
 	@Override
 	public RestResponse<T> next()
 	{
 		return request.next(links.get("next"));
 	}
-	
+
 	@Override
 	public String getLink(String type)
 	{
-		if(links == null) {
+		if (links == null)
+		{
 			return null;
-		} else {
+		}
+		else
+		{
 			return links.get(type);
 		}
 	}
@@ -64,51 +74,52 @@ public class ZoteroAPIResponse<T> implements RestResponse<T>
 		return lastModifyVersion;
 	}
 
-	public static class ZoteroGetAPIResponseBuilder<T>
+	public static class ZoteroRestResponseBuilder<T>
 	{
-		private ZoteroAPIResponse<T> response = new ZoteroAPIResponse<>();
-		
-		public ZoteroGetAPIResponseBuilder<T> response(T response)
+		private ZoteroRestResponse<T> response = new ZoteroRestResponse<>();
+
+		public ZoteroRestResponseBuilder<T> response(T response)
 		{
 			this.response.response = response;
 			return this;
 		}
-		
-		public ZoteroGetAPIResponseBuilder<T> addLink(String type, String link)
+
+		public ZoteroRestResponseBuilder<T> addLink(String type, String link)
 		{
-			if(response.links == null) {
+			if (response.links == null)
+			{
 				response.links = new HashMap<>();
 			}
-			
+
 			response.links.put(type, link);
 			return this;
 		}
-		
-		public ZoteroGetAPIResponseBuilder<T> totalResults(Integer totalResults)
+
+		public ZoteroRestResponseBuilder<T> totalResults(Integer totalResults)
 		{
 			response.totalResults = totalResults;
 			return this;
 		}
-		
-		public ZoteroGetAPIResponseBuilder<T> lastModifyVersion(Integer lastModifyVersion)
+
+		public ZoteroRestResponseBuilder<T> lastModifyVersion(Integer lastModifyVersion)
 		{
 			response.lastModifyVersion = lastModifyVersion;
 			return this;
 		}
-		
-		public ZoteroGetAPIResponseBuilder<T> errorMessage(String errorMessage)
+
+		public ZoteroRestResponseBuilder<T> errorMessage(String errorMessage)
 		{
 			response.errorMessage = errorMessage;
 			return this;
 		}
-		
-		public ZoteroGetAPIResponseBuilder<T> request(ZoteroGetUserAPIRequest<T> request)
+
+		public ZoteroRestResponseBuilder<T> request(ZoteroRestGetRequest<T> request)
 		{
 			response.request = request;
 			return this;
 		}
-		
-		public ZoteroAPIResponse<T> build()
+
+		public ZoteroRestResponse<T> build()
 		{
 			return response;
 		}

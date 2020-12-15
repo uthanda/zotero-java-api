@@ -15,16 +15,17 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import zotero.api.constants.LinkTypes;
-import zotero.api.internal.rest.ZoteroGetUserAPIRequest;
+import zotero.api.internal.rest.impl.ZoteroRestGetRequest;
+import zotero.api.internal.rest.impl.ZoteroRestPutRequest;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
-import zotero.api.util.MockGetRestService;
+import zotero.api.util.MockRestService;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ ZoteroGetUserAPIRequest.class })
+@PrepareForTest({ ZoteroRestGetRequest.class, ZoteroRestPutRequest.Builder.class })
 public class CollectionsTest
 {
-	private static MockGetRestService service = new MockGetRestService();
+	private static MockRestService service = new MockRestService();
 	private static Library library;
 	private static Collection collectionNoSubCollections;
 	private static Collection collectionSubCollections;
@@ -34,11 +35,11 @@ public class CollectionsTest
 	{
 		// Initialize the mock service for the static setup
 		service.initialize();
-		library = Library.createLibrary("5787467", new ZoteroAPIKey("89ikoRRPvnGHVNBXHbiSRSXo"));
+		library = Library.createLibrary(MockRestService.API_ID, new ZoteroAPIKey(MockRestService.API_KEY));
 		collectionNoSubCollections = library.fetchCollection("FJ3SUIFZ");
 		collectionSubCollections = library.fetchCollection("Y82V25U2");
 	}
-	
+
 	@Before
 	public void initialize() throws NoSuchMethodException, SecurityException
 	{
@@ -68,27 +69,43 @@ public class CollectionsTest
 	public void testFetchParent()
 	{
 		Collection parent = collectionNoSubCollections.fetchParentCollection();
-		
+
 		assertEquals("9DXQSYMF", parent.getKey());
 	}
-	
+
 	@Test
 	public void testFetchSubCollections()
 	{
 		CollectionIterator iterator = collectionNoSubCollections.fetchSubCollections();
-		
+
 		assertEquals(0, iterator.getTotalCount());
-		
+
 		iterator = collectionSubCollections.fetchSubCollections();
-		
+
 		assertEquals(4, iterator.getTotalCount());
+		
+		assertTrue(iterator.hasNext());
+		Collection collection = iterator.next();
+		assertEquals("NYJCQ4NZ", collection.getKey());
+		
+		assertTrue(iterator.hasNext());
+		collection = iterator.next();
+		assertEquals("6LB4NBH4", collection.getKey());
+		
+		assertTrue(iterator.hasNext());
+		collection = iterator.next();
+		assertEquals("M2F2X5CZ", collection.getKey());
+		
+		assertTrue(iterator.hasNext());
+		collection = iterator.next();
+		assertEquals("NTN3S2WV", collection.getKey());
 	}
 
 	@Test
 	public void testFetchItems()
 	{
 		ItemIterator iterator = collectionNoSubCollections.fetchItems();
-		
+
 		assertEquals(7, iterator.getTotalCount());
 
 		assertTrue(iterator.hasNext());

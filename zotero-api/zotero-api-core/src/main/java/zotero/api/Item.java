@@ -3,6 +3,7 @@ package zotero.api;
 import java.util.Date;
 import java.util.List;
 
+import zotero.api.collections.CreatorsList;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 
@@ -12,7 +13,7 @@ public interface Item extends Entry
 	
 	String getTitle();
 
-	List<Creator> getCreators();
+	CreatorsList getCreators();
 
 	Date getDateAdded();
 
@@ -40,9 +41,9 @@ public interface Item extends Entry
 
 	int getNumberOfChilden();
 
-	void save() throws Exception;
+	void save();
 
-	void delete() throws Exception;
+	void delete();
 
 	Relationships getRelationships();
 }

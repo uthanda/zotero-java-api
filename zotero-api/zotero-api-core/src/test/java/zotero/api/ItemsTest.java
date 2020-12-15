@@ -3,6 +3,7 @@ package zotero.api;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -17,37 +18,59 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import zotero.api.constants.CreatorTypes;
-import zotero.api.constants.ItemTypes;
+import zotero.api.collections.CreatorsList;
+import zotero.api.constants.CreatorType;
+import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkTypes;
 import zotero.api.constants.RelationshipTypes;
 import zotero.api.constants.ZoteroKeys;
-import zotero.api.internal.rest.ZoteroGetUserAPIRequest;
+import zotero.api.internal.rest.builders.GetBuilder;
+import zotero.api.internal.rest.builders.PutBuilder;
+import zotero.api.internal.rest.impl.ZoteroRestGetRequest;
+import zotero.api.internal.rest.impl.ZoteroRestPutRequest;
+import zotero.api.internal.rest.impl.ZoteroRestPutRequest.Builder;
+import zotero.api.internal.rest.model.ZoteroRestCreator;
+import zotero.api.internal.rest.model.ZoteroRestData;
+import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
-import zotero.api.util.MockGetRestService;
+import zotero.api.util.MockPutRequest;
+import zotero.api.util.MockRestService;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ ZoteroGetUserAPIRequest.class })
+@PrepareForTest({ ZoteroRestGetRequest.class, ZoteroRestPutRequest.class })
 public class ItemsTest
 {
-	private static MockGetRestService service = new MockGetRestService();
+	// Static setups
+	private static MockRestService service = new MockRestService();
 	private static Library library;
 	private static Item item;
-
+	
 	@BeforeClass
 	public static void setUp() throws NoSuchMethodException, SecurityException
 	{
 		// Initialize the mock service for the static setup
 		service.initialize();
-		library = Library.createLibrary("5787467", new ZoteroAPIKey("89ikoRRPvnGHVNBXHbiSRSXo"));
+		library = Library.createLibrary(MockRestService.API_ID, new ZoteroAPIKey(MockRestService.API_KEY));
 		item = library.fetchItem("B4ERDVS4");
 	}
+
+	// Instance level stuff
+	
+	private MockPutRequest putRequest;
 
 	@Before
 	public void initialize() throws NoSuchMethodException, SecurityException
 	{
 		service.initialize();
+		
+		GetBuilder<?> gb = ZoteroRestGetRequest.Builder.createBuilder(Object.class);
+		
+		assertTrue(gb instanceof zotero.api.util.MockGetRequest.MockRequestBuilder);
+		
+		PutBuilder pb = ZoteroRestPutRequest.Builder.createBuilder();
+		
+		assertTrue(pb instanceof zotero.api.util.MockPutRequest.MockRequestBuilder);
 	}
 
 	@Test
@@ -58,7 +81,7 @@ public class ItemsTest
 		assertEquals(DatatypeConverter.parseDateTime("2020-07-03T10:31:52Z").getTimeInMillis(), item.getDateAdded().getTime());
 		assertEquals(DatatypeConverter.parseDateTime("2020-12-10T06:28:27Z").getTimeInMillis(), item.getDateModified().getTime());
 		assertEquals("tex.ids: hewelt_toward_2019, hewelt_towards_nodate", item.getExtra());
-		assertEquals(ItemTypes.TYPE_JOURNAL_ARTICLE, item.getItemType());
+		assertEquals(ItemType.JOURNAL_ARTICLE.getZoteroType(), item.getItemType());
 		assertEquals("B4ERDVS4", item.getKey());
 		assertEquals(2, item.getNumberOfChilden());
 		assertEquals("rightsContent", item.getRights());
@@ -100,27 +123,39 @@ public class ItemsTest
 	@Test
 	public void testCreators()
 	{
-		List<Creator> creators = item.getCreators();
+		CreatorsList creators = item.getCreators();
+		
 		assertEquals(5, creators.size());
-		assertEquals(CreatorTypes.TYPE_AUTHOR, creators.get(0).getProperties().getString(CreatorTypes.CREATOR_TYPE));
-		assertEquals("Marcin", creators.get(0).getProperties().getString(CreatorTypes.FIRST_NAME));
-		assertEquals("Hewelt", creators.get(0).getProperties().getString(CreatorTypes.LAST_NAME));
+		
+		Creator creator = creators.get(0);
+		
+		assertEquals(CreatorType.AUTHOR, creator.getType());
+		assertEquals("Marcin", creator.getFirstName());
+		assertEquals("Hewelt", creator.getLastName());
 
-		assertEquals(CreatorTypes.TYPE_AUTHOR, creators.get(1).getProperties().getString(CreatorTypes.CREATOR_TYPE));
-		assertEquals("Luise", creators.get(1).getProperties().getString(CreatorTypes.FIRST_NAME));
-		assertEquals("Pufahl", creators.get(1).getProperties().getString(CreatorTypes.LAST_NAME));
-
-		assertEquals(CreatorTypes.TYPE_AUTHOR, creators.get(2).getProperties().getString(CreatorTypes.CREATOR_TYPE));
-		assertEquals("Sankalita", creators.get(2).getProperties().getString(CreatorTypes.FIRST_NAME));
-		assertEquals("Mandal", creators.get(2).getProperties().getString(CreatorTypes.LAST_NAME));
-
-		assertEquals(CreatorTypes.TYPE_AUTHOR, creators.get(3).getProperties().getString(CreatorTypes.CREATOR_TYPE));
-		assertEquals("Felix", creators.get(3).getProperties().getString(CreatorTypes.FIRST_NAME));
-		assertEquals("Wolff", creators.get(3).getProperties().getString(CreatorTypes.LAST_NAME));
-
-		assertEquals(CreatorTypes.TYPE_AUTHOR, creators.get(4).getProperties().getString(CreatorTypes.CREATOR_TYPE));
-		assertEquals("Mathias", creators.get(4).getProperties().getString(CreatorTypes.FIRST_NAME));
-		assertEquals("Weske", creators.get(4).getProperties().getString(CreatorTypes.LAST_NAME));
+		creator = creators.get(1);
+		
+		assertEquals(CreatorType.AUTHOR, creator.getType());
+		assertEquals("Luise", creator.getFirstName());
+		assertEquals("Pufahl", creator.getLastName());
+		
+		creator = creators.get(2);
+		
+		assertEquals(CreatorType.AUTHOR, creator.getType());
+		assertEquals("Sankalita", creator.getFirstName());
+		assertEquals("Mandal", creator.getLastName());
+		
+		creator = creators.get(3);
+		
+		assertEquals(CreatorType.AUTHOR, creator.getType());
+		assertEquals("Felix", creator.getFirstName());
+		assertEquals("Wolff", creator.getLastName());
+		
+		creator = creators.get(4);
+		
+		assertEquals(CreatorType.AUTHOR, creator.getType());
+		assertEquals("Mathias", creator.getFirstName());
+		assertEquals("Weske", creator.getLastName());
 	}
 
 	@Test
@@ -139,10 +174,12 @@ public class ItemsTest
 
 		assertTrue(iterator.hasNext());
 		Collection collection = iterator.next();
-		assertEquals("FJ3SUIFZ", collection.getKey());
+		assertEquals("A6C8YX9M", collection.getKey());
+
 		assertTrue(iterator.hasNext());
 		collection = iterator.next();
-		assertEquals("A6C8YX9M", collection.getKey());
+		assertEquals("FJ3SUIFZ", collection.getKey());
+
 		assertFalse(iterator.hasNext());
 	}
 
@@ -165,12 +202,43 @@ public class ItemsTest
 		
 		Item child = i.next();
 		assertNotNull(child);
-		assertEquals(ItemTypes.TYPE_ATTACHMENT, child.getItemType());
+		assertEquals(ItemType.ATTACHMENT.getZoteroType(), child.getItemType());
 		
 		child = i.next();
 		assertNotNull(child);
-		assertEquals(ItemTypes.TYPE_ATTACHMENT, child.getItemType());
+		assertEquals(ItemType.ATTACHMENT.getZoteroType(), child.getItemType());
 		
 		assertFalse(i.hasNext());
+	}
+	
+	@Test
+	public void testCreate()
+	{
+		service.setPutCallbackFunction(req -> {
+			testUpdate(req);
+			return Boolean.TRUE;
+		});
+		
+		Item update = library.createItem(ItemType.CASE);
+		
+		System.out.println(update.getProperties().getPropertyNames());
+		
+		update.getCreators().add(CreatorType.CARTOGRAPHER, "John", "Dewey");
+		update.save();
+	}
+
+	private void testUpdate(MockPutRequest request)
+	{
+		Object content = request.getContent();
+		assertTrue(content instanceof ZoteroRestItem);
+		
+		ZoteroRestItem item = (ZoteroRestItem) content;
+		assertNull(item.getKey());
+		
+		ZoteroRestData data = item.getData();
+		assertTrue(data.get(ZoteroKeys.CREATORS) instanceof List);
+		List<ZoteroRestCreator> creators = (List<ZoteroRestCreator>) data.get(ZoteroKeys.CREATORS);
+		assertEquals(5, creators.size());
+		assertEquals(CreatorType.ATTORNEY_AGENT.name(), creators.get(0).getCreatorType());
 	}
 }
