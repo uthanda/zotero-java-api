@@ -1,10 +1,13 @@
 package zotero.api;
 
 import java.util.List;
+import java.util.Set;
+
+import zotero.api.constants.RelationshipType;
 
 public interface Relationships
 {
-
-	List<String> getRelationships(String type);
-
+	List<String> getRelationships(RelationshipType type);
+	
+	Set<RelationshipType> getTypes();
 }

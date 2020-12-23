@@ -4,42 +4,40 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.bind.DatatypeConverter;
-
 import zotero.api.Collection;
 import zotero.api.Item;
 import zotero.api.Library;
 import zotero.api.Relationships;
-import zotero.api.Tag;
-import zotero.api.collections.CreatorsList;
+import zotero.api.collections.Creators;
+import zotero.api.collections.Tags;
 import zotero.api.constants.ItemType;
+import zotero.api.constants.ZoteroExceptionCodes;
+import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.constants.ZoteroKeys;
-import zotero.api.internal.rest.builders.PutBuilder;
-import zotero.api.internal.rest.impl.ZoteroRestPutRequest;
+import zotero.api.exceptions.ZoteroRuntimeException;
+import zotero.api.internal.rest.ZoteroRestPaths;
+import zotero.api.internal.rest.builders.DeleteBuilder;
+import zotero.api.internal.rest.builders.PatchBuilder;
+import zotero.api.internal.rest.builders.PostBuilder;
+import zotero.api.internal.rest.impl.ZoteroRestDeleteRequest;
+import zotero.api.internal.rest.impl.ZoteroRestPatchRequest;
+import zotero.api.internal.rest.impl.ZoteroRestPostRequest;
 import zotero.api.internal.rest.model.ZoteroRestData;
 import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.internal.rest.model.ZoteroRestMeta;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
+import zotero.api.properties.PropertyObject;
 import zotero.apiimpl.properties.PropertiesImpl;
 
 @SuppressWarnings({ "squid:S2160" })
-final class ItemImpl extends EntryImpl implements Item
+public final class ItemImpl extends EntryImpl implements Item
 {
-	private static final String RELATIONS = "relations";
-
-	static final String URI_ITEMS_ALL = "/items";
-	static final String URI_ITEMS_TOP = "/items/top";
-	static final String URI_ITEMS_TRASH = "/items/trash";
-	static final String URI_ITEM = "/items/{key}";
-	private static final String URI_ITEM_CHILDREN = "/items/{key}/children";
-	@SuppressWarnings("unused") // Implementation coming later
-	private static final String URI_ITEM_TAGS = "/items/{key}/tags";
-
-	@SuppressWarnings("unused")
 	private ZoteroRestItem jsonItem;
 
 	private int numChildren;
+
+	private boolean deleted = false;
 
 	private ItemImpl(ZoteroRestItem item, Library library)
 	{
@@ -50,80 +48,168 @@ final class ItemImpl extends EntryImpl implements Item
 	{
 		super(type, library);
 	}
-	
+
 	@Override
 	public String getTitle()
 	{
+		checkDeletionStatus();
+
 		return super.getProperties().getString(ZoteroKeys.TITLE);
 	}
 
-	@Override
-	public CreatorsList getCreators()
+	private void checkDeletionStatus()
 	{
-		return (CreatorsList) super.getProperties().getRaw(ZoteroKeys.CREATORS);
+		if (deleted)
+		{
+			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.OBJECT_DELETED, "Object was deleted");
+		}
+	}
+
+	@Override
+	public void setTitle(String title)
+	{
+		checkDeletionStatus();
+
+		super.getProperties().putValue(ZoteroKeys.TITLE, title);
+	}
+
+	@Override
+	public Creators getCreators()
+	{
+		checkDeletionStatus();
+
+		return (Creators) super.getProperties().getProperty(ZoteroKeys.CREATORS).getValue();
 	}
 
 	@Override
 	public Date getDateAdded()
 	{
-		return DatatypeConverter.parseDateTime(super.getProperties().getString(ZoteroKeys.DATE_ADDED)).getTime();
+		checkDeletionStatus();
+
+		return super.getProperties().getDate(ZoteroKeys.DATE_ADDED);
 	}
 
 	@Override
 	public Date getDateModified()
 	{
-		return DatatypeConverter.parseDateTime(super.getProperties().getString(ZoteroKeys.DATE_MODIFIED)).getTime();
+		checkDeletionStatus();
+
+		return super.getProperties().getDate(ZoteroKeys.DATE_MODIFIED);
 	}
 
 	@Override
-	public String getItemType()
+	public ItemType getItemType()
 	{
-		return getProperties().getString(ZoteroKeys.ITEM_TYPE);
+		checkDeletionStatus();
+
+		return (ItemType) getProperties().getProperty(ZoteroKeys.ITEM_TYPE).getValue();
+	}
+
+	@Override
+	public void changeItemType(ItemType type)
+	{
+		checkDeletionStatus();
+
+		super.reinitialize(type);
 	}
 
 	@Override
 	public String getRights()
 	{
+		checkDeletionStatus();
+
 		return getProperties().getString(ZoteroKeys.RIGHTS);
+	}
+
+	@Override
+	public void setRights(String rights)
+	{
+		checkDeletionStatus();
+
+		getProperties().putValue(ZoteroKeys.RIGHTS, rights);
 	}
 
 	@Override
 	public String getURL()
 	{
+		checkDeletionStatus();
+
 		return getProperties().getString(ZoteroKeys.URL);
+	}
+
+	@Override
+	public void setURL(String url)
+	{
+		checkDeletionStatus();
+
+		getProperties().putValue(ZoteroKeys.URL, url);
 	}
 
 	@Override
 	public String getShortTitle()
 	{
+		checkDeletionStatus();
+
 		return getProperties().getString(ZoteroKeys.SHORT_TITLE);
+	}
+
+	@Override
+	public void setShortTitle(String shortTitle)
+	{
+		checkDeletionStatus();
+
+		getProperties().putValue(ZoteroKeys.SHORT_TITLE, shortTitle);
 	}
 
 	@Override
 	public Date getAccessDate()
 	{
-		return DatatypeConverter.parseDateTime(super.getProperties().getString(ZoteroKeys.ACCESS_DATE)).getTime();
+		checkDeletionStatus();
+
+		return super.getProperties().getDate(ZoteroKeys.ACCESS_DATE);
 	}
 
 	@Override
 	public String getExtra()
 	{
+		checkDeletionStatus();
+
 		return getProperties().getString(ZoteroKeys.EXTRA);
+	}
+
+	@Override
+	public void setExtra(String extra)
+	{
+		checkDeletionStatus();
+
+		getProperties().putValue(ZoteroKeys.EXTRA, extra);
 	}
 
 	@Override
 	public String getAbstractNote()
 	{
+		checkDeletionStatus();
+
 		return getProperties().getString(ZoteroKeys.ABSTRACT_NOTE);
+	}
+
+	@Override
+	public void setAbstractNote(String abstractNote)
+	{
+		checkDeletionStatus();
+
+		getProperties().putValue(ZoteroKeys.ABSTRACT_NOTE, abstractNote);
 	}
 
 	@Override
 	public CollectionIterator getCollections()
 	{
+		checkDeletionStatus();
+
 		return new CollectionIterator()
 		{
 			@SuppressWarnings("unchecked")
-			private List<String> set = (List<String>) getProperties().getRaw(ZoteroKeys.COLLECTIONS);
+			private List<String> set = (List<String>) getProperties().getProperty(ZoteroKeys.COLLECTIONS).getValue();
 			private Iterator<String> i = set.iterator();
 
 			@Override
@@ -147,10 +233,11 @@ final class ItemImpl extends EntryImpl implements Item
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<Tag> getTags()
+	public Tags getTags()
 	{
-		return (List<Tag>) getProperties().getRaw(ZoteroKeys.TAGS);
+		checkDeletionStatus();
+
+		return (Tags) getProperties().getProperty(ZoteroKeys.TAGS).getValue();
 	}
 
 	static Item fromItem(ZoteroRestItem jsonItem, Library library)
@@ -168,11 +255,13 @@ final class ItemImpl extends EntryImpl implements Item
 	@Override
 	public ItemIterator fetchChildren()
 	{
-		return ((LibraryImpl) getLibrary()).fetchItems(URI_ITEM_CHILDREN, this.getKey());
+		checkDeletionStatus();
+
+		return ((LibraryImpl) getLibrary()).fetchItems(ZoteroRestPaths.ITEM_CHILDREN, this.getKey());
 	}
 
 	@Override
-	public void refresh() throws Exception
+	public void refresh()
 	{
 		// TODO
 	}
@@ -186,35 +275,57 @@ final class ItemImpl extends EntryImpl implements Item
 	@Override
 	public void save()
 	{
-		// This is a new item, so we do a put
+		checkDeletionStatus();
+
+		// This is a new item, so we do a post
+		LibraryImpl libraryImpl = (LibraryImpl) getLibrary();
+		
 		if (this.jsonItem == null)
 		{
-			ZoteroRestItem item = new ZoteroRestItem();
-			item.setKey(this.getKey());
+			ZoteroRestItem item = buildRestItem(false);
 
-			ZoteroRestData data = new ZoteroRestData();
-			PropertiesImpl.gatherProperties(data, this.getProperties());
-			
-			PutBuilder builder = ZoteroRestPutRequest.Builder.createBuilder();
+			PostBuilder builder = ZoteroRestPostRequest.Builder.createBuilder();
 			builder.content(item);
-			
-			((LibraryImpl)getLibrary()).performPut((builder));
+
+			libraryImpl.performPost((builder));
 		}
 		else
 		{
+			ZoteroRestItem item = buildRestItem(true);
 
+			PatchBuilder builder = ZoteroRestPatchRequest.Builder.createBuilder();
+			builder.content(item).itemKey(this.getKey());
+
+			libraryImpl.performPatch((builder));
 		}
+	}
+
+	private ZoteroRestItem buildRestItem(boolean deltaMode)
+	{
+		ZoteroRestItem item = new ZoteroRestItem();
+		item.setKey(this.getKey());
+
+		ZoteroRestData data = new ZoteroRestData();
+		PropertiesImpl.gatherProperties(data, this.getProperties(), deltaMode);
+		item.setData(data);
+		return item;
 	}
 
 	@Override
 	public void delete()
 	{
-		// TODO
+		checkDeletionStatus();
+
+		DeleteBuilder builder = ZoteroRestDeleteRequest.Builder.createBuilder();
+		builder.itemKey(this.getKey());
+		
+		((LibraryImpl)getLibrary()).performDelete();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Relationships getRelationships()
 	{
-		return (Relationships) super.getProperties().getRaw(RELATIONS);
+		return ((PropertyObject<Relationships>) super.getProperties().getProperty(ZoteroKeys.RELATIONS)).getValue();
 	}
 }

@@ -15,14 +15,12 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import zotero.api.constants.LinkTypes;
-import zotero.api.internal.rest.impl.ZoteroRestGetRequest;
-import zotero.api.internal.rest.impl.ZoteroRestPutRequest;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.util.MockRestService;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ ZoteroRestGetRequest.class, ZoteroRestPutRequest.Builder.class })
+@PrepareForTest(fullyQualifiedNames="zotero.api.internal.rest.impl.*")
 public class CollectionsTest
 {
 	private static MockRestService service = new MockRestService();
@@ -83,19 +81,19 @@ public class CollectionsTest
 		iterator = collectionSubCollections.fetchSubCollections();
 
 		assertEquals(4, iterator.getTotalCount());
-		
+
 		assertTrue(iterator.hasNext());
 		Collection collection = iterator.next();
 		assertEquals("NYJCQ4NZ", collection.getKey());
-		
+
 		assertTrue(iterator.hasNext());
 		collection = iterator.next();
 		assertEquals("6LB4NBH4", collection.getKey());
-		
+
 		assertTrue(iterator.hasNext());
 		collection = iterator.next();
 		assertEquals("M2F2X5CZ", collection.getKey());
-		
+
 		assertTrue(iterator.hasNext());
 		collection = iterator.next();
 		assertEquals("NTN3S2WV", collection.getKey());

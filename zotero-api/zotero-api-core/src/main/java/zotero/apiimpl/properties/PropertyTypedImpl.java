@@ -1,15 +1,14 @@
 package zotero.apiimpl.properties;
 
 import zotero.api.constants.PropertyType;
-import zotero.api.properties.PropertyObject;
 
-public abstract class PropertyTypedImpl<T> extends PropertyImpl
+public abstract class PropertyTypedImpl<T> extends PropertyImpl<T>
 {
 	private final Class<T> type;
 
-	public PropertyTypedImpl(String key, Class<T> type, PropertyType propertyType)
+	public PropertyTypedImpl(PropertyType propertyType, String key, Class<T> type, T value)
 	{
-		super(key, propertyType);
+		super(propertyType, key, value);
 		this.type = type;
 	}
 

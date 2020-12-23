@@ -1,6 +1,6 @@
-package zotero.api.constants;
 
+package zotero.api.constants;
 public enum PropertyType
 {
-	STRING, DATE, CREATORS, ENUM, LIST, OBJECT
+	STRING, DATE, CREATORS, ENUM, LIST, OBJECT, INTEGER, BOOLEAN
 }

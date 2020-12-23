@@ -10,7 +10,11 @@ import zotero.apiimpl.properties.PropertiesImpl;
 
 public class PropertiesItemImpl implements PropertiesItem
 {
-	private Properties properties = new PropertiesImpl();
+	private PropertiesImpl properties = new PropertiesImpl();
+
+	PropertiesItemImpl()
+	{
+	}
 
 	PropertiesItemImpl(Map<String, Object> values)
 	{
@@ -24,12 +28,22 @@ public class PropertiesItemImpl implements PropertiesItem
 
 	PropertiesItemImpl(ItemType type)
 	{
-		this.properties = PropertiesImpl.initialize(type);
+		this.properties = new PropertiesImpl();
+		PropertiesImpl.initialize(type, this.properties, null);
 	}
 
 	@Override
 	public final Properties getProperties()
 	{
 		return properties;
+	}
+
+	final void reinitialize(ItemType type)
+	{
+		PropertiesImpl current = properties;
+
+		this.properties = new PropertiesImpl();
+
+		PropertiesImpl.initialize(type, properties, current);
 	}
 }

@@ -18,59 +18,60 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import zotero.api.collections.CreatorsList;
+import zotero.api.collections.Creators;
+import zotero.api.collections.Tags;
 import zotero.api.constants.CreatorType;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkTypes;
-import zotero.api.constants.RelationshipTypes;
+import zotero.api.constants.RelationshipType;
 import zotero.api.constants.ZoteroKeys;
+import zotero.api.exceptions.ZoteroRuntimeException;
+import zotero.api.internal.rest.ZoteroRestPaths;
 import zotero.api.internal.rest.builders.GetBuilder;
-import zotero.api.internal.rest.builders.PutBuilder;
+import zotero.api.internal.rest.builders.PostBuilder;
 import zotero.api.internal.rest.impl.ZoteroRestGetRequest;
-import zotero.api.internal.rest.impl.ZoteroRestPutRequest;
-import zotero.api.internal.rest.impl.ZoteroRestPutRequest.Builder;
+import zotero.api.internal.rest.impl.ZoteroRestPostRequest;
 import zotero.api.internal.rest.model.ZoteroRestCreator;
 import zotero.api.internal.rest.model.ZoteroRestData;
 import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
-import zotero.api.util.MockPutRequest;
+import zotero.api.util.MockDeleteRequest;
+import zotero.api.util.MockPatchRequest;
+import zotero.api.util.MockPostRequest;
 import zotero.api.util.MockRestService;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ ZoteroRestGetRequest.class, ZoteroRestPutRequest.class })
+@PrepareForTest(fullyQualifiedNames="zotero.api.internal.rest.impl.*")
 public class ItemsTest
 {
+	private static final String TEST_ITEM_B4ERDVS4 = "B4ERDVS4";
 	// Static setups
 	private static MockRestService service = new MockRestService();
 	private static Library library;
 	private static Item item;
-	
+
 	@BeforeClass
 	public static void setUp() throws NoSuchMethodException, SecurityException
 	{
 		// Initialize the mock service for the static setup
 		service.initialize();
 		library = Library.createLibrary(MockRestService.API_ID, new ZoteroAPIKey(MockRestService.API_KEY));
-		item = library.fetchItem("B4ERDVS4");
+		item = library.fetchItem(TEST_ITEM_B4ERDVS4);
 	}
-
-	// Instance level stuff
-	
-	private MockPutRequest putRequest;
 
 	@Before
 	public void initialize() throws NoSuchMethodException, SecurityException
 	{
 		service.initialize();
-		
+
 		GetBuilder<?> gb = ZoteroRestGetRequest.Builder.createBuilder(Object.class);
-		
+
 		assertTrue(gb instanceof zotero.api.util.MockGetRequest.MockRequestBuilder);
-		
-		PutBuilder pb = ZoteroRestPutRequest.Builder.createBuilder();
-		
-		assertTrue(pb instanceof zotero.api.util.MockPutRequest.MockRequestBuilder);
+
+		PostBuilder pb = ZoteroRestPostRequest.Builder.createBuilder();
+
+		assertTrue(pb instanceof zotero.api.util.MockPostRequest.MockRequestBuilder);
 	}
 
 	@Test
@@ -81,8 +82,8 @@ public class ItemsTest
 		assertEquals(DatatypeConverter.parseDateTime("2020-07-03T10:31:52Z").getTimeInMillis(), item.getDateAdded().getTime());
 		assertEquals(DatatypeConverter.parseDateTime("2020-12-10T06:28:27Z").getTimeInMillis(), item.getDateModified().getTime());
 		assertEquals("tex.ids: hewelt_toward_2019, hewelt_towards_nodate", item.getExtra());
-		assertEquals(ItemType.JOURNAL_ARTICLE.getZoteroType(), item.getItemType());
-		assertEquals("B4ERDVS4", item.getKey());
+		assertEquals(ItemType.JOURNAL_ARTICLE, item.getItemType());
+		assertEquals(TEST_ITEM_B4ERDVS4, item.getKey());
 		assertEquals(2, item.getNumberOfChilden());
 		assertEquals("rightsContent", item.getRights());
 		assertEquals("TAMFCM", item.getShortTitle());
@@ -123,36 +124,36 @@ public class ItemsTest
 	@Test
 	public void testCreators()
 	{
-		CreatorsList creators = item.getCreators();
-		
+		Creators creators = item.getCreators();
+
 		assertEquals(5, creators.size());
-		
+
 		Creator creator = creators.get(0);
-		
+
 		assertEquals(CreatorType.AUTHOR, creator.getType());
 		assertEquals("Marcin", creator.getFirstName());
 		assertEquals("Hewelt", creator.getLastName());
 
 		creator = creators.get(1);
-		
+
 		assertEquals(CreatorType.AUTHOR, creator.getType());
 		assertEquals("Luise", creator.getFirstName());
 		assertEquals("Pufahl", creator.getLastName());
-		
+
 		creator = creators.get(2);
-		
+
 		assertEquals(CreatorType.AUTHOR, creator.getType());
 		assertEquals("Sankalita", creator.getFirstName());
 		assertEquals("Mandal", creator.getLastName());
-		
+
 		creator = creators.get(3);
-		
+
 		assertEquals(CreatorType.AUTHOR, creator.getType());
 		assertEquals("Felix", creator.getFirstName());
 		assertEquals("Wolff", creator.getLastName());
-		
+
 		creator = creators.get(4);
-		
+
 		assertEquals(CreatorType.AUTHOR, creator.getType());
 		assertEquals("Mathias", creator.getFirstName());
 		assertEquals("Weske", creator.getLastName());
@@ -161,9 +162,9 @@ public class ItemsTest
 	@Test
 	public void testTags()
 	{
-		List<Tag> tags = item.getTags();
+		Tags tags = item.getTags();
 		assertEquals(1, tags.size());
-		assertEquals("followrefs", tags.get(0).getProperties().getString("tag"));
+		assertEquals("followrefs", tags.get(0));
 	}
 
 	@Test
@@ -187,7 +188,7 @@ public class ItemsTest
 	public void testRelationships()
 	{
 		Relationships relationships = item.getRelationships();
-		List<String> relationUris = relationships.getRelationships(RelationshipTypes.TYPE_DC_REPLACES);
+		List<String> relationUris = relationships.getRelationships(RelationshipType.DC_REPLACES);
 		assertEquals("http://zotero.org/users/5787467/items/GX8ZD6D9", relationUris.get(0));
 		assertEquals("http://zotero.org/users/5787467/items/NYA3Z5B9", relationUris.get(1));
 	}
@@ -196,49 +197,130 @@ public class ItemsTest
 	public void testGetChildren()
 	{
 		ItemIterator i = item.fetchChildren();
-		
+
 		assertEquals(2, i.getTotalCount());
 		assertTrue(i.hasNext());
-		
+
 		Item child = i.next();
 		assertNotNull(child);
-		assertEquals(ItemType.ATTACHMENT.getZoteroType(), child.getItemType());
-		
+		assertEquals(ItemType.ATTACHMENT, child.getItemType());
+
 		child = i.next();
 		assertNotNull(child);
-		assertEquals(ItemType.ATTACHMENT.getZoteroType(), child.getItemType());
-		
+		assertEquals(ItemType.ATTACHMENT, child.getItemType());
+
 		assertFalse(i.hasNext());
 	}
-	
+
 	@Test
 	public void testCreate()
 	{
 		service.setPutCallbackFunction(req -> {
-			testUpdate(req);
+			testCreate(req);
 			return Boolean.TRUE;
 		});
-		
+
 		Item update = library.createItem(ItemType.CASE);
-		
-		System.out.println(update.getProperties().getPropertyNames());
-		
+
 		update.getCreators().add(CreatorType.CARTOGRAPHER, "John", "Dewey");
 		update.save();
 	}
 
-	private void testUpdate(MockPutRequest request)
+	private void testCreate(MockPostRequest request)
 	{
 		Object content = request.getContent();
 		assertTrue(content instanceof ZoteroRestItem);
-		
+
 		ZoteroRestItem item = (ZoteroRestItem) content;
 		assertNull(item.getKey());
-		
+
 		ZoteroRestData data = item.getData();
 		assertTrue(data.get(ZoteroKeys.CREATORS) instanceof List);
+
+		@SuppressWarnings("unchecked")
 		List<ZoteroRestCreator> creators = (List<ZoteroRestCreator>) data.get(ZoteroKeys.CREATORS);
-		assertEquals(5, creators.size());
-		assertEquals(CreatorType.ATTORNEY_AGENT.name(), creators.get(0).getCreatorType());
+		assertEquals(1, creators.size());
+		assertEquals(CreatorType.CARTOGRAPHER.getZoteroName(), creators.get(0).getCreatorType());
+		assertEquals("John", creators.get(0).getFirstName());
+		assertEquals("Dewey", creators.get(0).getLastName());
+	}
+
+	@Test
+	public void testUpdate()
+	{
+		service.setPatchCallbackFunction(req -> {
+			testUpdate(req);
+			return Boolean.TRUE;
+		});
+
+		Item update = library.fetchItem(TEST_ITEM_B4ERDVS4);
+
+		update.getCreators().add(CreatorType.CARTOGRAPHER, "John", "Dewey");
+		update.setTitle("Changed title");
+
+		update.save();
+	}
+
+	private void testUpdate(MockPatchRequest req)
+	{
+		assertEquals(TEST_ITEM_B4ERDVS4, req.itemKey);
+		
+		Object content = req.getContent();
+		assertTrue(content instanceof ZoteroRestItem);
+
+		ZoteroRestItem item = (ZoteroRestItem) content;
+		assertEquals(TEST_ITEM_B4ERDVS4, item.getKey());
+
+		ZoteroRestData data = item.getData();
+
+		assertEquals(2, data.keySet().size());
+
+		assertTrue(data.containsKey(ZoteroKeys.CREATORS));
+		assertTrue(data.containsKey(ZoteroKeys.TITLE));
+
+		assertEquals("Changed title", data.get(ZoteroKeys.TITLE));
+
+		assertTrue(data.get(ZoteroKeys.CREATORS) instanceof List);
+
+		@SuppressWarnings("unchecked")
+		List<ZoteroRestCreator> creators = (List<ZoteroRestCreator>) data.get(ZoteroKeys.CREATORS);
+		assertEquals(6, creators.size());
+		assertEquals(CreatorType.CARTOGRAPHER.getZoteroName(), creators.get(5).getCreatorType());
+		assertEquals("John", creators.get(5).getFirstName());
+		assertEquals("Dewey", creators.get(5).getLastName());
+	}
+
+	@Test
+	public void testDelete()
+	{
+		service.setDeleteCallbackFunction(req -> {
+			testDelete(req);
+			return Boolean.TRUE;
+		});
+
+		Item delete = library.fetchItem(TEST_ITEM_B4ERDVS4);
+		delete.delete();
+		
+		delete.getAbstractNote();
+	}
+
+	private void testDelete(MockDeleteRequest req)
+	{
+		assertEquals(TEST_ITEM_B4ERDVS4, req.getUrlParams().get(ZoteroRestPaths.URL_PARAM_KEY));
+		assertEquals(0, req.getQueryParams().size());
+	}
+
+	@Test(expected = ZoteroRuntimeException.class)
+	public void testPostDeleteException()
+	{
+		service.setDeleteCallbackFunction(req -> {
+			testDelete(req);
+			return Boolean.TRUE;
+		});
+
+		Item delete = library.fetchItem(TEST_ITEM_B4ERDVS4);
+		delete.delete();
+		
+		delete.getAbstractNote();
 	}
 }

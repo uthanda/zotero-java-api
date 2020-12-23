@@ -7,12 +7,12 @@ import java.util.function.Function;
 import com.google.gson.JsonObject;
 
 import zotero.api.ZoteroAPIKey;
-import zotero.api.internal.rest.RestPutRequest;
+import zotero.api.internal.rest.RestPostRequest;
 import zotero.api.internal.rest.RestRequest;
 import zotero.api.internal.rest.RestResponse;
-import zotero.api.internal.rest.builders.PutBuilder;
+import zotero.api.internal.rest.builders.PostBuilder;
 
-public class MockPutRequest implements RestPutRequest
+public class MockPostRequest implements RestPostRequest
 {
 	private String id;
 	private boolean isUsers = false;
@@ -22,59 +22,59 @@ public class MockPutRequest implements RestPutRequest
 	public Class<?> type;
 	public Object content;
 	
-	public static class MockRequestBuilder implements PutBuilder
+	public static class MockRequestBuilder implements PostBuilder
 	{
-		private MockPutRequest request = new MockPutRequest();
+		private MockPostRequest request = new MockPostRequest();
 		
-		public MockRequestBuilder(JsonObject data, Function<MockPutRequest,Boolean> putCallback)
+		public MockRequestBuilder(JsonObject data, Function<MockPostRequest,Boolean> putCallback)
 		{
 			request.putCallback = putCallback;
 		}
 
 		@Override
-		public PutBuilder id(String id)
+		public PostBuilder id(String id)
 		{
 			request.id = id;
 			return this;
 		}
 
 		@Override
-		public PutBuilder setUsers()
+		public PostBuilder setUsers()
 		{
 			request.isUsers = true;
 			return this;
 		}
 
 		@Override
-		public PutBuilder setGroups()
+		public PostBuilder setGroups()
 		{
 			request.isUsers = false;
 			return this;
 		}
 
 		@Override
-		public PutBuilder apiKey(ZoteroAPIKey key)
+		public PostBuilder apiKey(ZoteroAPIKey key)
 		{
 			request.key = key;
 			return this;
 		}
 
 		@Override
-		public PutBuilder url(String url)
+		public PostBuilder url(String url)
 		{
 			request.url = url;
 			return this;
 		}
 
 		@Override
-		public PutBuilder urlParam(String param, String value)
+		public PostBuilder urlParam(String param, String value)
 		{
 			request.urlParams.put(param, value);
 			return this;
 		}
 
 		@Override
-		public PutBuilder type(Class<?> type)
+		public PostBuilder type(Class<?> type)
 		{
 			request.type = type;
 			return this;
@@ -86,27 +86,27 @@ public class MockPutRequest implements RestPutRequest
 		}
 
 		@Override
-		public PutBuilder applyCurrent(RestRequest<?> current)
+		public PostBuilder applyCurrent(RestRequest<?> current)
 		{
 			return this;
 		}
 
 		@Override
-		public PutBuilder content(Object content)
+		public PostBuilder content(Object content)
 		{
 			request.content = content;
 			return this;
 		}
 
 		@Override
-		public RestPutRequest build()
+		public RestPostRequest build()
 		{
 			return request;
 		}
 
 	}
 
-	private Function<MockPutRequest,Boolean> putCallback;
+	private Function<MockPostRequest,Boolean> putCallback;
 
 	@Override
 	public RestResponse<Boolean> post()

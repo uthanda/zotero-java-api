@@ -7,8 +7,10 @@ import zotero.api.ZoteroAPIKey;
 import zotero.api.constants.ItemType;
 import zotero.api.internal.rest.RestGetRequest;
 import zotero.api.internal.rest.RestResponse;
+import zotero.api.internal.rest.ZoteroRestPaths;
 import zotero.api.internal.rest.builders.GetBuilder;
-import zotero.api.internal.rest.builders.PutBuilder;
+import zotero.api.internal.rest.builders.PatchBuilder;
+import zotero.api.internal.rest.builders.PostBuilder;
 import zotero.api.internal.rest.impl.ZoteroRestGetRequest;
 import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.iterators.CollectionIterator;
@@ -37,7 +39,7 @@ public final class LibraryImpl extends Library
 		GetBuilder<ZoteroRestItem> req = ZoteroRestGetRequest.Builder.createBuilder(ZoteroRestItem.class);
 		applyBaseRequestInfo(req);
 
-		req.url(CollectionImpl.URI_COLLECTION).urlParam("key", key);
+		req.url(ZoteroRestPaths.COLLECTION).urlParam("key", key);
 
 		RestResponse<ZoteroRestItem> response = performGet(req.build());
 
@@ -66,25 +68,25 @@ public final class LibraryImpl extends Library
 	@Override
 	public ItemIterator fetchCollectionItems(String key)
 	{
-		return fetchItems(CollectionImpl.URI_COLLECTION_ITEMS, key);
+		return fetchItems(ZoteroRestPaths.COLLECTION_ITEMS, key);
 	}
 
 	@Override
 	public ItemIterator fetchCollectionItemsTop(String key)
 	{
-		return fetchItems(CollectionImpl.URI_COLLECTION_ITEMS_TOP, key);
+		return fetchItems(ZoteroRestPaths.COLLECTION_ITEMS_TOP, key);
 	}
 
 	@Override
 	public CollectionIterator fetchCollectionsAll()
 	{
-		return fetchCollections(CollectionImpl.URI_COLLECTIONS_ALL, null);
+		return fetchCollections(ZoteroRestPaths.COLLECTIONS_ALL, null);
 	}
 
 	@Override
 	public CollectionIterator fetchCollectionsTop()
 	{
-		return fetchCollections(CollectionImpl.URI_COLLECTIONS_TOP, null);
+		return fetchCollections(ZoteroRestPaths.COLLECTIONS_TOP, null);
 	}
 
 	CollectionIterator fetchCollections(String url, String key)
@@ -107,19 +109,19 @@ public final class LibraryImpl extends Library
 	@Override
 	public ItemIterator fetchItemsAll()
 	{
-		return fetchItems(ItemImpl.URI_ITEMS_ALL, null);
+		return fetchItems(ZoteroRestPaths.ITEMS_ALL, null);
 	}
 
 	@Override
 	public ItemIterator fetchItemsTop()
 	{
-		return fetchItems(ItemImpl.URI_ITEMS_TOP, null);
+		return fetchItems(ZoteroRestPaths.ITEMS_TOP, null);
 	}
 
 	@Override
 	public ItemIterator fetchItemsTrash()
 	{
-		return fetchItems(ItemImpl.URI_ITEMS_TRASH, null);
+		return fetchItems(ZoteroRestPaths.ITEMS_TRASH, null);
 	}
 
 	@Override
@@ -129,7 +131,7 @@ public final class LibraryImpl extends Library
 
 		this.applyBaseRequestInfo(builder);
 
-		builder.url(ItemImpl.URI_ITEM).urlParam("key", key);
+		builder.url(ZoteroRestPaths.ITEM).urlParam("key", key);
 
 		RestResponse<ZoteroRestItem> response = performGet(builder.build());
 
@@ -159,7 +161,7 @@ public final class LibraryImpl extends Library
 		return new ItemImpl(type, this);
 	}
 
-	public void performPut(PutBuilder builder)
+	public void performPost(PostBuilder builder)
 	{
 		RestResponse<Boolean> resp = builder.apiKey(apiKey).id(id).setUsers().build().post();
 
@@ -174,5 +176,23 @@ public final class LibraryImpl extends Library
 	public static final Library create(String userId, ZoteroAPIKey apiKey)
 	{
 		return new LibraryImpl(apiKey, userId);
+	}
+
+	public void performPatch(PatchBuilder builder)
+	{
+		RestResponse<Boolean> resp = builder.apiKey(apiKey).id(id).setUsers().build().patch();
+
+		if (resp.wasSuccessful())
+		{
+			return;
+		}
+
+		throw new RuntimeException(resp.getErrorMessage());
+	}
+
+	public void performDelete()
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

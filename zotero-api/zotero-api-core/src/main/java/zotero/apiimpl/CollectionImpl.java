@@ -3,6 +3,7 @@ package zotero.apiimpl;
 import zotero.api.Collection;
 import zotero.api.Library;
 import zotero.api.constants.ZoteroKeys;
+import zotero.api.internal.rest.ZoteroRestPaths;
 import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
@@ -10,13 +11,6 @@ import zotero.api.iterators.ItemIterator;
 @SuppressWarnings({ "squid:S2160" })
 final class CollectionImpl extends EntryImpl implements Collection
 {
-	static final String URI_COLLECTIONS_ALL = "/collections";
-	private static final String URI_COLLECTIONS_SUBCOLLECTIONS = "/collections/{key}/collections";
-	static final String URI_COLLECTIONS_TOP = "/collections/top";
-	static final String URI_COLLECTION = "/collections/{key}";
-	static final String URI_COLLECTION_ITEMS = "/collections/{key}/items";
-	static final String URI_COLLECTION_ITEMS_TOP = "/collections/{key}/items/top";
-
 	private int numItems;
 	private int numCollections;
 
@@ -56,7 +50,7 @@ final class CollectionImpl extends EntryImpl implements Collection
 	@Override
 	public CollectionIterator fetchSubCollections()
 	{
-		return ((LibraryImpl) getLibrary()).fetchCollections(URI_COLLECTIONS_SUBCOLLECTIONS, this.getKey());
+		return ((LibraryImpl) getLibrary()).fetchCollections(ZoteroRestPaths.COLLECTIONS_SUBCOLLECTIONS, this.getKey());
 	}
 
 	@Override

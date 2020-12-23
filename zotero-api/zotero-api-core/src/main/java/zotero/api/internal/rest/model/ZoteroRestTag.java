@@ -1,29 +1,18 @@
 package zotero.api.internal.rest.model;
 
-import java.math.BigDecimal;
+import java.util.Map;
 
 public class ZoteroRestTag
 {
-	private String tag = null;
-	private BigDecimal type = null;
+	private Map<String,Object> properties;
 
-	public String getTag()
+	public Map<String, Object> getProperties()
 	{
-		return tag;
+		return properties;
 	}
 
-	public void setTag(String tag)
+	public void setProperties(Map<String, Object> properties)
 	{
-		this.tag = tag;
-	}
-
-	public BigDecimal getType()
-	{
-		return type;
-	}
-
-	public void setType(BigDecimal type)
-	{
-		this.type = type;
+		this.properties = properties;
 	}
 }

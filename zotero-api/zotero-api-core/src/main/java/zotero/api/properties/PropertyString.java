@@ -1,8 +1,5 @@
 package zotero.api.properties;
 
-public interface PropertyString
+public interface PropertyString extends Property<String>
 {
-	String getValue();
-	
-	void setValue(String value);
 }

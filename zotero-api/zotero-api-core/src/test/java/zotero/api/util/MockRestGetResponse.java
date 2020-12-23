@@ -6,20 +6,17 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import zotero.api.internal.rest.RestGetRequest;
 import zotero.api.internal.rest.RestResponse;
 
-public final class MockRestResponse<T> implements RestResponse<T>
+public final class MockRestGetResponse<T> implements RestResponse<T>
 {
 	private JsonElement item;
 	private JsonObject headers;
 	private Class<?> type;
-	private JsonObject data;
 	private MockGetRequest<T> request;
 
-	public MockRestResponse(JsonObject data, JsonObject headers, JsonElement item, MockGetRequest<T> request, Class<?> type)
+	public MockRestGetResponse(JsonObject headers, JsonElement item, MockGetRequest<T> request, Class<?> type)
 	{
-		this.data = data;
 		this.item = item;
 		this.headers = headers;
 		this.type = type;

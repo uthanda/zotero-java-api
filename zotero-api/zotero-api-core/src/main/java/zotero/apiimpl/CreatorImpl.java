@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import zotero.api.Creator;
+import zotero.api.properties.*;
 import zotero.api.constants.CreatorType;
 import zotero.api.internal.rest.model.ZoteroRestCreator;
+import zotero.apiimpl.properties.*;
 
 public final class CreatorImpl extends PropertiesItemImpl implements Creator
 {
@@ -16,7 +18,24 @@ public final class CreatorImpl extends PropertiesItemImpl implements Creator
 
 	public CreatorImpl(Map<String, Object> values)
 	{
-		super(values);
+		PropertyObjectImpl<CreatorType> creatorTypeProperty = new PropertyObjectImpl<>(CREATOR_TYPE, CreatorType.class, null);
+
+		if (values.containsKey(CREATOR_TYPE))
+		{
+			creatorTypeProperty.setValue(CreatorType.fromZoteroType((String) values.get(CREATOR_TYPE)));
+		}
+
+		getProperties().putValue(LAST_NAME, (String) values.get(LAST_NAME));
+		getProperties().putValue(FIRST_NAME, (String) values.get(FIRST_NAME));
+		((PropertiesImpl) getProperties()).addProperty(creatorTypeProperty);
+	}
+
+	public CreatorImpl()
+	{
+		PropertyObjectImpl<CreatorType> creatorTypeProperty = new PropertyObjectImpl<>(CREATOR_TYPE, CreatorType.class, null);
+		getProperties().putValue(LAST_NAME, null);
+		getProperties().putValue(FIRST_NAME, null);
+		((PropertiesImpl) getProperties()).addProperty(creatorTypeProperty);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -46,10 +65,14 @@ public final class CreatorImpl extends PropertiesItemImpl implements Creator
 
 	public static ZoteroRestCreator to(Creator creator)
 	{
+		String firstName = creator.getProperties().getString(FIRST_NAME);
+		String lastName = creator.getProperties().getString(LAST_NAME);
+		CreatorType type = (CreatorType) creator.getProperties().getProperty(CREATOR_TYPE).getValue();
+		
 		ZoteroRestCreator zrc = new ZoteroRestCreator();
-		zrc.setCreatorType(creator.getProperties().getString(CREATOR_TYPE));
-		zrc.setFirstName(creator.getProperties().getString(FIRST_NAME));
-		zrc.setLastName(creator.getProperties().getString(LAST_NAME));
+		zrc.setCreatorType(type != null ? type.getZoteroName() : null);
+		zrc.setFirstName(firstName);
+		zrc.setLastName(lastName);
 
 		return zrc;
 	}
@@ -57,14 +80,14 @@ public final class CreatorImpl extends PropertiesItemImpl implements Creator
 	@Override
 	public CreatorType getType()
 	{
-		String type = getProperties().getString(CREATOR_TYPE);
-		return CreatorType.fromZoteroType(type);
+		return (CreatorType)getProperties().getProperty(CREATOR_TYPE).getValue();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setType(CreatorType type)
 	{
-		getProperties().putProperty(CREATOR_TYPE, type.name());
+		((PropertyObject<CreatorType>) getProperties().getProperty(CREATOR_TYPE)).setValue(type);
 	}
 
 	@Override
@@ -76,7 +99,7 @@ public final class CreatorImpl extends PropertiesItemImpl implements Creator
 	@Override
 	public void setFirstName(String name)
 	{
-		getProperties().putProperty(FIRST_NAME, name);
+		getProperties().putValue(FIRST_NAME, name);
 	}
 
 	@Override
@@ -88,6 +111,6 @@ public final class CreatorImpl extends PropertiesItemImpl implements Creator
 	@Override
 	public void setLastName(String name)
 	{
-		getProperties().putProperty(LAST_NAME, name);
+		getProperties().putValue(LAST_NAME, name);
 	}
 }

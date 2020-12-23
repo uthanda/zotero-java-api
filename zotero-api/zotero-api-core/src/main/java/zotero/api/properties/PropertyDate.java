@@ -2,9 +2,6 @@ package zotero.api.properties;
 
 import java.util.Date;
 
-public interface PropertyDate extends Property
+public interface PropertyDate extends Property<Date>
 {
-	Date getValue();
-	
-	void setValue(Date value);
 }

@@ -3,32 +3,19 @@ package zotero.apiimpl.properties;
 import zotero.api.constants.PropertyType;
 import zotero.api.properties.PropertyEnum;
 
-public class PropertyEnumImpl<T extends Enum<T>> extends PropertyTypedImpl<T> implements PropertyEnum<T>
+public class PropertyEnumImpl<T extends Enum<T>> extends PropertyImpl<T> implements PropertyEnum<T>
 {
-	private T value;
-	private boolean isDirty = false;
-	
+	private Class<T> type;
+
 	public PropertyEnumImpl(String key, Class<T> type, T value)
 	{
-		super(key, type, PropertyType.ENUM);
-		this.value = value;
+		super(PropertyType.ENUM, key, value);
+		this.type = type;
 	}
 
 	@Override
-	public T getValue()
+	public Class<T> getType()
 	{
-		return value;
-	}
-
-	@Override
-	public void setValue(T value)
-	{
-		this.value = value;
-		this.isDirty = true;
-	}
-
-	public final boolean isDirty()
-	{
-		return isDirty;
+		return type;
 	}
 }

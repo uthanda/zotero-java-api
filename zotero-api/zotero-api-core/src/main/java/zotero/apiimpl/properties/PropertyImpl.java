@@ -3,15 +3,18 @@ package zotero.apiimpl.properties;
 import zotero.api.constants.PropertyType;
 import zotero.api.properties.Property;
 
-public abstract class PropertyImpl implements Property
+public class PropertyImpl<T> implements Property<T>
 {
 	private final String key;
 	private final PropertyType propertyType;
+	private T value;
+	private boolean dirty;
 	
-	public PropertyImpl(String key, PropertyType propertyType)
+	public PropertyImpl(PropertyType propertyType, String key, T value)
 	{
 		this.key = key;
 		this.propertyType = propertyType;
+		this.value = value;
 	}
 
 	@Override
@@ -26,5 +29,21 @@ public abstract class PropertyImpl implements Property
 		return propertyType;
 	}
 
-	public abstract boolean isDirty();
+	public boolean isDirty()
+	{
+		return this.dirty;
+	}
+
+	@Override
+	public T getValue()
+	{
+		return value;
+	}
+
+	@Override
+	public void setValue(T value)
+	{
+		this.dirty = true;
+		this.value = value;
+	}
 }

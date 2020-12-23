@@ -13,5 +13,7 @@ public interface Properties
 
 	Date getDate(String key);
 
-	Property getProperty(String key);
+	Property<?> getProperty(String key);
+
+	void putValue(String key, String name);
 }

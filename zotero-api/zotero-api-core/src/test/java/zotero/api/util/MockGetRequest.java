@@ -61,7 +61,7 @@ public class MockGetRequest<T> implements RestGetRequest<T>
 		JsonObject headers = queryParamsObject.get("headers").getAsJsonObject();
 		JsonElement item = queryParamsObject.get("item");
 
-		return new MockRestResponse<T>(data, headers, item, this, type);
+		return new MockRestGetResponse<T>(headers, item, this, type);
 	}
 
 	private String buildQueryParams()

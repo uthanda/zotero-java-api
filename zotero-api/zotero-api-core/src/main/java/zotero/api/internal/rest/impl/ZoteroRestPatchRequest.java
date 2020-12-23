@@ -4,32 +4,33 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 import com.google.gson.Gson;
 
-import zotero.api.internal.rest.RestPutRequest;
+import zotero.api.internal.rest.RestPatchRequest;
 import zotero.api.internal.rest.RestResponse;
-import zotero.api.internal.rest.builders.PutBuilder;
+import zotero.api.internal.rest.ZoteroRestPaths;
+import zotero.api.internal.rest.builders.PatchBuilder;
 import zotero.api.internal.rest.impl.ZoteroRestResponse.ZoteroRestResponseBuilder;
 
-public class ZoteroRestPutRequest extends ZoteroRestRequest<ZoteroRestPutRequest> implements RestPutRequest
+public class ZoteroRestPatchRequest extends ZoteroRestRequest<ZoteroRestPatchRequest> implements RestPatchRequest
 {
 	private Gson gson = new Gson();
 	private CloseableHttpClient httpClient = HttpClients.createDefault();
 	private Object content;
 
 	@Override
-	public RestResponse<Boolean> post()
+	public RestResponse<Boolean> patch()
 	{
 		ZoteroRestResponseBuilder<Boolean> builder = new ZoteroRestResponse.ZoteroRestResponseBuilder<>();
 		
 		try
 		{
-			doPost(content, builder);
+			doPatch(content, builder);
 		}
 		catch (Exception e)
 		{
@@ -39,9 +40,9 @@ public class ZoteroRestPutRequest extends ZoteroRestRequest<ZoteroRestPutRequest
 		return builder.build();
 	}
 
-	private void doPost(Object object, ZoteroRestResponseBuilder<Boolean> builder) throws IOException
+	private void doPatch(Object object, ZoteroRestResponseBuilder<Boolean> builder) throws IOException
 	{
-		HttpPost post = new HttpPost(super.buildURL());
+		HttpPatch post = new HttpPatch(super.buildURL());
 		super.addHeaders(post);
 		
 		String json = gson.toJson(object);
@@ -70,33 +71,41 @@ public class ZoteroRestPutRequest extends ZoteroRestRequest<ZoteroRestPutRequest
 		}
 	}
 	
-	public static class Builder extends ZoteroRestRequest.BaseBuilder<PutBuilder> implements PutBuilder
+	public static class Builder extends ZoteroRestRequest.BaseBuilder<PatchBuilder> implements PatchBuilder
 	{
 		private Object content;
-		
+
 		private Builder()
 		{
 		}
 		
-		public PutBuilder content(Object content)
+		public PatchBuilder content(Object content)
 		{
 			this.content = content;
 			return this;
 		}
 		
-		public RestPutRequest build()
+		public RestPatchRequest build()
 		{
-			ZoteroRestPutRequest request = new ZoteroRestPutRequest();
-			request.content = content;
+			ZoteroRestPatchRequest request = new ZoteroRestPatchRequest();
 			
 			super.apply(request);
+			
+			request.content = content;
 			
 			return request;
 		}
 		
-		public static PutBuilder createBuilder()
+		public static PatchBuilder createBuilder()
 		{
 			return new Builder();
+		}
+
+		@Override
+		public PatchBuilder itemKey(String key)
+		{
+			super.urlParam(ZoteroRestPaths.URL_PARAM_KEY, key);
+			return this;
 		}
 	}
 }

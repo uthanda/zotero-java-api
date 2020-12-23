@@ -10,7 +10,7 @@ import zotero.api.properties.PropertyEnum;
 
 public class PropertyEnumTest
 {
-	private PropertyEnum<CreatorType> property = new PropertyEnumImpl<>("testProperty", CreatorType.class);
+	private PropertyEnum<CreatorType> property = new PropertyEnumImpl<>("testProperty", CreatorType.class, null);
 	
 	@Test
 	public void test()

@@ -10,150 +10,167 @@ import java.util.function.UnaryOperator;
 import zotero.api.constants.PropertyType;
 import zotero.api.properties.PropertyList;
 
-public class PropertyListImpl<T> extends PropertyTypedImpl<T> implements PropertyList<T>
+public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.ObservableList<T>> implements PropertyList<T,PropertyListImpl.ObservableList<T>>
 {
-	private List<T> value = new ObservableList<>(this);
-	private boolean isDirty = false;
+	private Class<T> type;
 
 	public PropertyListImpl(String key, Class<T> type, List<T> values)
 	{
-		super(key, type, PropertyType.LIST);
+		super(PropertyType.LIST, key, buildList(values));
+		this.type = type;
+	}
 
-		if (value != null)
+	private static <T> ObservableList<T> buildList(List<T> values)
+	{
+		if(values instanceof ObservableList)
 		{
-			value.addAll(values);
-			isDirty = false;
+			return (ObservableList<T>) values;
 		}
+		
+		ObservableList<T> list = new ObservableList<>();
+		list.addAll(values);
+		list.dirty = false;
+		
+		return list;
 	}
 
 	@Override
-	public List<T> getValue()
-	{
-		return value;
-	}
-
 	public final boolean isDirty()
 	{
-		return isDirty;
+		return ((ObservableList<T>)getValue()).dirty;
 	}
 
-	private static class ObservableList<T> extends ArrayList<T>
+	public static class ObservableList<T> extends ArrayList<T>
 	{
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 7277287177675698114L;
+		private boolean dirty;
 
-		private PropertyListImpl<T> property;
-
-		private ObservableList(PropertyListImpl<T> property)
+		public ObservableList()
 		{
-			this.property = property;
 		}
 
+		public ObservableList(Collection<T> values)
+		{
+			super.addAll(values);
+		}
+		
 		@Override
 		public void clear()
 		{
-			this.property.isDirty = true;
+			this.dirty = true;
 			super.clear();
 		}
 
 		@Override
 		public void add(int index, T element)
 		{
-			this.property.isDirty = true;
+			this.dirty = true;
 			super.add(index, element);
 		}
 
 		@Override
 		public void ensureCapacity(int minCapacity)
 		{
-			this.property.isDirty = true;
+			this.dirty = true;
 			super.ensureCapacity(minCapacity);
 		}
 
 		@Override
 		public void trimToSize()
 		{
-			this.property.isDirty = true;
+			this.dirty = true;
 			super.trimToSize();
 		}
 
 		@Override
 		public void sort(Comparator<? super T> c)
 		{
-			this.property.isDirty = true;
+			this.dirty = true;
 			super.sort(c);
 		}
 
 		@Override
 		public T set(int index, T element)
 		{
-			this.property.isDirty = true;
+			this.dirty = true;
 			return super.set(index, element);
 		}
 
 		@Override
 		public boolean retainAll(Collection<?> c)
 		{
-			this.property.isDirty = true;
+			this.dirty = true;
 			return super.retainAll(c);
 		}
 
 		@Override
 		public void replaceAll(UnaryOperator<T> operator)
 		{
-			this.property.isDirty = true;
+			this.dirty = true;
 			super.replaceAll(operator);
 		}
 
 		@Override
 		public boolean removeIf(Predicate<? super T> filter)
 		{
-			this.property.isDirty = true;
+			this.dirty = true;
 			return super.removeIf(filter);
 		}
 
 		@Override
 		public boolean removeAll(Collection<?> c)
 		{
-			this.property.isDirty = true;
+			this.dirty = true;
 			return super.removeAll(c);
 		}
 
 		@Override
 		public boolean remove(Object o)
 		{
-			this.property.isDirty = true;
+			this.dirty = true;
 			return super.remove(o);
 		}
 
 		@Override
 		public T remove(int index)
 		{
-			this.property.isDirty = true;
+			this.dirty = true;
 			return super.remove(index);
 		}
 
 		@Override
 		public boolean add(T e)
 		{
-			this.property.isDirty = true;
+			this.dirty = true;
 			return super.add(e);
 		}
 
 		@Override
 		public boolean addAll(int index, Collection<? extends T> c)
 		{
-			this.property.isDirty = true;
+			this.dirty = true;
 			return super.addAll(index, c);
 		}
 
 		@Override
 		public boolean addAll(Collection<? extends T> c)
 		{
-			this.property.isDirty = true;
+			this.dirty = true;
 			return super.addAll(c);
 		}
+
+		public boolean isDirty()
+		{
+			return dirty;
+		}
+	}
+
+	@Override
+	public Class<T> getType()
+	{
+		return type;
 	}
 }

@@ -1,6 +1,6 @@
 package zotero.api.internal.rest;
 
-public interface RestPutRequest extends RestRequest<Boolean>
+public interface RestPostRequest extends RestRequest<Boolean>
 {
 	RestResponse<Boolean> post();
 }

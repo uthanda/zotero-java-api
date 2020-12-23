@@ -15,8 +15,8 @@ import org.apache.logging.log4j.Logger;
 
 import zotero.api.Creator;
 import zotero.api.Relationships;
-import zotero.api.Tag;
-import zotero.api.collections.CreatorsList;
+import zotero.api.collections.Creators;
+import zotero.api.collections.Tags;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.internal.rest.model.ZoteroRestCreator;
@@ -28,17 +28,19 @@ import zotero.api.properties.Properties;
 import zotero.api.properties.Property;
 import zotero.api.properties.PropertyDate;
 import zotero.api.properties.PropertyInteger;
+import zotero.api.properties.PropertyList;
+import zotero.api.properties.PropertyObject;
 import zotero.api.properties.PropertyString;
 import zotero.apiimpl.CreatorImpl;
 import zotero.apiimpl.RelationshipsImpl;
-import zotero.apiimpl.TagImpl;
 import zotero.apiimpl.collections.CreatorsListImpl;
+import zotero.apiimpl.collections.TagsImpl;
 
 public final class PropertiesImpl implements Properties
 {
 	private static final Logger logger = LogManager.getLogger(PropertiesImpl.class);
 
-	private Map<String, Property> properties = new HashMap<>();
+	private Map<String, Property<?>> properties = new HashMap<>();
 
 	@Override
 	public String getString(String key)
@@ -59,22 +61,23 @@ public final class PropertiesImpl implements Properties
 	}
 
 	@Override
-	public Property getProperty(String key)
+	public Property<?> getProperty(String key)
 	{
 		return properties.get(key);
 	}
 
-	@SuppressWarnings("unchecked")
-	public static Properties from(ZoteroRestItem jsonItem)
+	public static PropertiesImpl from(ZoteroRestItem jsonItem)
 	{
 		return from(jsonItem.getData());
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Properties from(Map<String, Object> values)
+	public static PropertiesImpl from(Map<String, Object> values)
 	{
 		PropertiesImpl properties = new PropertiesImpl();
 		ZoteroSchema schema = ZoteroSchema.getCurrentSchema();
+
+		logger.debug("Starting to deserialize {}", values);
 
 		for (Map.Entry<String, Object> e : values.entrySet())
 		{
@@ -83,7 +86,7 @@ public final class PropertiesImpl implements Properties
 
 			logger.debug("Processing {} of type {} and value {}", name, value.getClass().getCanonicalName(), value);
 
-			Property property = null;
+			Property<?> property = null;
 
 			if (value instanceof List)
 			{
@@ -95,21 +98,21 @@ public final class PropertiesImpl implements Properties
 					{
 						// Convert to a list of Creators
 						List<Creator> list = listValue.stream().map(CreatorImpl::fromMap).collect(Collectors.toList());
-						property = new PropertyListImpl<Creator>(ZoteroKeys.CREATORS, Creator.class, list);
+						property = new PropertyListImpl<>(ZoteroKeys.CREATORS, Creator.class, new CreatorsListImpl(list));
 						break;
 					}
 					case ZoteroKeys.TAGS:
 					{
 						List<Map<String, Object>> jsonTags = (List<Map<String, Object>>) value;
 
-						List<Tag> tags = jsonTags.stream().map(TagImpl::fromMap).collect(Collectors.toList());
+						Tags tags = TagsImpl.from(jsonTags);
 
-						property = new PropertyListImpl<Tag>(ZoteroKeys.TAGS, Tag.class, tags);
+						property = new PropertyListImpl<>(ZoteroKeys.TAGS, String.class, tags);
 						break;
 					}
 					case ZoteroKeys.COLLECTIONS:
 					{
-						property = new PropertyListImpl<String>(ZoteroKeys.COLLECTIONS, String.class, (List<String>) listValue);
+						property = new PropertyListImpl<>(ZoteroKeys.COLLECTIONS, String.class, (List<String>) listValue);
 						break;
 					}
 					default:
@@ -125,7 +128,7 @@ public final class PropertiesImpl implements Properties
 					case ZoteroKeys.RELATIONS:
 					{
 						Relationships relationships = RelationshipsImpl.fromMap((Map<String, Object>) value);
-						property = new PropertyObjectImpl<Relationships>(ZoteroKeys.RELATIONS, Relationships.class, relationships);
+						property = new PropertyObjectImpl<>(ZoteroKeys.RELATIONS, Relationships.class, relationships);
 						break;
 					}
 					default:
@@ -136,11 +139,23 @@ public final class PropertiesImpl implements Properties
 			}
 			else if (value instanceof String && schema.getDateKeys().contains(name))
 			{
-				property = new PropertyDateImpl(name, DatatypeConverter.parseDateTime((String) value).getTime());
+				logger.debug("Attempting to deserialize '{}' as date", value);
+
+				Date dateValue = ((String) value).isEmpty() ? null : DatatypeConverter.parseDateTime((String) value).getTime();
+
+				property = new PropertyDateImpl(name, dateValue);
+			}
+			else if (ZoteroKeys.ITEM_TYPE.equals(e.getKey()))
+			{
+				property = new PropertyEnumImpl<>(e.getKey(), ItemType.class, ItemType.fromZoteroType((String) e.getValue()));
 			}
 			else if (value instanceof Double)
 			{
 				property = new PropertyIntegerImpl(name, ((Double) value).intValue());
+			}
+			else if (value instanceof Boolean)
+			{
+				property = new PropertyBooleanImpl(name, (Boolean) value);
 			}
 			else
 			{
@@ -154,53 +169,70 @@ public final class PropertiesImpl implements Properties
 
 	}
 
-	public static void gatherProperties(ZoteroRestData data, Properties properties)
+	@SuppressWarnings("unchecked")
+	public static void gatherProperties(ZoteroRestData data, Properties properties, boolean deltaMode)
 	{
 		PropertiesImpl props = (PropertiesImpl) properties;
 
-		for (Map.Entry<String, Property> e : props.properties.entrySet())
+		for (Map.Entry<String, Property<?>> e : props.properties.entrySet())
 		{
 			String key = e.getKey();
-			Property prop = e.getValue();
+			PropertyImpl<?> prop = (PropertyImpl<?>) e.getValue();
+
+			// In Delta mode, we only add the changed properties
+			if (deltaMode && !prop.isDirty())
+			{
+				continue;
+			}
 
 			switch (key)
 			{
 				case ZoteroKeys.CREATORS:
 				{
-					CreatorsList creators = (CreatorsList) value;
-					if (value == null)
+					if (prop == null)
 					{
 						continue;
 					}
 
+					Creators creators = ((PropertyList<Creator, Creators>) prop).getValue();
 					List<ZoteroRestCreator> zrcs = creators.stream().map(CreatorImpl::to).collect(Collectors.toList());
 					data.put(ZoteroKeys.CREATORS, zrcs);
 					break;
 				}
 				case ZoteroKeys.TAGS:
 				{
-					data.put(ZoteroKeys.TAGS, value);
+					Tags tags = ((PropertyList<String, Tags>) prop).getValue();
+
+					data.put(ZoteroKeys.TAGS, TagsImpl.to(tags));
 					break;
 				}
 				case ZoteroKeys.COLLECTIONS:
 				{
-					data.put(ZoteroKeys.COLLECTIONS, value);
+					List<String> collections = ((PropertyList<String, List<String>>) prop).getValue();
+
+					data.put(ZoteroKeys.COLLECTIONS, collections);
 					break;
 				}
 				case ZoteroKeys.RELATIONS:
 				{
-					data.put(ZoteroKeys.RELATIONS, value);
+					final Relationships relationships = ((PropertyObject<Relationships>) prop).getValue();
+
+					Map<String, List<String>> zrs = new HashMap<>();
+
+					relationships.getTypes().forEach(type -> zrs.put(type.getZoteroName(), relationships.getRelationships(type)));
+
+					data.put(ZoteroKeys.RELATIONS, zrs);
 					break;
 				}
 				default:
 				{
-					data.put(key, value);
+					data.put(key, prop != null ? prop.getValue() : null);
 				}
 			}
 		}
 	}
 
-	public static Properties initialize(ItemType type)
+	public static void initialize(ItemType type, PropertiesImpl properties, PropertiesImpl current)
 	{
 		ZoteroSchema schema = ZoteroSchema.getCurrentSchema();
 		ZoteroType zoteroType = null;
@@ -219,17 +251,19 @@ public final class PropertiesImpl implements Properties
 			throw new RuntimeException("Invalid type " + type.name());
 		}
 
-		PropertiesImpl properties = new PropertiesImpl();
-
 		for (String key : zoteroType.getFields().keySet())
 		{
-			properties.properties.put(key, null);
-			properties.changedValues.put(key, null);
+			Property<?> prop = current != null ? current.getProperty(key) : null;
+
+			if(prop == null) {
+				prop = new PropertyStringImpl(key, null);
+			}
+			
+			properties.properties.put(key, prop);
 		}
 
-		properties.properties.put(ZoteroKeys.CREATORS, new CreatorsListImpl());
-
-		return properties;
+		properties.properties.put(ZoteroKeys.CREATORS, new PropertyListImpl<>(ZoteroKeys.CREATORS, Creator.class, new CreatorsListImpl()));
+		properties.properties.put(ZoteroKeys.ITEM_TYPE, new PropertyEnumImpl<>(ZoteroKeys.ITEM_TYPE, ItemType.class, type));
 	}
 
 	@Override
@@ -237,7 +271,24 @@ public final class PropertiesImpl implements Properties
 	{
 		Set<String> set = new HashSet<>();
 		set.addAll(this.properties.keySet());
-		set.addAll(this.changedValues.keySet());
 		return set;
+	}
+
+	public void addProperty(Property<?> property)
+	{
+		this.properties.put(property.getKey(), property);
+	}
+
+	@Override
+	public void putValue(String key, String value)
+	{
+		if (!properties.containsKey(key))
+		{
+			properties.put(key, new PropertyStringImpl(key, value));
+		}
+		else
+		{
+			((PropertyString) properties.get(key)).setValue(value);
+		}
 	}
 }

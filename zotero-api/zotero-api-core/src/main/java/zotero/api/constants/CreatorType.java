@@ -32,7 +32,7 @@ public enum CreatorType
 	TRANSLATOR("translator"),
 	WORDS_BY("wordsBy");
 
-	private String zoteroName;
+	private final String zoteroName;
 
 	private CreatorType(String name)
 	{
@@ -49,5 +49,10 @@ public enum CreatorType
 		}
 		
 		throw new EnumConstantNotPresentException(CreatorType.class, zoteroType);
+	}
+
+	public String getZoteroName()
+	{
+		return zoteroName;
 	}
 }

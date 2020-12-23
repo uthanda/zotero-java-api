@@ -1,8 +1,5 @@
 package zotero.api.properties;
 
-public interface PropertyInteger
+public interface PropertyInteger extends Property<Integer>
 {
-	Integer getValue();
-	
-	void setValue(Integer value);
 }

@@ -13,18 +13,26 @@ import org.powermock.api.mockito.PowerMockito;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import zotero.api.internal.rest.builders.DeleteBuilder;
 import zotero.api.internal.rest.builders.GetBuilder;
-import zotero.api.internal.rest.builders.PutBuilder;
+import zotero.api.internal.rest.builders.PatchBuilder;
+import zotero.api.internal.rest.builders.PostBuilder;
+import zotero.api.internal.rest.impl.ZoteroRestDeleteRequest;
 import zotero.api.internal.rest.impl.ZoteroRestGetRequest;
-import zotero.api.internal.rest.impl.ZoteroRestPutRequest;
+import zotero.api.internal.rest.impl.ZoteroRestPatchRequest;
+import zotero.api.internal.rest.impl.ZoteroRestPostRequest;
 
 public class MockRestService
 {
+	public static final Class<?>[] REQEST_CLASSES = { ZoteroRestGetRequest.class, ZoteroRestPostRequest.Builder.class, ZoteroRestPatchRequest.class, ZoteroRestDeleteRequest.Builder.class };
+	
 	public static final String API_ID = "apiId";
 	public static final String API_KEY = "apiKey";
 
 	private static JsonObject data;
-	private Function<MockPutRequest, Boolean> putCallback;
+	private Function<MockPostRequest, Boolean> putCallback;
+	private Function<MockPatchRequest, Boolean> patchCallback;
+	private Function<MockDeleteRequest, Boolean> deleteCallback;
 
 	public void initialize() throws NoSuchMethodException, SecurityException
 	{
@@ -34,10 +42,13 @@ public class MockRestService
 		}
 
 		PowerMockito.mockStatic(ZoteroRestGetRequest.Builder.class);
-		PowerMockito.mockStatic(ZoteroRestPutRequest.Builder.class);
+		PowerMockito.mockStatic(ZoteroRestPostRequest.Builder.class);
+		PowerMockito.mockStatic(ZoteroRestPatchRequest.Builder.class);
+		PowerMockito.mockStatic(ZoteroRestDeleteRequest.Builder.class);
 
 		when(ZoteroRestGetRequest.Builder.createBuilder(any())).thenAnswer(new Answer<GetBuilder<?>>()
 		{
+			@SuppressWarnings("unchecked")
 			@Override
 			public GetBuilder<?> answer(InvocationOnMock invocation) throws Throwable
 			{
@@ -45,12 +56,12 @@ public class MockRestService
 			}
 		});
 
-		when(ZoteroRestPutRequest.Builder.createBuilder()).thenAnswer(new Answer<PutBuilder>()
+		when(ZoteroRestPostRequest.Builder.createBuilder()).thenAnswer(new Answer<PostBuilder>()
 		{
 			@Override
-			public PutBuilder answer(InvocationOnMock invocation) throws Throwable
+			public PostBuilder answer(InvocationOnMock invocation) throws Throwable
 			{
-				return new MockPutRequest.MockRequestBuilder(data, req -> {
+				return new MockPostRequest.MockRequestBuilder(data, req -> {
 					if (putCallback != null)
 					{
 						return putCallback.apply(req);
@@ -62,10 +73,56 @@ public class MockRestService
 				});
 			}
 		});
+		
+		when(ZoteroRestPatchRequest.Builder.createBuilder()).thenAnswer(new Answer<PatchBuilder>()
+		{
+			@Override
+			public PatchBuilder answer(InvocationOnMock invocation) throws Throwable
+			{
+				return new MockPatchRequest.MockPatchBuilder(data, req -> {
+					if (patchCallback != null)
+					{
+						return patchCallback.apply(req);
+					}
+					else
+					{
+						return Boolean.TRUE;
+					}
+				});
+			}
+		});
+		
+		when(ZoteroRestDeleteRequest.Builder.createBuilder()).thenAnswer(new Answer<DeleteBuilder>()
+		{
+			@Override
+			public DeleteBuilder answer(InvocationOnMock invocation) throws Throwable
+			{
+				return new MockDeleteRequest.MockRequestBuilder(req -> {
+					if (deleteCallback != null)
+					{
+						return deleteCallback.apply(req);
+					}
+					else
+					{
+						return Boolean.TRUE;
+					}
+				});
+			}
+		});
 	}
 
-	public void setPutCallbackFunction(Function<MockPutRequest, Boolean> callback)
+	public void setPutCallbackFunction(Function<MockPostRequest, Boolean> callback)
 	{
 		this.putCallback = callback;
+	}
+	
+	public void setPatchCallbackFunction(Function<MockPatchRequest, Boolean> callback)
+	{
+		this.patchCallback = callback;
+	}
+
+	public void setDeleteCallbackFunction(Function<MockDeleteRequest, Boolean> callback)
+	{
+		this.deleteCallback = callback;
 	}
 }
