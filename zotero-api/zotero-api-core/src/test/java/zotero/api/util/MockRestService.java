@@ -52,7 +52,7 @@ public class MockRestService
 			@Override
 			public GetBuilder<?> answer(InvocationOnMock invocation) throws Throwable
 			{
-				return new MockGetRequest.MockRequestBuilder<>(invocation.getArgumentAt(0, Class.class), data);
+				return new MockGetRequest.MockRequestBuilder<>(invocation.getArgument(0, Class.class), data);
 			}
 		});
 

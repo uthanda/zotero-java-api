@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -23,11 +24,21 @@ import zotero.api.util.MockPatchRequest;
 import zotero.api.util.MockPostRequest;
 import zotero.api.util.MockRestService;
 import zotero.apiimpl.rest.ZoteroRestPaths;
+import zotero.apiimpl.rest.impl.ZoteroRestDeleteRequest;
+import zotero.apiimpl.rest.impl.ZoteroRestGetRequest;
+import zotero.apiimpl.rest.impl.ZoteroRestPatchRequest;
+import zotero.apiimpl.rest.impl.ZoteroRestPostRequest;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(fullyQualifiedNames="zotero.api.internal.rest.impl.*")
+@PrepareForTest({
+	ZoteroRestGetRequest.class, ZoteroRestGetRequest.Builder.class,
+	ZoteroRestDeleteRequest.class, ZoteroRestDeleteRequest.Builder.class,
+	ZoteroRestPatchRequest.class, ZoteroRestPatchRequest.Builder.class,
+	ZoteroRestPostRequest.class, ZoteroRestPostRequest.Builder.class
+})
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*"})
 public class CollectionsTest
 {
 	private static final String KEY_SUBS = "Y82V25U2";

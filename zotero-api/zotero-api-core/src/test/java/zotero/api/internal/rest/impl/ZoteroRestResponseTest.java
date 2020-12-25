@@ -130,7 +130,7 @@ public class ZoteroRestResponseTest
 			@Override
 			public CloseableHttpResponse answer(InvocationOnMock invocation) throws Throwable
 			{
-				return buildResponse(invocation.getArgumentAt(0, HttpGet.class));
+				return buildResponse(invocation.getArgument(0, HttpGet.class));
 			}
 		});
 	
