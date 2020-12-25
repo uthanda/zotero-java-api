@@ -16,6 +16,7 @@ import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 
+import zotero.api.Library;
 import zotero.api.ZoteroAPIKey;
 import zotero.apiimpl.rest.RestRequest;
 import zotero.apiimpl.rest.builders.Builder;
@@ -23,15 +24,25 @@ import zotero.apiimpl.rest.builders.Builder;
 @SuppressWarnings("rawtypes")
 public abstract class ZoteroRestRequest
 {
-	private static final String HEADER_ZOTERO_WRITE_TOKEN = "Zotero-Write-Token";
 	public static final String ZOTERO_API_HOST = "api.zotero.org";
 	public static final String ZOTERO_API_USERS_BASE = "/users/";
 	public static final String ZOTERO_API_GROUPS_BASE = "/groups/";
 
 	public static final String ZOTERO_API_VERSION = "3";
+	
+	public static final String HEADER_ZOTERO_WRITE_TOKEN = "Zotero-Write-Token";
 	public static final String HEADER_ZOTERO_API_VERSION = "Zotero-API-Version";
 	public static final String HEADER_ZOTERO_API_KEY = "Zotero-API-Key";
 	public static final String HEADER_IF_UNMODIFIED_SINCE_VERSION = "If-Unmodified-Since-Version";
+	public static final String HEADER_USER_AGENT = "User-Agent";
+	
+	private static final String USER_AGENT = String.format("com.uthanda::zotero-api v%s (%s Java %s on %s/%s)",
+			Library.API_VERSION,
+			System.getProperty("java.vendor"),
+			System.getProperty("java.version"),
+			System.getProperty("os.name"),
+			System.getProperty("os.arch")
+			);
 
 	private String id;
 	private boolean isUser;
@@ -103,6 +114,7 @@ public abstract class ZoteroRestRequest
 	{
 		request.addHeader(ZoteroRestRequest.HEADER_ZOTERO_API_KEY, apiKey);
 		request.addHeader(ZoteroRestRequest.HEADER_ZOTERO_API_VERSION, ZoteroRestRequest.ZOTERO_API_VERSION);
+		request.addHeader(ZoteroRestRequest.HEADER_USER_AGENT, USER_AGENT);
 	}
 
 	public final Class<?> getType()

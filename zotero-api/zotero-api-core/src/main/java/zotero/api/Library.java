@@ -35,6 +35,8 @@ import zotero.apiimpl.LibraryImpl;
  */
 public abstract class Library
 {
+	public static final String API_VERSION = "0.1-SNAPSHOT";
+
 	/**
 	 * Gets the user id for the current library.
 	 * 
