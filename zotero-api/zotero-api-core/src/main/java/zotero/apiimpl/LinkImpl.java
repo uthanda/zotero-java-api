@@ -1,7 +1,7 @@
 package zotero.apiimpl;
 
 import zotero.api.Link;
-import zotero.api.internal.rest.model.ZoteroRestLink;
+import zotero.apiimpl.rest.model.ZoteroRestLink;
 
 final class LinkImpl implements Link
 {

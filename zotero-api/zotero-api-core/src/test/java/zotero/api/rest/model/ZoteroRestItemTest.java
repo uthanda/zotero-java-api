@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import com.google.gson.Gson;
 
-import zotero.api.internal.rest.model.ZoteroRestItem;
+import zotero.apiimpl.rest.model.ZoteroRestItem;
 
 public class ZoteroRestItemTest
 {

@@ -27,19 +27,19 @@ import zotero.api.constants.LinkType;
 import zotero.api.constants.RelationshipType;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.exceptions.ZoteroRuntimeException;
-import zotero.api.internal.rest.ZoteroRestPaths;
-import zotero.api.internal.rest.builders.GetBuilder;
-import zotero.api.internal.rest.builders.PostBuilder;
-import zotero.api.internal.rest.impl.ZoteroRestGetRequest;
-import zotero.api.internal.rest.impl.ZoteroRestPostRequest;
-import zotero.api.internal.rest.model.ZoteroRestData;
-import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.util.MockDeleteRequest;
 import zotero.api.util.MockPatchRequest;
 import zotero.api.util.MockPostRequest;
 import zotero.api.util.MockRestService;
+import zotero.apiimpl.rest.ZoteroRestPaths;
+import zotero.apiimpl.rest.builders.GetBuilder;
+import zotero.apiimpl.rest.builders.PostBuilder;
+import zotero.apiimpl.rest.impl.ZoteroRestGetRequest;
+import zotero.apiimpl.rest.impl.ZoteroRestPostRequest;
+import zotero.apiimpl.rest.model.ZoteroRestData;
+import zotero.apiimpl.rest.model.ZoteroRestItem;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(fullyQualifiedNames="zotero.api.internal.rest.impl.*")

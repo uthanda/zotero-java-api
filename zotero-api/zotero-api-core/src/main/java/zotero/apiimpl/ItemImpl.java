@@ -15,20 +15,20 @@ import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.exceptions.ZoteroRuntimeException;
-import zotero.api.internal.rest.ZoteroRestPaths;
-import zotero.api.internal.rest.builders.DeleteBuilder;
-import zotero.api.internal.rest.builders.PatchBuilder;
-import zotero.api.internal.rest.builders.PostBuilder;
-import zotero.api.internal.rest.impl.ZoteroRestDeleteRequest;
-import zotero.api.internal.rest.impl.ZoteroRestPatchRequest;
-import zotero.api.internal.rest.impl.ZoteroRestPostRequest;
-import zotero.api.internal.rest.model.ZoteroRestData;
-import zotero.api.internal.rest.model.ZoteroRestItem;
-import zotero.api.internal.rest.model.ZoteroRestMeta;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.properties.PropertyObject;
 import zotero.apiimpl.properties.PropertiesImpl;
+import zotero.apiimpl.rest.ZoteroRestPaths;
+import zotero.apiimpl.rest.builders.DeleteBuilder;
+import zotero.apiimpl.rest.builders.PatchBuilder;
+import zotero.apiimpl.rest.builders.PostBuilder;
+import zotero.apiimpl.rest.impl.ZoteroRestDeleteRequest;
+import zotero.apiimpl.rest.impl.ZoteroRestPatchRequest;
+import zotero.apiimpl.rest.impl.ZoteroRestPostRequest;
+import zotero.apiimpl.rest.model.ZoteroRestData;
+import zotero.apiimpl.rest.model.ZoteroRestItem;
+import zotero.apiimpl.rest.model.ZoteroRestMeta;
 
 @SuppressWarnings({ "squid:S2160" })
 public final class ItemImpl extends EntryImpl implements Item

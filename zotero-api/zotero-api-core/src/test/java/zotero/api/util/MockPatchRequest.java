@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.function.Function;
 
 import zotero.api.ZoteroAPIKey;
-import zotero.api.internal.rest.RestPatchRequest;
-import zotero.api.internal.rest.RestRequest;
-import zotero.api.internal.rest.RestResponse;
-import zotero.api.internal.rest.builders.PatchBuilder;
+import zotero.apiimpl.rest.RestPatchRequest;
+import zotero.apiimpl.rest.RestRequest;
+import zotero.apiimpl.rest.RestResponse;
+import zotero.apiimpl.rest.builders.PatchBuilder;
 
 public class MockPatchRequest implements RestPatchRequest
 {

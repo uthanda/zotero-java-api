@@ -8,10 +8,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import zotero.api.ZoteroAPIKey;
-import zotero.api.internal.rest.RestGetRequest;
-import zotero.api.internal.rest.RestRequest;
-import zotero.api.internal.rest.RestResponse;
-import zotero.api.internal.rest.builders.GetBuilder;
+import zotero.apiimpl.rest.RestGetRequest;
+import zotero.apiimpl.rest.RestRequest;
+import zotero.apiimpl.rest.RestResponse;
+import zotero.apiimpl.rest.builders.GetBuilder;
 
 public class MockGetRequest<T> implements RestGetRequest<T>
 {

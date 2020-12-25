@@ -9,9 +9,9 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import zotero.api.internal.rest.schema.ZoteroSchema;
-import zotero.api.internal.rest.schema.ZoteroSchema.ZoteroField;
-import zotero.api.internal.rest.schema.ZoteroSchema.ZoteroType;
+import zotero.apiimpl.rest.schema.ZoteroSchema;
+import zotero.apiimpl.rest.schema.ZoteroSchema.ZoteroField;
+import zotero.apiimpl.rest.schema.ZoteroSchema.ZoteroType;
 
 public class SchemaTest
 {

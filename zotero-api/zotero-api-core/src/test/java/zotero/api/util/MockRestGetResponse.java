@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import zotero.api.internal.rest.RestResponse;
+import zotero.apiimpl.rest.RestResponse;
 
 public final class MockRestGetResponse<T> implements RestResponse<T>
 {

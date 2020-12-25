@@ -17,14 +17,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import zotero.api.constants.LinkType;
 import zotero.api.constants.ZoteroKeys;
-import zotero.api.internal.rest.ZoteroRestPaths;
-import zotero.api.internal.rest.model.ZoteroRestData;
-import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.util.MockPatchRequest;
 import zotero.api.util.MockPostRequest;
 import zotero.api.util.MockRestService;
+import zotero.apiimpl.rest.ZoteroRestPaths;
+import zotero.apiimpl.rest.model.ZoteroRestData;
+import zotero.apiimpl.rest.model.ZoteroRestItem;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(fullyQualifiedNames="zotero.api.internal.rest.impl.*")

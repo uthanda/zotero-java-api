@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import zotero.api.Links;
 import zotero.api.constants.LinkType;
-import zotero.api.internal.rest.model.ZoteroRestLinks;
+import zotero.apiimpl.rest.model.ZoteroRestLinks;
 
 final class LinksImpl implements Links
 {

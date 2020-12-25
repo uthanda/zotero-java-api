@@ -7,8 +7,9 @@ import java.net.URISyntaxException;
 import org.junit.Test;
 
 import zotero.api.ZoteroAPIKey;
-import zotero.api.internal.rest.ZoteroRestPaths;
-import zotero.api.internal.rest.impl.ZoteroRestGetRequest.Builder;
+import zotero.apiimpl.rest.ZoteroRestPaths;
+import zotero.apiimpl.rest.impl.ZoteroRestGetRequest;
+import zotero.apiimpl.rest.impl.ZoteroRestGetRequest.Builder;
 
 public class ZoteroRestGetRequestTest
 {

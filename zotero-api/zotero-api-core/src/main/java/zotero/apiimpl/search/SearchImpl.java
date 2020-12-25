@@ -7,6 +7,8 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import zotero.api.constants.ItemType;
+import zotero.api.constants.Sort;
+import zotero.api.search.Direction;
 import zotero.api.search.Search;
 
 public class SearchImpl<S> implements Search<S>
@@ -15,6 +17,10 @@ public class SearchImpl<S> implements Search<S>
 	private String quickSearch;
 	private Integer since;
 	private Set<String> tags = new LinkedHashSet<>();
+	private Sort sort;
+	private Direction direction;
+	private Integer limit;
+	private Integer start;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -84,6 +90,26 @@ public class SearchImpl<S> implements Search<S>
 		{
 			params.accept("since", since.toString());
 		}
+		
+		if(sort != null)
+		{
+			params.accept("sort", sort.getZoteroName());
+		}
+		
+		if(direction != null)
+		{
+			params.accept("direction", direction.getZoteroName());
+		}
+		
+		if(limit != null)
+		{
+			params.accept("limit", limit.toString());
+		}
+		
+		if(start != null)
+		{
+			params.accept("start", start.toString());
+		}
 	}
 
 	public static String escapeItem(String item)
@@ -94,5 +120,30 @@ public class SearchImpl<S> implements Search<S>
 	public static String escapeItem(ItemType item)
 	{
 		return escapeItem(item.getZoteroName());
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public S sort(Sort sort, Direction order)
+	{
+		this.sort = sort;
+		this.direction = order;
+		return (S) this;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public S limit(Integer limit)
+	{
+		this.limit = limit;
+		return (S) this;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public S start(Integer start)
+	{
+		this.start = start;
+		return (S) this;
 	}
 }

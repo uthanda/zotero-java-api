@@ -6,10 +6,10 @@ import java.util.function.Function;
 import com.google.gson.JsonObject;
 
 import zotero.api.ZoteroAPIKey;
-import zotero.api.internal.rest.RestPostRequest;
-import zotero.api.internal.rest.RestRequest;
-import zotero.api.internal.rest.RestResponse;
-import zotero.api.internal.rest.builders.PostBuilder;
+import zotero.apiimpl.rest.RestPostRequest;
+import zotero.apiimpl.rest.RestRequest;
+import zotero.apiimpl.rest.RestResponse;
+import zotero.apiimpl.rest.builders.PostBuilder;
 
 public class MockPostRequest implements RestPostRequest
 {

@@ -18,11 +18,6 @@ import zotero.api.collections.Creators;
 import zotero.api.collections.Tags;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.ZoteroKeys;
-import zotero.api.internal.rest.model.ZoteroRestData;
-import zotero.api.internal.rest.model.ZoteroRestData.DataBuilder;
-import zotero.api.internal.rest.model.ZoteroRestItem;
-import zotero.api.internal.rest.schema.ZoteroSchema;
-import zotero.api.internal.rest.schema.ZoteroSchema.ZoteroType;
 import zotero.api.properties.Properties;
 import zotero.api.properties.Property;
 import zotero.api.properties.PropertyDate;
@@ -33,6 +28,11 @@ import zotero.api.properties.PropertyString;
 import zotero.apiimpl.RelationshipsImpl;
 import zotero.apiimpl.collections.CreatorsImpl;
 import zotero.apiimpl.collections.TagsImpl;
+import zotero.apiimpl.rest.model.ZoteroRestData;
+import zotero.apiimpl.rest.model.ZoteroRestItem;
+import zotero.apiimpl.rest.model.ZoteroRestData.DataBuilder;
+import zotero.apiimpl.rest.schema.ZoteroSchema;
+import zotero.apiimpl.rest.schema.ZoteroSchema.ZoteroType;
 
 public final class PropertiesImpl implements Properties
 {

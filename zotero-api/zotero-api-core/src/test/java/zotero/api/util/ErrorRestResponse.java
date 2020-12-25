@@ -2,7 +2,7 @@ package zotero.api.util;
 
 import java.io.IOException;
 
-import zotero.api.internal.rest.RestResponse;
+import zotero.apiimpl.rest.RestResponse;
 
 final class ErrorRestResponse<T> implements RestResponse<T>
 {

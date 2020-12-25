@@ -4,8 +4,8 @@ import zotero.api.Entry;
 import zotero.api.Library;
 import zotero.api.Links;
 import zotero.api.constants.ItemType;
-import zotero.api.internal.rest.model.ZoteroRestItem;
-import zotero.api.internal.rest.model.ZoteroRestLinks;
+import zotero.apiimpl.rest.model.ZoteroRestItem;
+import zotero.apiimpl.rest.model.ZoteroRestLinks;
 
 abstract class EntryImpl extends PropertiesItemImpl implements Entry
 {

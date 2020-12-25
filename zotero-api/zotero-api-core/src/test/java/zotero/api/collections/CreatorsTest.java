@@ -16,8 +16,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import zotero.api.internal.rest.ZoteroRestPaths;
 import zotero.apiimpl.collections.CreatorsImpl;
+import zotero.apiimpl.rest.ZoteroRestPaths;
 
 @RunWith(PowerMockRunner.class)
 public class CreatorsTest

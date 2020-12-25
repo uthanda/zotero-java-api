@@ -31,10 +31,11 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import zotero.api.ZoteroAPIKey;
-import zotero.api.internal.rest.RestResponse;
-import zotero.api.internal.rest.impl.ZoteroRestGetRequest.Builder;
-import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.util.MockRestService;
+import zotero.apiimpl.rest.RestResponse;
+import zotero.apiimpl.rest.impl.ZoteroRestGetRequest;
+import zotero.apiimpl.rest.impl.ZoteroRestGetRequest.Builder;
+import zotero.apiimpl.rest.model.ZoteroRestItem;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ ZoteroRestGetRequest.class, HttpClients.class })

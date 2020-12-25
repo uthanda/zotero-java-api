@@ -13,14 +13,14 @@ import org.powermock.api.mockito.PowerMockito;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import zotero.api.internal.rest.builders.DeleteBuilder;
-import zotero.api.internal.rest.builders.GetBuilder;
-import zotero.api.internal.rest.builders.PatchBuilder;
-import zotero.api.internal.rest.builders.PostBuilder;
-import zotero.api.internal.rest.impl.ZoteroRestDeleteRequest;
-import zotero.api.internal.rest.impl.ZoteroRestGetRequest;
-import zotero.api.internal.rest.impl.ZoteroRestPatchRequest;
-import zotero.api.internal.rest.impl.ZoteroRestPostRequest;
+import zotero.apiimpl.rest.builders.DeleteBuilder;
+import zotero.apiimpl.rest.builders.GetBuilder;
+import zotero.apiimpl.rest.builders.PatchBuilder;
+import zotero.apiimpl.rest.builders.PostBuilder;
+import zotero.apiimpl.rest.impl.ZoteroRestDeleteRequest;
+import zotero.apiimpl.rest.impl.ZoteroRestGetRequest;
+import zotero.apiimpl.rest.impl.ZoteroRestPatchRequest;
+import zotero.apiimpl.rest.impl.ZoteroRestPostRequest;
 
 public class MockRestService
 {

@@ -16,15 +16,15 @@ import zotero.api.Item;
 import zotero.api.Library;
 import zotero.api.ZoteroAPIKey;
 import zotero.api.constants.ItemType;
-import zotero.api.internal.rest.builders.GetBuilder;
-import zotero.api.internal.rest.builders.PostBuilder;
-import zotero.api.internal.rest.impl.ZoteroRestGetRequest;
-import zotero.api.internal.rest.impl.ZoteroRestPostRequest;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.search.ItemSearch;
 import zotero.api.search.QuickSearchMode;
 import zotero.api.util.MockRestService;
 import zotero.api.util.Params;
+import zotero.apiimpl.rest.builders.GetBuilder;
+import zotero.apiimpl.rest.builders.PostBuilder;
+import zotero.apiimpl.rest.impl.ZoteroRestGetRequest;
+import zotero.apiimpl.rest.impl.ZoteroRestPostRequest;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(fullyQualifiedNames="zotero.api.internal.rest.impl.*")

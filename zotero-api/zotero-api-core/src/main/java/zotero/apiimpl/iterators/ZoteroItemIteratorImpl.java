@@ -2,10 +2,10 @@ package zotero.apiimpl.iterators;
 
 import zotero.api.Item;
 import zotero.api.Library;
-import zotero.api.internal.rest.RestResponse;
-import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.iterators.ItemIterator;
 import zotero.apiimpl.ItemImpl;
+import zotero.apiimpl.rest.RestResponse;
+import zotero.apiimpl.rest.model.ZoteroRestItem;
 
 public final class ZoteroItemIteratorImpl extends ZoteroIteratorImpl<Item> implements ItemIterator
 {

@@ -4,12 +4,12 @@ import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 
 import zotero.api.Library;
-import zotero.api.internal.rest.RestResponse;
-import zotero.api.internal.rest.builders.GetBuilder;
-import zotero.api.internal.rest.impl.ZoteroRestGetRequest;
-import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.iterators.ZoteroIterator;
 import zotero.apiimpl.LibraryImpl;
+import zotero.apiimpl.rest.RestResponse;
+import zotero.apiimpl.rest.builders.GetBuilder;
+import zotero.apiimpl.rest.impl.ZoteroRestGetRequest;
+import zotero.apiimpl.rest.model.ZoteroRestItem;
 
 class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 {

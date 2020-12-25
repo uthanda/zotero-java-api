@@ -2,9 +2,9 @@ package zotero.apiimpl;
 
 import zotero.api.PropertiesItem;
 import zotero.api.constants.ItemType;
-import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.properties.Properties;
 import zotero.apiimpl.properties.PropertiesImpl;
+import zotero.apiimpl.rest.model.ZoteroRestItem;
 
 public class PropertiesItemImpl implements PropertiesItem
 {

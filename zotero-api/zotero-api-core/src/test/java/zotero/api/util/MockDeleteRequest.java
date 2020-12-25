@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.function.Function;
 
 import zotero.api.ZoteroAPIKey;
-import zotero.api.internal.rest.RestDeleteRequest;
-import zotero.api.internal.rest.RestRequest;
-import zotero.api.internal.rest.RestResponse;
-import zotero.api.internal.rest.ZoteroRestPaths;
-import zotero.api.internal.rest.builders.DeleteBuilder;
+import zotero.apiimpl.rest.RestDeleteRequest;
+import zotero.apiimpl.rest.RestRequest;
+import zotero.apiimpl.rest.RestResponse;
+import zotero.apiimpl.rest.ZoteroRestPaths;
+import zotero.apiimpl.rest.builders.DeleteBuilder;
 
 public class MockDeleteRequest implements RestDeleteRequest
 {

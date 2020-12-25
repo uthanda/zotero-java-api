@@ -8,14 +8,14 @@ import java.util.stream.Collectors;
 
 import zotero.api.Library;
 import zotero.api.constants.ItemType;
-import zotero.api.internal.rest.RestResponse;
-import zotero.api.internal.rest.builders.GetBuilder;
-import zotero.api.internal.rest.impl.ZoteroRestGetRequest;
-import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.search.ItemEndpointSearch;
 import zotero.api.search.QuickSearchMode;
 
 import zotero.apiimpl.*;
+import zotero.apiimpl.rest.RestResponse;
+import zotero.apiimpl.rest.builders.GetBuilder;
+import zotero.apiimpl.rest.impl.ZoteroRestGetRequest;
+import zotero.apiimpl.rest.model.ZoteroRestItem;
 
 public abstract class ItemEndpointSearchImpl<S,T> extends SearchImpl<ItemEndpointSearch<S,T>> implements ItemEndpointSearch<S,T>
 {
