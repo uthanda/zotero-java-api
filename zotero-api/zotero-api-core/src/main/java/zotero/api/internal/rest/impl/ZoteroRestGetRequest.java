@@ -3,14 +3,8 @@ package zotero.api.internal.rest.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.net.URISyntaxException;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -36,7 +30,6 @@ public class ZoteroRestGetRequest<T> extends ZoteroRestRequest implements RestGe
 
 	private CloseableHttpClient httpClient = HttpClients.createDefault();
 	private Integer lastVersion;
-	private Map<String, List<String>> queryParams;
 	private ZoteroRestResponseBuilder<T> builder;
 
 	private String specialUrl;
@@ -56,7 +49,7 @@ public class ZoteroRestGetRequest<T> extends ZoteroRestRequest implements RestGe
 		{
 			this.doGet();
 		}
-		catch (IOException ex)
+		catch (IOException | URISyntaxException ex)
 		{
 			builder.errorMessage(ex.getLocalizedMessage());
 		}
@@ -64,9 +57,9 @@ public class ZoteroRestGetRequest<T> extends ZoteroRestRequest implements RestGe
 		return builder.build();
 	}
 
-	private void doGet() throws IOException
+	private void doGet() throws IOException, URISyntaxException
 	{
-		HttpGet get = new HttpGet(specialUrl == null ? this.buildURL() : specialUrl);
+		HttpGet get = specialUrl == null ? new HttpGet(this.buildURL()) : new HttpGet(specialUrl);
 		super.addHeaders(get);
 
 		// Allow for rate limiting
@@ -158,46 +151,9 @@ public class ZoteroRestGetRequest<T> extends ZoteroRestRequest implements RestGe
 		}
 	}
 
-	@Override
-	public String buildQueryParams()
-	{
-		if (queryParams == null || queryParams.isEmpty())
-		{
-			return "";
-		}
-
-		StringBuilder query = new StringBuilder();
-
-		for (Map.Entry<String, List<String>> e : this.queryParams.entrySet())
-		{
-			for (String value : e.getValue())
-			{
-				if (query.length() > 0)
-				{
-					query.append('&');
-				}
-				
-				query.append(e.getKey());
-				query.append('=');
-				try
-				{
-					query.append(URLEncoder.encode(value, StandardCharsets.UTF_8.name()));
-				}
-				catch (UnsupportedEncodingException e1)
-				{
-					// Should never happen
-					e1.printStackTrace();
-				}
-			}
-		}
-
-		return query.toString();
-	}
-
 	public static class Builder<T> extends ZoteroRestRequest.BaseBuilder<GetBuilder<T>> implements GetBuilder<T>
 	{
 		private Integer lastVersion;
-		private Map<String, List<String>> queryParams;
 		private String specialUrl;
 
 		@Override
@@ -213,7 +169,6 @@ public class ZoteroRestGetRequest<T> extends ZoteroRestRequest implements RestGe
 			ZoteroRestGetRequest<T> current = (ZoteroRestGetRequest<T>) request;
 
 			lastVersion = current.lastVersion;
-			queryParams = current.queryParams;
 			specialUrl = current.specialUrl;
 
 			super.applyCurrent(current);
@@ -228,30 +183,11 @@ public class ZoteroRestGetRequest<T> extends ZoteroRestRequest implements RestGe
 		}
 
 		@Override
-		public GetBuilder<T> queryParam(String param, String value)
-		{
-			if (this.queryParams == null)
-			{
-				this.queryParams = new HashMap<>();
-			}
-
-			if (!this.queryParams.containsKey(param))
-			{
-				this.queryParams.put(param, new ArrayList<>());
-			}
-
-			this.queryParams.get(param).add(value);
-
-			return this;
-		}
-
-		@Override
 		public RestGetRequest<T> build()
 		{
 			ZoteroRestGetRequest<T> get = new ZoteroRestGetRequest<>();
 
 			get.lastVersion = lastVersion;
-			get.queryParams = queryParams;
 			get.specialUrl = specialUrl;
 
 			super.apply(get);

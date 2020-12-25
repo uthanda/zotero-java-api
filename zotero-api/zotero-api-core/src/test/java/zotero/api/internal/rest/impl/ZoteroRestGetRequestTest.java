@@ -1,26 +1,32 @@
 package zotero.api.internal.rest.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.apache.http.client.methods.HttpGet;
+import java.net.URISyntaxException;
+
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.easymock.PowerMock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({HttpGet.class, ZoteroRestGetRequest.class})
+import zotero.api.ZoteroAPIKey;
+import zotero.api.internal.rest.ZoteroRestPaths;
+import zotero.api.internal.rest.impl.ZoteroRestGetRequest.Builder;
+
 public class ZoteroRestGetRequestTest
 {
-	@Mock
-	private HttpGet get;
-	
 	@Test
-	public void test() throws Exception
+	public void testBuildUrl() throws URISyntaxException
 	{
-		PowerMock.expectNew(HttpGet.class).andReturn(get);
+		ZoteroRestGetRequest.Builder<String> builder = (Builder<String>) ZoteroRestGetRequest.Builder.createBuilder(String.class);
+		
+		ZoteroRestGetRequest<String> request = (ZoteroRestGetRequest<String>) builder
+				.setUsers()
+				.apiKey(new ZoteroAPIKey("key"))
+				.id("12345")
+				.url(ZoteroRestPaths.ITEM)
+				.urlParam("key", "theKey")
+				.queryParam("param1", "p1")
+				.queryParam("param1", "p2")
+				.build();
+		
+		assertEquals("https://api.zotero.org/users/12345/items/theKey?param1=p1&param1=p2",request.buildURL().toString());
 	}
 }

@@ -3,13 +3,18 @@ package zotero.api.internal.rest.impl;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.URIBuilder;
 
 import zotero.api.ZoteroAPIKey;
 import zotero.api.internal.rest.RestRequest;
@@ -18,8 +23,10 @@ import zotero.api.internal.rest.builders.Builder;
 @SuppressWarnings("rawtypes")
 public abstract class ZoteroRestRequest
 {
-	public static final String ZOTERO_API_USERS_BASE = "https://api.zotero.org/users/";
-	public static final String ZOTERO_API_GROUPS_BASE = "https://api.zotero.org/groups/";
+	private static final String HEADER_ZOTERO_WRITE_TOKEN = "Zotero-Write-Token";
+	public static final String ZOTERO_API_HOST = "api.zotero.org";
+	public static final String ZOTERO_API_USERS_BASE = "/users/";
+	public static final String ZOTERO_API_GROUPS_BASE = "/groups/";
 
 	public static final String ZOTERO_API_VERSION = "3";
 	public static final String HEADER_ZOTERO_API_VERSION = "Zotero-API-Version";
@@ -34,7 +41,16 @@ public abstract class ZoteroRestRequest
 	private Map<String, String> urlParams;
 	private Class<?> type;
 
-	protected String buildURL()
+	private URIBuilder builder = new URIBuilder();
+	private Map<String, List<String>> queryParams;
+
+	public ZoteroRestRequest()
+	{
+		builder.setScheme("https");
+		builder.setHost(ZOTERO_API_HOST);
+	}
+
+	public URI buildURL() throws URISyntaxException
 	{
 		if (apiUrl == null)
 		{
@@ -44,15 +60,15 @@ public abstract class ZoteroRestRequest
 		String finalUri = String.format("%s%s%s", isUser ? ZOTERO_API_USERS_BASE : ZOTERO_API_GROUPS_BASE, id, apiUrl);
 
 		finalUri = processUrlParams(finalUri);
-		finalUri = finalUri + buildQueryParams();
 
-		return finalUri;
-	}
+		builder.setPath(finalUri);
 
-	@SuppressWarnings({ "squid:S3400" })
-	public String buildQueryParams()
-	{
-		return "";
+		if (queryParams != null)
+		{
+			queryParams.forEach((param, values) -> values.forEach(value -> builder.addParameter(param, value)));
+		}
+
+		return builder.build();
 	}
 
 	private String processUrlParams(String finalUri)
@@ -79,6 +95,7 @@ public abstract class ZoteroRestRequest
 
 			finalUri = finalUri.replace(key, value);
 		}
+
 		return finalUri;
 	}
 
@@ -114,7 +131,7 @@ public abstract class ZoteroRestRequest
 
 	protected void addWriteToken(HttpRequest request)
 	{
-		request.addHeader("Zotero-Write-Token", UUID.randomUUID().toString().replace("-", ""));
+		request.addHeader(HEADER_ZOTERO_WRITE_TOKEN, UUID.randomUUID().toString().replace("-", ""));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -126,12 +143,13 @@ public abstract class ZoteroRestRequest
 		private Map<String, String> urlParams;
 		private Class<?> type;
 		private String id;
+		private Map<String, List<String>> queryParams;
 
 		@Override
 		public R id(String id)
 		{
 			this.id = id;
-			return (R)this;
+			return (R) this;
 		}
 
 		@Override
@@ -154,7 +172,7 @@ public abstract class ZoteroRestRequest
 			this.apiKey = key;
 			return (R) this;
 		}
-		
+
 		@Override
 		public R url(String url)
 		{
@@ -186,20 +204,21 @@ public abstract class ZoteroRestRequest
 		public void apply(RestRequest<?> req)
 		{
 			ZoteroRestRequest request = (ZoteroRestRequest) req;
-			
+
 			request.apiKey = apiKey.getApiKey();
 			request.isUser = isUser;
 			request.id = id;
 			request.type = type;
 			request.urlParams = urlParams;
 			request.apiUrl = apiUrl;
+			request.queryParams = queryParams;
 		}
 
 		@Override
 		public R applyCurrent(RestRequest request)
 		{
 			ZoteroRestRequest current = (ZoteroRestRequest) request;
-			
+
 			apiKey = new ZoteroAPIKey(current.apiKey);
 			isUser = current.isUser;
 			id = current.id;
@@ -207,7 +226,24 @@ public abstract class ZoteroRestRequest
 			urlParams = current.urlParams;
 			apiUrl = current.apiUrl;
 
-			return (R)this;
+			return (R) this;
+		}
+
+		public R queryParam(String param, String value)
+		{
+			if (this.queryParams == null)
+			{
+				this.queryParams = new HashMap<>();
+			}
+
+			if (!this.queryParams.containsKey(param))
+			{
+				this.queryParams.put(param, new ArrayList<>());
+			}
+
+			this.queryParams.get(param).add(value);
+
+			return (R) this;
 		}
 	}
 }

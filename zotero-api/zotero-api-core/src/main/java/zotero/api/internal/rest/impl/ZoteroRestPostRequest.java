@@ -2,6 +2,7 @@ package zotero.api.internal.rest.impl;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -39,7 +40,7 @@ public class ZoteroRestPostRequest extends ZoteroRestRequest implements RestPost
 		return builder.build();
 	}
 
-	private void doPost(Object object, ZoteroRestResponseBuilder<Boolean> builder) throws IOException
+	private void doPost(Object object, ZoteroRestResponseBuilder<Boolean> builder) throws IOException, URISyntaxException
 	{
 		HttpPost post = new HttpPost(super.buildURL());
 		super.addHeaders(post);

@@ -47,9 +47,9 @@ class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 				throw new NoSuchElementException();
 			}
 
-			GetBuilder<ZoteroRestItem[]> builder = ZoteroRestGetRequest.Builder.createBuilder(ZoteroRestItem[].class).specialUrl(nextLink);
+			GetBuilder<ZoteroRestItem[]> b = ZoteroRestGetRequest.Builder.createBuilder(ZoteroRestItem[].class).specialUrl(nextLink);
 			
-			response = ((LibraryImpl)library).performGet(builder);
+			response = ((LibraryImpl)library).performGet(b);
 			
 			page = response.getResponse();
 			index = 0;

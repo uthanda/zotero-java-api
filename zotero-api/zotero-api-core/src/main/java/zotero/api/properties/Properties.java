@@ -13,6 +13,7 @@ public interface Properties
 
 	Date getDate(String key);
 
+	@SuppressWarnings({"squid:S1452"})
 	Property<?> getProperty(String key);
 
 	void putValue(String key, String name);

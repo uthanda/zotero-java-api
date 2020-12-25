@@ -2,6 +2,7 @@ package zotero.api.internal.rest.impl;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPatch;
@@ -41,7 +42,7 @@ public class ZoteroRestPatchRequest extends ZoteroRestRequest implements RestPat
 		return builder.build();
 	}
 
-	private void doPatch(Object object, ZoteroRestResponseBuilder<Boolean> builder) throws IOException
+	private void doPatch(Object object, ZoteroRestResponseBuilder<Boolean> builder) throws IOException, URISyntaxException
 	{
 		HttpPatch post = new HttpPatch(super.buildURL());
 		super.addHeaders(post);

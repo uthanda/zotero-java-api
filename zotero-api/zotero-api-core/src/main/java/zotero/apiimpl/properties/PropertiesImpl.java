@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -31,7 +30,6 @@ import zotero.api.properties.PropertyInteger;
 import zotero.api.properties.PropertyList;
 import zotero.api.properties.PropertyObject;
 import zotero.api.properties.PropertyString;
-import zotero.apiimpl.CreatorImpl;
 import zotero.apiimpl.RelationshipsImpl;
 import zotero.apiimpl.collections.CreatorsImpl;
 import zotero.apiimpl.collections.TagsImpl;

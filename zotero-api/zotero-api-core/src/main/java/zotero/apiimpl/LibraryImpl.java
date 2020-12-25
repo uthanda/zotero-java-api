@@ -16,8 +16,12 @@ import zotero.api.internal.rest.impl.ZoteroRestGetRequest;
 import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
+import zotero.api.search.CollectionSearch;
+import zotero.api.search.ItemSearch;
 import zotero.apiimpl.iterators.CollectionIteratorImpl;
 import zotero.apiimpl.iterators.ZoteroItemIteratorImpl;
+import zotero.apiimpl.search.CollectionSearchImpl;
+import zotero.apiimpl.search.ItemSearchImpl;
 
 public final class LibraryImpl extends Library
 {
@@ -200,5 +204,17 @@ public final class LibraryImpl extends Library
 		}
 
 		throw new RuntimeException(resp.getErrorMessage());
+	}
+
+	@Override
+	public ItemSearch createItemSearch()
+	{
+		return new ItemSearchImpl(this);
+	}
+
+	@Override
+	public CollectionSearch createCollectionSearch()
+	{
+		return new CollectionSearchImpl(this);
 	}
 }

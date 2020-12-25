@@ -7,80 +7,63 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import zotero.api.constants.ItemType;
+import zotero.api.search.Search;
 
-public class SearchBuilderImpl<B>
+public class SearchImpl<S> implements Search<S>
 {
-	private Set<String> itemTypes = new LinkedHashSet<>();
 	private Set<String> itemKeys = new LinkedHashSet<>();
 	private String quickSearch;
 	private Integer since;
 	private Set<String> tags = new LinkedHashSet<>();
 
+	@Override
 	@SuppressWarnings("unchecked")
-	public B itemKey(String key)
+	public S itemKey(String key)
 	{
 		itemKeys.add(escapeItem(key));
-		return (B) this;
+		return (S) this;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
-	public B quickSearch(String search)
+	public S quickSearch(String search)
 	{
 		this.quickSearch = search;
-		return (B) this;
+		return (S) this;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
-	public B since(Integer since)
+	public S since(Integer since)
 	{
 		this.since = since;
-		return (B) this;
+		return (S) this;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
-	public B tag(String tag)
+	public S tag(String tag)
 	{
 		this.tags.add(escapeItem(tag));
-		return (B) this;
+		return (S) this;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
-	public B notTag(String tag)
+	public S notTag(String tag)
 	{
 		this.tags.add("-" + escapeItem(tag));
-		return (B) this;
+		return (S) this;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
-	public B orTags(List<String> tags)
+	public S orTags(List<String> tags)
 	{
-		String combined = tags.stream().map(SearchBuilderImpl::escapeItem).collect(Collectors.joining("||"));
+		String combined = tags.stream().map(SearchImpl::escapeItem).collect(Collectors.joining("||"));
 
 		this.tags.add(combined);
-		return (B) this;
-	}
-
-	@SuppressWarnings("unchecked")
-	public B itemType(ItemType itemType)
-	{
-		this.itemTypes.add(escapeItem(itemType));
-		return (B) this;
-	}
-
-	@SuppressWarnings("unchecked")
-	public B notItemType(ItemType itemType)
-	{
-		this.itemTypes.add("-" + escapeItem(itemType));
-		return (B) this;
-	}
-
-	@SuppressWarnings("unchecked")
-	public B orItemTypes(List<ItemType> itemTypes)
-	{
-		String combined = itemTypes.stream().map(SearchBuilderImpl::escapeItem).collect(Collectors.joining("||"));
-	
-		this.itemTypes.add(combined);
-		return (B) this;
+		return (S) this;
 	}
 
 	public void apply(BiConsumer<String, String> params)
@@ -90,7 +73,6 @@ public class SearchBuilderImpl<B>
 			params.accept("itemKey", itemKeys.stream().collect(Collectors.joining(",")));
 		}
 
-		itemTypes.forEach(type -> params.accept("itemType", type));
 		tags.forEach(tag -> params.accept("tag", tag));
 
 		if (quickSearch != null)

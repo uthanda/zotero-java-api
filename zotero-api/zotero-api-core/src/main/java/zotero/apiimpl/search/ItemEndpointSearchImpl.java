@@ -1,25 +1,29 @@
 package zotero.apiimpl.search;
 
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 import zotero.api.Library;
+import zotero.api.constants.ItemType;
 import zotero.api.internal.rest.RestResponse;
 import zotero.api.internal.rest.builders.GetBuilder;
 import zotero.api.internal.rest.impl.ZoteroRestGetRequest;
 import zotero.api.internal.rest.model.ZoteroRestItem;
-import zotero.api.iterators.ItemIterator;
+import zotero.api.search.ItemEndpointSearch;
 import zotero.api.search.QuickSearchMode;
 
 import zotero.apiimpl.*;
-import zotero.apiimpl.iterators.ZoteroItemIteratorImpl;
 
-public abstract class ItemEndpointSearchImpl extends SearchBuilderImpl<ItemEndpointSearchImpl>
+public abstract class ItemEndpointSearchImpl<S,T> extends SearchImpl<ItemEndpointSearch<S,T>> implements ItemEndpointSearch<S,T>
 {
-	private final Library library;
+	protected final Library library;
 	private final String url;
 	
-	private Boolean includeTrashed;
 	private QuickSearchMode mode;
+	private Set<String> itemTypes = new LinkedHashSet<>();
 	
 	public ItemEndpointSearchImpl(Library library, String url)
 	{
@@ -27,16 +31,12 @@ public abstract class ItemEndpointSearchImpl extends SearchBuilderImpl<ItemEndpo
 		this.url = url;
 	}
 
-	public ItemEndpointSearchImpl includeTrashed(boolean include)
-	{
-		this.includeTrashed = include;
-		return this;
-	}
-
-	public ItemEndpointSearchImpl quickSearchMode(QuickSearchMode mode)
+	@SuppressWarnings("unchecked")
+	@Override
+	public S quickSearchMode(QuickSearchMode mode)
 	{
 		this.mode = mode;
-		return this;
+		return (S) this;
 	}
 
 	@Override
@@ -44,18 +44,15 @@ public abstract class ItemEndpointSearchImpl extends SearchBuilderImpl<ItemEndpo
 	{
 		super.apply(params);
 
-		if (includeTrashed != null)
-		{
-			params.accept("includeTrashed", includeTrashed.booleanValue() ? "1" : "0");
-		}
-
+		itemTypes.forEach(type -> params.accept("itemType", type));
+		
 		if (mode != null)
 		{
 			params.accept("qmode", mode.getZoteroName());
 		}
 	}
 	
-	public ItemIterator search()
+	protected RestResponse<ZoteroRestItem[]> execute()
 	{
 		GetBuilder<ZoteroRestItem[]> builder = ZoteroRestGetRequest.Builder.createBuilder(ZoteroRestItem[].class);
 		this.apply(builder::queryParam);
@@ -63,7 +60,29 @@ public abstract class ItemEndpointSearchImpl extends SearchBuilderImpl<ItemEndpo
 		builder.url(url);
 		
 		RestResponse<ZoteroRestItem[]> response = ((LibraryImpl)library).performGet(builder);
-		
-		return new ZoteroItemIteratorImpl(response, library);
+		return response;
+	}
+
+	@SuppressWarnings("unchecked")
+	public S itemType(ItemType itemType)
+	{
+		this.itemTypes.add(escapeItem(itemType));
+		return (S) this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public S notItemType(ItemType itemType)
+	{
+		this.itemTypes.add("-" + escapeItem(itemType));
+		return (S) this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public S orItemTypes(List<ItemType> itemTypes)
+	{
+		String combined = itemTypes.stream().map(SearchImpl::escapeItem).collect(Collectors.joining("||"));
+	
+		this.itemTypes.add(combined);
+		return (S) this;
 	}
 }

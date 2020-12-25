@@ -2,8 +2,7 @@ package zotero.api.internal.rest.impl;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URISyntaxException;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -28,7 +27,6 @@ public class ZoteroRestDeleteRequest extends ZoteroRestRequest implements RestDe
 
 	private CloseableHttpClient httpClient = HttpClients.createDefault();
 	private Integer lastVersion;
-	private Map<String, String> queryParams;
 	private ZoteroRestResponseBuilder<Boolean> builder;
 
 	private ZoteroRestDeleteRequest()
@@ -46,7 +44,7 @@ public class ZoteroRestDeleteRequest extends ZoteroRestRequest implements RestDe
 		{
 			this.doDelete();
 		}
-		catch (IOException ex)
+		catch (IOException | URISyntaxException ex)
 		{
 			builder.errorMessage(ex.getLocalizedMessage());
 		}
@@ -54,7 +52,7 @@ public class ZoteroRestDeleteRequest extends ZoteroRestRequest implements RestDe
 		return builder.build();
 	}
 
-	private void doDelete() throws IOException
+	private void doDelete() throws IOException, URISyntaxException
 	{
 		HttpDelete delete = new HttpDelete(this.buildURL());
 		super.addHeaders(delete);
@@ -134,23 +132,9 @@ public class ZoteroRestDeleteRequest extends ZoteroRestRequest implements RestDe
 		}
 	}
 
-	@Override
-	public String buildQueryParams()
-	{
-		if (queryParams == null || queryParams.isEmpty())
-		{
-			return "";
-		}
-
-		// TODO manage query params
-
-		return "";
-	}
-
 	public static class Builder extends ZoteroRestRequest.BaseBuilder<DeleteBuilder> implements DeleteBuilder
 	{
 		private Integer lastVersion;
-		private Map<String, String> queryParams;
 
 		@Override
 		public Builder lastVersion(Integer lastVersion)
@@ -160,25 +144,11 @@ public class ZoteroRestDeleteRequest extends ZoteroRestRequest implements RestDe
 		}
 
 		@Override
-		public Builder queryParam(String param, String value)
-		{
-			if (this.queryParams == null)
-			{
-				this.queryParams = new HashMap<>();
-			}
-
-			this.queryParams.put(param, value);
-
-			return this;
-		}
-
-		@Override
 		public RestDeleteRequest build()
 		{
 			ZoteroRestDeleteRequest delete = new ZoteroRestDeleteRequest();
 
 			delete.lastVersion = lastVersion;
-			delete.queryParams = queryParams;
 
 			super.apply(delete);
 

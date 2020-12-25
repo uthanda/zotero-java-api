@@ -3,8 +3,6 @@ package zotero.apiimpl.search;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,7 +26,7 @@ import zotero.api.util.Params;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(fullyQualifiedNames="zotero.api.internal.rest.impl.*")
-public class ItemSearchImplTest
+public class CollectionSearchImplTest
 {
 	private static MockRestService service = new MockRestService();
 	private static Library library;
@@ -118,44 +116,5 @@ public class ItemSearchImplTest
 		Item item = iterator.next();
 		
 		assertEquals("KZT65H5M", item.getKey());
-	}
-
-	@Test
-	public void testItemType()
-	{
-		Params params = new Params();
-	
-		ItemSearchImpl search = (ItemSearchImpl) library.createItemSearch();
-		search.apply(params::addParam);
-	
-		assertEquals(0, params.size());
-	
-		search.itemType(ItemType.ARTWORK);
-		search.apply(params::addParam);
-	
-		assertEquals(1, params.size());
-		assertEquals(1, params.get("itemType").size());
-		assertEquals(ItemType.ARTWORK.getZoteroName(), params.get("itemType").get(0));
-	
-		params.clear();
-	
-		search.notItemType(ItemType.ATTACHMENT);
-		search.apply(params::addParam);
-	
-		assertEquals(1, params.size());
-		assertEquals(2, params.get("itemType").size());
-		assertEquals(ItemType.ARTWORK.getZoteroName(), params.get("itemType").get(0));
-		assertEquals("-" + ItemType.ATTACHMENT.getZoteroName(), params.get("itemType").get(1));
-	
-		params.clear();
-	
-		search.orItemTypes(Arrays.asList(new ItemType[] { ItemType.BILL, ItemType.BOOK }));
-		search.apply(params::addParam);
-	
-		assertEquals(1, params.size());
-		assertEquals(3, params.get("itemType").size());
-		assertEquals(ItemType.ARTWORK.getZoteroName(), params.get("itemType").get(0));
-		assertEquals("-" + ItemType.ATTACHMENT.getZoteroName(), params.get("itemType").get(1));
-		assertEquals(ItemType.BILL.getZoteroName() + "||" + ItemType.BOOK.getZoteroName(), params.get("itemType").get(2));
 	}
 }

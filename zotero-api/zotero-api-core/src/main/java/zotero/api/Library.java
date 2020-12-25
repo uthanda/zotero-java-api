@@ -3,6 +3,8 @@ package zotero.api;
 import zotero.api.constants.ItemType;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
+import zotero.api.search.CollectionSearch;
+import zotero.api.search.ItemSearch;
 import zotero.apiimpl.LibraryImpl;
 
 @SuppressWarnings({ "squid:S1610" })
@@ -31,6 +33,10 @@ public abstract class Library
 	public abstract ItemIterator fetchItemsTop();
 
 	public abstract ItemIterator fetchItemsTrash();
+	
+	public abstract ItemSearch createItemSearch();
+	
+	public abstract CollectionSearch createCollectionSearch();
 
 	public static final Library createLibrary(String userId, ZoteroAPIKey apiKey)
 	{
