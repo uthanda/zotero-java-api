@@ -14,7 +14,6 @@ public class ZoteroRestResponse<T> implements RestResponse<T>
 	private T response;
 	private Map<String, String> links;
 	private String errorMessage;
-	private ZoteroRestRequest<?> request;
 
 	@Override
 	public final boolean wasSuccessful()
@@ -32,30 +31,6 @@ public class ZoteroRestResponse<T> implements RestResponse<T>
 	public T getResponse()
 	{
 		return response;
-	}
-
-	@Override
-	public boolean hasNext()
-	{
-		if (links == null || !links.containsKey("next"))
-		{
-			return false;
-		}
-		return links.containsKey("next");
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public RestResponse<T> next()
-	{
-		if (request instanceof ZoteroRestGetRequest)
-		{
-			return ((ZoteroRestGetRequest<T>) request).next(links.get("next"));
-		}
-		else
-		{
-			throw new java.lang.UnsupportedOperationException("The next() method only supported for GET requests");
-		}
 	}
 
 	@Override
@@ -119,12 +94,6 @@ public class ZoteroRestResponse<T> implements RestResponse<T>
 		public ZoteroRestResponseBuilder<T> errorMessage(String errorMessage)
 		{
 			response.errorMessage = errorMessage;
-			return this;
-		}
-
-		public ZoteroRestResponseBuilder<T> request(ZoteroRestRequest<?> request)
-		{
-			response.request = request;
 			return this;
 		}
 

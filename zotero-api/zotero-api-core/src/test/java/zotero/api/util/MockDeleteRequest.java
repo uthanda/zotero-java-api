@@ -1,6 +1,5 @@
 package zotero.api.util;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -9,6 +8,7 @@ import zotero.api.ZoteroAPIKey;
 import zotero.api.internal.rest.RestDeleteRequest;
 import zotero.api.internal.rest.RestRequest;
 import zotero.api.internal.rest.RestResponse;
+import zotero.api.internal.rest.ZoteroRestPaths;
 import zotero.api.internal.rest.builders.DeleteBuilder;
 
 public class MockDeleteRequest implements RestDeleteRequest
@@ -19,13 +19,18 @@ public class MockDeleteRequest implements RestDeleteRequest
 	private Function<MockDeleteRequest, Boolean> callback;
 	private String key;
 
+	public MockBaseParams getParams()
+	{
+		return params;
+	}
+
 	public String getKey()
 	{
 		return key;
 	}
 
 	@Override
-	public RestResponse<Boolean> delete()
+	public RestResponse<Boolean> execute()
 	{
 		final Boolean success = callback.apply(this);
 		
@@ -45,18 +50,6 @@ public class MockDeleteRequest implements RestDeleteRequest
 
 			@Override
 			public Boolean getResponse()
-			{
-				return null;
-			}
-
-			@Override
-			public boolean hasNext()
-			{
-				return false;
-			}
-
-			@Override
-			public RestResponse<Boolean> next() throws IOException
 			{
 				return null;
 			}
@@ -189,6 +182,7 @@ public class MockDeleteRequest implements RestDeleteRequest
 		public DeleteBuilder itemKey(String key)
 		{
 			request.key = key;
+			request.urlParams.put(ZoteroRestPaths.URL_PARAM_KEY, key);
 			return this;
 		}
 	}

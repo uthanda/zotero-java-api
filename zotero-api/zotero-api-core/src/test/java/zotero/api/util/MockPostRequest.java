@@ -1,6 +1,5 @@
 package zotero.api.util;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -109,7 +108,7 @@ public class MockPostRequest implements RestPostRequest
 	private Function<MockPostRequest,Boolean> putCallback;
 
 	@Override
-	public RestResponse<Boolean> post()
+	public RestResponse<Boolean> execute()
 	{
 		final Boolean success = putCallback.apply(this);
 		
@@ -131,18 +130,6 @@ public class MockPostRequest implements RestPostRequest
 			public Boolean getResponse()
 			{
 				return success;
-			}
-
-			@Override
-			public boolean hasNext()
-			{
-				return false;
-			}
-
-			@Override
-			public RestResponse<Boolean> next() throws IOException
-			{
-				return null;
 			}
 
 			@Override

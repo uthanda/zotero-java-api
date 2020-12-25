@@ -4,21 +4,37 @@ import zotero.api.Collection;
 import zotero.api.Library;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.internal.rest.ZoteroRestPaths;
+import zotero.api.internal.rest.builders.DeleteBuilder;
+import zotero.api.internal.rest.builders.PatchBuilder;
+import zotero.api.internal.rest.builders.PostBuilder;
+import zotero.api.internal.rest.impl.ZoteroRestDeleteRequest;
+import zotero.api.internal.rest.impl.ZoteroRestPatchRequest;
+import zotero.api.internal.rest.impl.ZoteroRestPostRequest;
+import zotero.api.internal.rest.model.ZoteroRestData;
 import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 
 @SuppressWarnings({ "squid:S2160" })
-final class CollectionImpl extends EntryImpl implements Collection
+public final class CollectionImpl extends EntryImpl implements Collection
 {
 	private int numItems;
 	private int numCollections;
+	private ZoteroRestItem item;
 
 	private CollectionImpl(ZoteroRestItem item, Library library)
 	{
 		super(item, library);
 		this.numCollections = ((Double) item.getMeta().get("numCollections")).intValue();
 		this.numItems = ((Double) item.getMeta().get("numItems")).intValue();
+		this.item = item;
+	}
+
+	private CollectionImpl(Library library)
+	{
+		super(library);
+		this.numCollections = 0;
+		this.numItems = 0;
 	}
 
 	@Override
@@ -27,7 +43,14 @@ final class CollectionImpl extends EntryImpl implements Collection
 		return getLibrary().fetchCollectionItems(this.getKey());
 	}
 
-	static CollectionImpl fromItem(ZoteroRestItem item, Library library)
+	public static CollectionImpl create(Library library, Collection parent)
+	{
+		CollectionImpl collection = new CollectionImpl(library);
+		collection.getProperties().putValue(ZoteroKeys.PARENT_COLLECTION, parent.getKey());
+		return collection;
+	}
+
+	public static CollectionImpl fromItem(ZoteroRestItem item, Library library)
 	{
 		return new CollectionImpl(item, library);
 	}
@@ -35,11 +58,48 @@ final class CollectionImpl extends EntryImpl implements Collection
 	@Override
 	public void save()
 	{
+		if (item == null)
+		{
+			performCreate();
+		}
+		else
+		{
+			performPatch();
+		}
+	}
+
+	private void performPatch()
+	{
+		PatchBuilder builder = ZoteroRestPatchRequest.Builder.createBuilder();
+		builder.url(ZoteroRestPaths.COLLECTION).content(buildContent(true));
+		((LibraryImpl)getLibrary()).performPatch(builder);
+	}
+
+	private void performCreate()
+	{
+		PostBuilder builder = ZoteroRestPostRequest.Builder.createBuilder();
+		builder.url(ZoteroRestPaths.COLLECTIONS).content(buildContent(false));
+		((LibraryImpl)getLibrary()).performPost(builder);
+	}
+
+	private ZoteroRestItem buildContent(boolean delta)
+	{
+		ZoteroRestItem.ItemBuilder ib = new ZoteroRestItem.ItemBuilder(delta);
+		
+		ZoteroRestData.DataBuilder db = ib.dataBuilder();
+		
+		db.addProperty(getProperties().getProperty(ZoteroKeys.PARENT_COLLECTION));
+		db.addProperty(getProperties().getProperty(ZoteroKeys.NAME));
+		
+		return ib.build();
 	}
 
 	@Override
 	public void delete()
 	{
+		DeleteBuilder builder = ZoteroRestDeleteRequest.Builder.createBuilder();
+		builder.url(ZoteroRestPaths.COLLECTIONS).itemKey(this.getKey());
+		((LibraryImpl)getLibrary()).performDelete(builder);
 	}
 
 	@Override
@@ -57,6 +117,12 @@ final class CollectionImpl extends EntryImpl implements Collection
 	public String getName()
 	{
 		return getProperties().getString(ZoteroKeys.NAME);
+	}
+
+	@Override
+	public void setName(String name)
+	{
+		getProperties().putValue(ZoteroKeys.NAME, name);
 	}
 
 	@Override

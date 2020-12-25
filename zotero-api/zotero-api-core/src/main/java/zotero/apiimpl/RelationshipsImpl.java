@@ -1,6 +1,7 @@
 package zotero.apiimpl;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -60,5 +61,14 @@ public final class RelationshipsImpl implements Relationships
 		}
 		
 		return isDirty;
+	}
+
+	public static Map<String, List<String>> toRest(Relationships relationships)
+	{
+		Map<String, List<String>> zrs = new HashMap<>();
+
+		relationships.getTypes().forEach(type -> zrs.put(type.getZoteroName(), relationships.getRelationships(type)));
+
+		return zrs;
 	}
 }

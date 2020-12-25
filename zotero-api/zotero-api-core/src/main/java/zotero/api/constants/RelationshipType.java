@@ -1,7 +1,14 @@
 package zotero.api.constants;
 
-public enum RelationshipType
+/**
+ *
+ * @author stran
+ */
+public enum RelationshipType implements ZoteroEnum
 {
+	/**
+	 * 
+	 */
 	DC_REPLACES("dc:replaces");
 
 	private final String zoteroName;

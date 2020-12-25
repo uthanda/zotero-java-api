@@ -5,9 +5,10 @@ import zotero.api.Item;
 import zotero.api.Library;
 import zotero.api.ZoteroAPIKey;
 import zotero.api.constants.ItemType;
-import zotero.api.internal.rest.RestGetRequest;
 import zotero.api.internal.rest.RestResponse;
 import zotero.api.internal.rest.ZoteroRestPaths;
+import zotero.api.internal.rest.builders.Builder;
+import zotero.api.internal.rest.builders.DeleteBuilder;
 import zotero.api.internal.rest.builders.GetBuilder;
 import zotero.api.internal.rest.builders.PatchBuilder;
 import zotero.api.internal.rest.builders.PostBuilder;
@@ -15,11 +16,18 @@ import zotero.api.internal.rest.impl.ZoteroRestGetRequest;
 import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
+import zotero.apiimpl.iterators.CollectionIteratorImpl;
+import zotero.apiimpl.iterators.ZoteroItemIteratorImpl;
 
 public final class LibraryImpl extends Library
 {
 	private final ZoteroAPIKey apiKey;
 	private final String id;
+
+	public static final Library create(String userId, ZoteroAPIKey apiKey)
+	{
+		return new LibraryImpl(apiKey, userId);
+	}
 
 	LibraryImpl(ZoteroAPIKey apiKey, String id)
 	{
@@ -37,32 +45,18 @@ public final class LibraryImpl extends Library
 	public Collection fetchCollection(String key)
 	{
 		GetBuilder<ZoteroRestItem> req = ZoteroRestGetRequest.Builder.createBuilder(ZoteroRestItem.class);
-		applyBaseRequestInfo(req);
 
 		req.url(ZoteroRestPaths.COLLECTION).urlParam("key", key);
 
-		RestResponse<ZoteroRestItem> response = performGet(req.build());
+		RestResponse<ZoteroRestItem> response = performGet(req);
 
 		return CollectionImpl.fromItem(response.getResponse(), this);
 	}
 
-	private void applyBaseRequestInfo(zotero.api.internal.rest.builders.Builder<?> req)
+	@Override
+	public Collection createCollection(Collection parent)
 	{
-		req.apiKey(apiKey);
-		req.id(id);
-		req.setUsers();
-	}
-
-	private <T> RestResponse<T> performGet(RestGetRequest<T> req)
-	{
-		RestResponse<T> resp = req.get();
-
-		if (resp.wasSuccessful())
-		{
-			return resp;
-		}
-
-		throw new RuntimeException(resp.getErrorMessage());
+		return CollectionImpl.create(this, parent);
 	}
 
 	@Override
@@ -80,7 +74,7 @@ public final class LibraryImpl extends Library
 	@Override
 	public CollectionIterator fetchCollectionsAll()
 	{
-		return fetchCollections(ZoteroRestPaths.COLLECTIONS_ALL, null);
+		return fetchCollections(ZoteroRestPaths.COLLECTIONS, null);
 	}
 
 	@Override
@@ -94,14 +88,12 @@ public final class LibraryImpl extends Library
 		GetBuilder<ZoteroRestItem[]> builder = ZoteroRestGetRequest.Builder.createBuilder(ZoteroRestItem[].class);
 		builder.url(url);
 
-		this.applyBaseRequestInfo(builder);
-
 		if (key != null)
 		{
 			builder.urlParam("key", key);
 		}
 
-		RestResponse<ZoteroRestItem[]> response = performGet(builder.build());
+		RestResponse<ZoteroRestItem[]> response = performGet(builder);
 
 		return new CollectionIteratorImpl(response, this);
 	}
@@ -129,11 +121,9 @@ public final class LibraryImpl extends Library
 	{
 		GetBuilder<ZoteroRestItem> builder = ZoteroRestGetRequest.Builder.createBuilder(ZoteroRestItem.class);
 
-		this.applyBaseRequestInfo(builder);
-
 		builder.url(ZoteroRestPaths.ITEM).urlParam("key", key);
 
-		RestResponse<ZoteroRestItem> response = performGet(builder.build());
+		RestResponse<ZoteroRestItem> response = performGet(builder);
 
 		return ItemImpl.fromItem(response.getResponse(), this);
 	}
@@ -143,14 +133,12 @@ public final class LibraryImpl extends Library
 		GetBuilder<ZoteroRestItem[]> builder = ZoteroRestGetRequest.Builder.createBuilder(ZoteroRestItem[].class);
 		builder.url(url);
 
-		this.applyBaseRequestInfo(builder);
-
 		if (key != null)
 		{
 			builder.urlParam("key", key);
 		}
 
-		RestResponse<ZoteroRestItem[]> response = performGet(builder.build());
+		RestResponse<ZoteroRestItem[]> response = performGet(builder);
 
 		return new ZoteroItemIteratorImpl(response, this);
 	}
@@ -161,9 +149,21 @@ public final class LibraryImpl extends Library
 		return new ItemImpl(type, this);
 	}
 
+	public <T> RestResponse<T> performGet(GetBuilder<T> builder)
+	{
+		RestResponse<T> resp = builder.apiKey(apiKey).id(id).setUsers().build().execute();
+
+		if (resp.wasSuccessful())
+		{
+			return resp;
+		}
+
+		throw new RuntimeException(resp.getErrorMessage());
+	}
+
 	public void performPost(PostBuilder builder)
 	{
-		RestResponse<Boolean> resp = builder.apiKey(apiKey).id(id).setUsers().build().post();
+		RestResponse<Boolean> resp = applyCommon(builder).build().execute();
 
 		if (resp.wasSuccessful())
 		{
@@ -173,14 +173,14 @@ public final class LibraryImpl extends Library
 		throw new RuntimeException(resp.getErrorMessage());
 	}
 
-	public static final Library create(String userId, ZoteroAPIKey apiKey)
+	private <T extends Builder<T>> T applyCommon(T builder)
 	{
-		return new LibraryImpl(apiKey, userId);
+		return builder.apiKey(apiKey).id(id).setUsers();
 	}
 
 	public void performPatch(PatchBuilder builder)
 	{
-		RestResponse<Boolean> resp = builder.apiKey(apiKey).id(id).setUsers().build().patch();
+		RestResponse<Boolean> resp = applyCommon(builder).build().execute();
 
 		if (resp.wasSuccessful())
 		{
@@ -190,9 +190,15 @@ public final class LibraryImpl extends Library
 		throw new RuntimeException(resp.getErrorMessage());
 	}
 
-	public void performDelete()
+	public void performDelete(DeleteBuilder builder)
 	{
-		// TODO Auto-generated method stub
-		
+		RestResponse<Boolean> resp = applyCommon(builder).build().execute();
+
+		if (resp.wasSuccessful())
+		{
+			return;
+		}
+
+		throw new RuntimeException(resp.getErrorMessage());
 	}
 }

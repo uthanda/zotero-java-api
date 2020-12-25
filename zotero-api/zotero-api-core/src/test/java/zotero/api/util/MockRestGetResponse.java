@@ -1,7 +1,5 @@
 package zotero.api.util;
 
-import java.io.IOException;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -13,14 +11,12 @@ public final class MockRestGetResponse<T> implements RestResponse<T>
 	private JsonElement item;
 	private JsonObject headers;
 	private Class<?> type;
-	private MockGetRequest<T> request;
 
-	public MockRestGetResponse(JsonObject headers, JsonElement item, MockGetRequest<T> request, Class<?> type)
+	public MockRestGetResponse(JsonObject headers, JsonElement item, Class<?> type)
 	{
 		this.item = item;
 		this.headers = headers;
 		this.type = type;
-		this.request = request;
 	}
 
 	@Override
@@ -43,21 +39,9 @@ public final class MockRestGetResponse<T> implements RestResponse<T>
 	}
 
 	@Override
-	public boolean hasNext()
-	{
-		return headers.has("next");
-	}
-
-	@Override
-	public RestResponse<T> next() throws IOException
-	{
-		return request.next(headers.get("next").getAsString());
-	}
-
-	@Override
 	public String getLink(String type)
 	{
-		return headers.get(type).getAsString();
+		return headers.has(type) ? headers.get(type).getAsString() : null;
 	}
 
 	@Override

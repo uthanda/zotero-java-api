@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -22,7 +23,7 @@ import zotero.api.collections.Creators;
 import zotero.api.collections.Tags;
 import zotero.api.constants.CreatorType;
 import zotero.api.constants.ItemType;
-import zotero.api.constants.LinkTypes;
+import zotero.api.constants.LinkType;
 import zotero.api.constants.RelationshipType;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.exceptions.ZoteroRuntimeException;
@@ -31,7 +32,6 @@ import zotero.api.internal.rest.builders.GetBuilder;
 import zotero.api.internal.rest.builders.PostBuilder;
 import zotero.api.internal.rest.impl.ZoteroRestGetRequest;
 import zotero.api.internal.rest.impl.ZoteroRestPostRequest;
-import zotero.api.internal.rest.model.ZoteroRestCreator;
 import zotero.api.internal.rest.model.ZoteroRestData;
 import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.iterators.CollectionIterator;
@@ -117,8 +117,8 @@ public class ItemsTest
 	@Test
 	public void testLinks()
 	{
-		assertTrue(item.getLinks().has(LinkTypes.TYPE_SELF));
-		assertTrue(item.getLinks().has(LinkTypes.TYPE_ALTERNATE));
+		assertTrue(item.getLinks().has(LinkType.SELF));
+		assertTrue(item.getLinks().has(LinkType.ALTERNATE));
 	}
 
 	@Test
@@ -215,7 +215,7 @@ public class ItemsTest
 	@Test
 	public void testCreate()
 	{
-		service.setPutCallbackFunction(req -> {
+		service.setPostCallbackFunction(req -> {
 			testCreate(req);
 			return Boolean.TRUE;
 		});
@@ -231,6 +231,8 @@ public class ItemsTest
 		Object content = request.getContent();
 		assertTrue(content instanceof ZoteroRestItem);
 
+		assertEquals(ZoteroRestPaths.ITEMS, request.getUrl());
+		
 		ZoteroRestItem item = (ZoteroRestItem) content;
 		assertNull(item.getKey());
 
@@ -238,11 +240,12 @@ public class ItemsTest
 		assertTrue(data.get(ZoteroKeys.CREATORS) instanceof List);
 
 		@SuppressWarnings("unchecked")
-		List<ZoteroRestCreator> creators = (List<ZoteroRestCreator>) data.get(ZoteroKeys.CREATORS);
+		List<Map<String,String>> creators = (List<Map<String,String>>) data.get(ZoteroKeys.CREATORS);
 		assertEquals(1, creators.size());
-		assertEquals(CreatorType.CARTOGRAPHER.getZoteroName(), creators.get(0).getCreatorType());
-		assertEquals("John", creators.get(0).getFirstName());
-		assertEquals("Dewey", creators.get(0).getLastName());
+		Map<String, String> creator = creators.get(0);
+		assertEquals(CreatorType.CARTOGRAPHER.getZoteroName(), creator.get(ZoteroKeys.CREATOR_TYPE));
+		assertEquals("John", creator.get(ZoteroKeys.FIRST_NAME));
+		assertEquals("Dewey", creator.get(ZoteroKeys.LAST_NAME));
 	}
 
 	@Test
@@ -264,7 +267,8 @@ public class ItemsTest
 	private void testUpdate(MockPatchRequest req)
 	{
 		assertEquals(TEST_ITEM_B4ERDVS4, req.itemKey);
-		
+		assertEquals(ZoteroRestPaths.ITEM, req.getUrl());
+
 		Object content = req.getContent();
 		assertTrue(content instanceof ZoteroRestItem);
 
@@ -283,11 +287,12 @@ public class ItemsTest
 		assertTrue(data.get(ZoteroKeys.CREATORS) instanceof List);
 
 		@SuppressWarnings("unchecked")
-		List<ZoteroRestCreator> creators = (List<ZoteroRestCreator>) data.get(ZoteroKeys.CREATORS);
+		List<Map<String,String>> creators = (List<Map<String,String>>) data.get(ZoteroKeys.CREATORS);
 		assertEquals(6, creators.size());
-		assertEquals(CreatorType.CARTOGRAPHER.getZoteroName(), creators.get(5).getCreatorType());
-		assertEquals("John", creators.get(5).getFirstName());
-		assertEquals("Dewey", creators.get(5).getLastName());
+		Map<String, String> creator = creators.get(5);
+		assertEquals(CreatorType.CARTOGRAPHER.getZoteroName(), creator.get(ZoteroKeys.CREATOR_TYPE));
+		assertEquals("John", creator.get(ZoteroKeys.FIRST_NAME));
+		assertEquals("Dewey", creator.get(ZoteroKeys.LAST_NAME));
 	}
 
 	@Test
@@ -300,13 +305,12 @@ public class ItemsTest
 
 		Item delete = library.fetchItem(TEST_ITEM_B4ERDVS4);
 		delete.delete();
-		
-		delete.getAbstractNote();
 	}
 
 	private void testDelete(MockDeleteRequest req)
 	{
-		assertEquals(TEST_ITEM_B4ERDVS4, req.getUrlParams().get(ZoteroRestPaths.URL_PARAM_KEY));
+		assertEquals(TEST_ITEM_B4ERDVS4, req.getKey());
+		assertEquals(ZoteroRestPaths.ITEM, req.getParams().url);
 		assertEquals(0, req.getQueryParams().size());
 	}
 

@@ -16,14 +16,14 @@ import zotero.api.internal.rest.RestResponse;
 import zotero.api.internal.rest.builders.PostBuilder;
 import zotero.api.internal.rest.impl.ZoteroRestResponse.ZoteroRestResponseBuilder;
 
-public class ZoteroRestPostRequest extends ZoteroRestRequest<ZoteroRestPostRequest> implements RestPostRequest
+public class ZoteroRestPostRequest extends ZoteroRestRequest implements RestPostRequest
 {
 	private Gson gson = new Gson();
 	private CloseableHttpClient httpClient = HttpClients.createDefault();
 	private Object content;
 
 	@Override
-	public RestResponse<Boolean> post()
+	public RestResponse<Boolean> execute()
 	{
 		ZoteroRestResponseBuilder<Boolean> builder = new ZoteroRestResponse.ZoteroRestResponseBuilder<>();
 		
@@ -43,6 +43,8 @@ public class ZoteroRestPostRequest extends ZoteroRestRequest<ZoteroRestPostReque
 	{
 		HttpPost post = new HttpPost(super.buildURL());
 		super.addHeaders(post);
+		
+		super.addWriteToken(post);
 		
 		String json = gson.toJson(object);
 		

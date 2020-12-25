@@ -2,6 +2,7 @@ package zotero.api;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -14,15 +15,23 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import zotero.api.constants.LinkTypes;
+import zotero.api.constants.LinkType;
+import zotero.api.constants.ZoteroKeys;
+import zotero.api.internal.rest.ZoteroRestPaths;
+import zotero.api.internal.rest.model.ZoteroRestData;
+import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
+import zotero.api.util.MockPatchRequest;
+import zotero.api.util.MockPostRequest;
 import zotero.api.util.MockRestService;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(fullyQualifiedNames="zotero.api.internal.rest.impl.*")
 public class CollectionsTest
 {
+	private static final String KEY_SUBS = "Y82V25U2";
+	private static final String KEY_NO_SUBS = "FJ3SUIFZ";
 	private static MockRestService service = new MockRestService();
 	private static Library library;
 	private static Collection collectionNoSubCollections;
@@ -34,8 +43,8 @@ public class CollectionsTest
 		// Initialize the mock service for the static setup
 		service.initialize();
 		library = Library.createLibrary(MockRestService.API_ID, new ZoteroAPIKey(MockRestService.API_KEY));
-		collectionNoSubCollections = library.fetchCollection("FJ3SUIFZ");
-		collectionSubCollections = library.fetchCollection("Y82V25U2");
+		collectionNoSubCollections = library.fetchCollection(KEY_NO_SUBS);
+		collectionSubCollections = library.fetchCollection(KEY_SUBS);
 	}
 
 	@Before
@@ -48,16 +57,16 @@ public class CollectionsTest
 	@Test
 	public void testDeserialize()
 	{
-		assertEquals("FJ3SUIFZ", collectionNoSubCollections.getKey());
-		assertTrue(collectionNoSubCollections.getLinks().has(LinkTypes.TYPE_SELF));
-		assertEquals("https://api.zotero.org/users/5787467/collections/FJ3SUIFZ", collectionNoSubCollections.getLinks().get(LinkTypes.TYPE_SELF).getUri());
-		assertEquals("application/json", collectionNoSubCollections.getLinks().get(LinkTypes.TYPE_SELF).getType());
-		assertTrue(collectionNoSubCollections.getLinks().has(LinkTypes.TYPE_ALTERNATE));
-		assertEquals("https://www.zotero.org/uthanda/collections/FJ3SUIFZ", collectionNoSubCollections.getLinks().get(LinkTypes.TYPE_ALTERNATE).getUri());
-		assertEquals("text/html", collectionNoSubCollections.getLinks().get(LinkTypes.TYPE_ALTERNATE).getType());
-		assertTrue(collectionNoSubCollections.getLinks().has(LinkTypes.TYPE_UP));
-		assertEquals("https://api.zotero.org/users/5787467/collections/9DXQSYMF", collectionNoSubCollections.getLinks().get(LinkTypes.TYPE_UP).getUri());
-		assertEquals("application/json", collectionNoSubCollections.getLinks().get(LinkTypes.TYPE_UP).getType());
+		assertEquals(KEY_NO_SUBS, collectionNoSubCollections.getKey());
+		assertTrue(collectionNoSubCollections.getLinks().has(LinkType.SELF));
+		assertEquals("https://api.zotero.org/users/5787467/collections/FJ3SUIFZ", collectionNoSubCollections.getLinks().get(LinkType.SELF).getUri());
+		assertEquals("application/json", collectionNoSubCollections.getLinks().get(LinkType.SELF).getType());
+		assertTrue(collectionNoSubCollections.getLinks().has(LinkType.ALTERNATE));
+		assertEquals("https://www.zotero.org/uthanda/collections/FJ3SUIFZ", collectionNoSubCollections.getLinks().get(LinkType.ALTERNATE).getUri());
+		assertEquals("text/html", collectionNoSubCollections.getLinks().get(LinkType.ALTERNATE).getType());
+		assertTrue(collectionNoSubCollections.getLinks().has(LinkType.UP));
+		assertEquals("https://api.zotero.org/users/5787467/collections/9DXQSYMF", collectionNoSubCollections.getLinks().get(LinkType.UP).getUri());
+		assertEquals("application/json", collectionNoSubCollections.getLinks().get(LinkType.UP).getType());
 		assertEquals(0, collectionNoSubCollections.getNumberOfCollections());
 		assertEquals(3, collectionNoSubCollections.getNumberOfItems());
 		assertEquals("Useful", collectionNoSubCollections.getName());
@@ -145,5 +154,62 @@ public class CollectionsTest
 		{
 
 		}
+	}
+	
+	@Test
+	public void testCreateCollection()
+	{
+		service.setPostCallbackFunction(req ->{
+			testPost(req);
+			return Boolean.TRUE;
+		});
+		
+		Collection child = library.createCollection(collectionNoSubCollections);
+		child.setName("New collection");
+		child.save();
+	}
+
+	private void testPost(MockPostRequest req)
+	{
+		assertEquals(ZoteroRestPaths.COLLECTIONS, req.getUrl());
+		
+		assertNotNull(req.getContent());
+		
+		ZoteroRestItem item = (ZoteroRestItem) req.getContent();
+		assertEquals(null, item.getKey());
+		assertNotNull(item.getData());
+		
+		ZoteroRestData data = item.getData();
+		assertEquals(2, data.size());
+		assertEquals("New collection", data.get(ZoteroKeys.NAME));		
+		assertEquals(KEY_NO_SUBS, data.get(ZoteroKeys.PARENT_COLLECTION));		
+	}
+	
+	@Test
+	public void testUpdateCollection()
+	{
+		service.setPatchCallbackFunction(req ->{
+			testPatch(req);
+			return Boolean.TRUE;
+		});
+		
+		Collection parent = library.fetchCollection(KEY_SUBS);
+		parent.setName("Changed name");
+		parent.save();
+	}
+	
+	private void testPatch(MockPatchRequest req)
+	{
+		assertEquals(ZoteroRestPaths.COLLECTION, req.getUrl());
+		
+		assertNotNull(req.getContent());
+		
+		ZoteroRestItem item = (ZoteroRestItem) req.getContent();
+		assertEquals(null, item.getKey());
+		assertNotNull(item.getData());
+		
+		ZoteroRestData data = item.getData();
+		assertEquals(1, data.size());
+		assertEquals("Changed name", data.get(ZoteroKeys.NAME));		
 	}
 }

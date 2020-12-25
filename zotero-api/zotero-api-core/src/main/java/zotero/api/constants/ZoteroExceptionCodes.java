@@ -1,9 +1,17 @@
 package zotero.api.constants;
 
+/**
+ *
+ * @author stran
+ */
 public final class ZoteroExceptionCodes
 {
 	private ZoteroExceptionCodes() {}
 	
+	/**
+	 *
+	 * @author stran
+	 */
 	public static final class Data
 	{
 		private Data() {}

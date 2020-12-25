@@ -17,12 +17,18 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 
 	private int version;
 
+	protected EntryImpl(Library library)
+	{
+		super();
+		this.library = library;
+	}
+
 	protected EntryImpl(ItemType type, Library library)
 	{
 		super(type);
 		this.library = library;
 	}
-	
+
 	EntryImpl(ZoteroRestItem item, Library library)
 	{
 		super(item);

@@ -30,7 +30,7 @@ public class MockRestService
 	public static final String API_KEY = "apiKey";
 
 	private static JsonObject data;
-	private Function<MockPostRequest, Boolean> putCallback;
+	private Function<MockPostRequest, Boolean> postCallback;
 	private Function<MockPatchRequest, Boolean> patchCallback;
 	private Function<MockDeleteRequest, Boolean> deleteCallback;
 
@@ -62,9 +62,9 @@ public class MockRestService
 			public PostBuilder answer(InvocationOnMock invocation) throws Throwable
 			{
 				return new MockPostRequest.MockRequestBuilder(data, req -> {
-					if (putCallback != null)
+					if (postCallback != null)
 					{
-						return putCallback.apply(req);
+						return postCallback.apply(req);
 					}
 					else
 					{
@@ -111,9 +111,9 @@ public class MockRestService
 		});
 	}
 
-	public void setPutCallbackFunction(Function<MockPostRequest, Boolean> callback)
+	public void setPostCallbackFunction(Function<MockPostRequest, Boolean> callback)
 	{
-		this.putCallback = callback;
+		this.postCallback = callback;
 	}
 	
 	public void setPatchCallbackFunction(Function<MockPatchRequest, Boolean> callback)

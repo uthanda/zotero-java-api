@@ -1,4 +1,63 @@
 {
+	"/items":{
+		"<empty>":{
+			"/includeTrashed=0/itemType=artwork/itemType=book":{
+				"headers":{
+					"totalResults": 1
+				},
+				"item": [{
+					"key": "KZT65H5M",
+					"version": 2902,
+					"library": {
+						"type": "user",
+						"id": 5787467,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/5787467/items/KZT65H5M",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/items/KZT65H5M",
+							"type": "text/html"
+						},
+						"up": {
+							"href": "https://api.zotero.org/users/5787467/items/B4ERDVS4",
+							"type": "application/json"
+						}
+					},
+					"meta": {
+						},
+					"data": {
+						"key": "KZT65H5M",
+						"version": 2902,
+						"parentItem": "B4ERDVS4",
+						"itemType": "attachment",
+						"linkMode": "linked_file",
+						"title": "2019 Toward a methodology for case modeling.pdf",
+						"accessDate": "",
+						"url": "",
+						"note": "",
+						"contentType": "application/pdf",
+						"charset": "",
+						"path": "attachments:2019/2019 Toward a methodology for case modeling2.pdf",
+						"tags": [],
+						"relations": {
+							},
+						"dateAdded": "2020-12-10T06:27:05Z",
+						"dateModified": "2020-12-10T06:27:07Z"
+					}
+				}]
+			}
+		}
+	},
 	"/items/{key}/children": {
 		"/key=B4ERDVS4": {
 			"<empty>": {

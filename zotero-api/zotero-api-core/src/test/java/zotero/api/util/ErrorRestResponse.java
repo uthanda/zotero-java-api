@@ -32,18 +32,6 @@ final class ErrorRestResponse<T> implements RestResponse<T>
 	}
 
 	@Override
-	public boolean hasNext()
-	{
-		return false;
-	}
-
-	@Override
-	public RestResponse<T> next() throws IOException
-	{
-		return null;
-	}
-
-	@Override
 	public String getLink(String type)
 	{
 		return null;

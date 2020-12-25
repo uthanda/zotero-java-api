@@ -9,6 +9,8 @@ import zotero.apiimpl.LibraryImpl;
 public abstract class Library
 {
 	public abstract String getUserId();
+	
+	public abstract Collection createCollection(Collection parent);
 
 	public abstract Collection fetchCollection(String key);
 

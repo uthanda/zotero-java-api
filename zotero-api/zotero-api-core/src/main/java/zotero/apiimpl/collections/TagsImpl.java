@@ -24,7 +24,7 @@ public final class TagsImpl extends PropertyListImpl.ObservableList<String> impl
 		super(values);
 	}
 
-	public static List<Map<String,String>> to(Tags tags)
+	public static List<Map<String,String>> toRest(Tags tags)
 	{
 		TagsImpl t = (TagsImpl) tags;
 

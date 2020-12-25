@@ -17,14 +17,15 @@ import zotero.api.internal.rest.ZoteroRestPaths;
 import zotero.api.internal.rest.builders.PatchBuilder;
 import zotero.api.internal.rest.impl.ZoteroRestResponse.ZoteroRestResponseBuilder;
 
-public class ZoteroRestPatchRequest extends ZoteroRestRequest<ZoteroRestPatchRequest> implements RestPatchRequest
+public class ZoteroRestPatchRequest extends ZoteroRestRequest implements RestPatchRequest
 {
 	private Gson gson = new Gson();
 	private CloseableHttpClient httpClient = HttpClients.createDefault();
 	private Object content;
+	private Integer versionNumber;
 
 	@Override
-	public RestResponse<Boolean> patch()
+	public RestResponse<Boolean> execute()
 	{
 		ZoteroRestResponseBuilder<Boolean> builder = new ZoteroRestResponse.ZoteroRestResponseBuilder<>();
 		
@@ -44,6 +45,12 @@ public class ZoteroRestPatchRequest extends ZoteroRestRequest<ZoteroRestPatchReq
 	{
 		HttpPatch post = new HttpPatch(super.buildURL());
 		super.addHeaders(post);
+		
+		if(versionNumber != null) {
+			post.addHeader(HEADER_IF_UNMODIFIED_SINCE_VERSION, versionNumber.toString());
+		} else {
+			addWriteToken(post);
+		}
 		
 		String json = gson.toJson(object);
 		
@@ -74,6 +81,7 @@ public class ZoteroRestPatchRequest extends ZoteroRestRequest<ZoteroRestPatchReq
 	public static class Builder extends ZoteroRestRequest.BaseBuilder<PatchBuilder> implements PatchBuilder
 	{
 		private Object content;
+		private Integer versionNumber;
 
 		private Builder()
 		{
@@ -92,6 +100,7 @@ public class ZoteroRestPatchRequest extends ZoteroRestRequest<ZoteroRestPatchReq
 			super.apply(request);
 			
 			request.content = content;
+			request.versionNumber = versionNumber;
 			
 			return request;
 		}
@@ -105,6 +114,13 @@ public class ZoteroRestPatchRequest extends ZoteroRestRequest<ZoteroRestPatchReq
 		public PatchBuilder itemKey(String key)
 		{
 			super.urlParam(ZoteroRestPaths.URL_PARAM_KEY, key);
+			return this;
+		}
+
+		@Override
+		public PatchBuilder versionNumber(Integer versionNumber)
+		{
+			this.versionNumber = versionNumber;
 			return this;
 		}
 	}

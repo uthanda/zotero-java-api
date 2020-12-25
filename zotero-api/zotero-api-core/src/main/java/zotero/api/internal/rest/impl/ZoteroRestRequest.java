@@ -5,8 +5,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.HttpRequestBase;
 
 import zotero.api.ZoteroAPIKey;
@@ -14,7 +16,7 @@ import zotero.api.internal.rest.RestRequest;
 import zotero.api.internal.rest.builders.Builder;
 
 @SuppressWarnings("rawtypes")
-public abstract class ZoteroRestRequest<R extends ZoteroRestRequest>
+public abstract class ZoteroRestRequest
 {
 	public static final String ZOTERO_API_USERS_BASE = "https://api.zotero.org/users/";
 	public static final String ZOTERO_API_GROUPS_BASE = "https://api.zotero.org/groups/";
@@ -22,6 +24,7 @@ public abstract class ZoteroRestRequest<R extends ZoteroRestRequest>
 	public static final String ZOTERO_API_VERSION = "3";
 	public static final String HEADER_ZOTERO_API_VERSION = "Zotero-API-Version";
 	public static final String HEADER_ZOTERO_API_KEY = "Zotero-API-Key";
+	public static final String HEADER_IF_UNMODIFIED_SINCE_VERSION = "If-Unmodified-Since-Version";
 
 	private String id;
 	private boolean isUser;
@@ -107,6 +110,11 @@ public abstract class ZoteroRestRequest<R extends ZoteroRestRequest>
 		is.close();
 
 		return new String(bos.toByteArray());
+	}
+
+	protected void addWriteToken(HttpRequest request)
+	{
+		request.addHeader("Zotero-Write-Token", UUID.randomUUID().toString().replace("-", ""));
 	}
 
 	@SuppressWarnings("unchecked")

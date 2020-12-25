@@ -1,6 +1,6 @@
 package zotero.api.constants;
 
-public enum CreatorType
+public enum CreatorType implements ZoteroEnum
 {
 	ARTIST("artist"),
 	ATTORNEY_AGENT("attorneyAgent"),
@@ -51,6 +51,7 @@ public enum CreatorType
 		throw new EnumConstantNotPresentException(CreatorType.class, zoteroType);
 	}
 
+	@Override
 	public String getZoteroName()
 	{
 		return zoteroName;

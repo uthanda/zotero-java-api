@@ -1,6 +1,37 @@
-
 package zotero.api.constants;
+
+/**
+ *
+ * @author stran
+ */
 public enum PropertyType
 {
-	STRING, DATE, CREATORS, ENUM, LIST, OBJECT, INTEGER, BOOLEAN
+	/**
+	 * 
+	 */
+	STRING,
+	/**
+	* 
+	*/
+	DATE,
+	/**
+	* 
+	*/
+	ENUM,
+	/**
+	* 
+	*/
+	LIST,
+	/**
+	* 
+	*/
+	OBJECT,
+	/**
+	* 
+	*/
+	INTEGER,
+	/**
+	* 
+	*/
+	BOOLEAN
 }

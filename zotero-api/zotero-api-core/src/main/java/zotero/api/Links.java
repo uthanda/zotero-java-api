@@ -1,10 +1,12 @@
 package zotero.api;
 
+import zotero.api.constants.LinkType;
+
 public interface Links
 {
-	boolean has(String key);
+	boolean has(LinkType type);
 
-	Link get(String key);
+	Link get(LinkType key);
 
-	Link create(String key);
+	Link create(LinkType key);
 }

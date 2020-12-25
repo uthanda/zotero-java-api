@@ -1,6 +1,5 @@
 package zotero.api.util;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -23,6 +22,7 @@ public class MockPatchRequest implements RestPatchRequest
 
 	private Function<MockPatchRequest,Boolean> callback;
 	public String itemKey;
+	public Integer versionNumber;
 	
 	public String getItemKey()
 	{
@@ -65,7 +65,7 @@ public class MockPatchRequest implements RestPatchRequest
 	}
 
 	@Override
-	public RestResponse<Boolean> patch()
+	public RestResponse<Boolean> execute()
 	{
 		final Boolean status = callback.apply(this);
 		
@@ -87,18 +87,6 @@ public class MockPatchRequest implements RestPatchRequest
 			public Boolean getResponse()
 			{
 				return status;
-			}
-
-			@Override
-			public boolean hasNext()
-			{
-				return false;
-			}
-
-			@Override
-			public RestResponse<Boolean> next() throws IOException
-			{
-				return null;
 			}
 
 			@Override
@@ -207,6 +195,13 @@ public class MockPatchRequest implements RestPatchRequest
 		public PatchBuilder itemKey(String key)
 		{
 			request.itemKey = key;
+			return this;
+		}
+
+		@Override
+		public PatchBuilder versionNumber(Integer versionNumber)
+		{
+			request.versionNumber = versionNumber;
 			return this;
 		}
 	}

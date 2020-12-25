@@ -1,6 +1,6 @@
 package zotero.api.constants;
 
-public enum ItemType
+public enum ItemType implements ZoteroEnum
 {
 	ARTWORK("artwork"),
 	ATTACHMENT("attachment"),
@@ -39,23 +39,23 @@ public enum ItemType
 	VIDEO_RECORDING("videoRecording"),
 	WEB_PAGE("webpage");
 
-	private String zoteroType;
+	private String zoteroName;
 
-	private ItemType(String zoteroType)
+	private ItemType(String zoteroName)
 	{
-		this.zoteroType = zoteroType;
+		this.zoteroName = zoteroName;
 	}
 	
-	public final String getZoteroType()
+	public final String getZoteroName()
 	{
-		return zoteroType;
+		return zoteroName;
 	}
 	
 	public static ItemType fromZoteroType(String zoteroType)
 	{
 		for(ItemType type : ItemType.values())
 		{
-			if(type.zoteroType.equals(zoteroType)) {
+			if(type.zoteroName.equals(zoteroType)) {
 				return type;
 			}
 		}

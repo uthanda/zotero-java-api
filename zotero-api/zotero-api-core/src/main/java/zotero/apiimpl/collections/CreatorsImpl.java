@@ -1,6 +1,8 @@
 package zotero.apiimpl.collections;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import zotero.api.Creator;
 import zotero.api.collections.Creators;
@@ -8,18 +10,18 @@ import zotero.api.constants.CreatorType;
 import zotero.apiimpl.CreatorImpl;
 import zotero.apiimpl.properties.PropertyListImpl;
 
-public final class CreatorsListImpl extends PropertyListImpl.ObservableList<Creator> implements Creators
+public final class CreatorsImpl extends PropertyListImpl.ObservableList<Creator> implements Creators
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2763232832891672780L;
 	
-	public CreatorsListImpl()
+	public CreatorsImpl()
 	{
 	}
 	
-	public CreatorsListImpl(List<Creator> list)
+	public CreatorsImpl(List<Creator> list)
 	{
 		super(list);
 	}
@@ -33,5 +35,16 @@ public final class CreatorsListImpl extends PropertyListImpl.ObservableList<Crea
 		creator.setType(type);
 
 		this.add(creator);
+	}
+
+	public static Creators fromRest(List<?> listValue)
+	{
+		List<Creator> list = listValue.stream().map(CreatorImpl::fromRest).collect(Collectors.toList());
+		return new CreatorsImpl(list);
+	}
+
+	public static List<Map<String, String>> toRest(Creators creators)
+	{
+		return creators.stream().map(CreatorImpl::toRest).collect(Collectors.toList());
 	}
 }

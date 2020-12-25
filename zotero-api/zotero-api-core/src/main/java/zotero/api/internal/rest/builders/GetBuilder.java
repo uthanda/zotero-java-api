@@ -11,4 +11,6 @@ public interface GetBuilder<T> extends Builder<GetBuilder<T>>
 	GetBuilder<T> queryParam(String param, String value);
 
 	RestGetRequest<T> build();
+	
+	GetBuilder<T> specialUrl(String url);
 }

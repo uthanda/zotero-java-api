@@ -9,4 +9,6 @@ public interface PatchBuilder extends Builder<PatchBuilder>
 	PatchBuilder itemKey(String key);
 
 	RestPatchRequest build();
+
+	PatchBuilder versionNumber(Integer versionNumber);
 }

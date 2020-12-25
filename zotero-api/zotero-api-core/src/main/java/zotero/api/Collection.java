@@ -8,6 +8,8 @@ public interface Collection extends Entry
 	// Item information
 	
 	String getName();
+	
+	void setName(String string);
 
 	int getNumberOfCollections();
 

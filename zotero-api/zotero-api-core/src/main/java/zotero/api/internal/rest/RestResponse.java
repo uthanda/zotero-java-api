@@ -1,18 +1,34 @@
 package zotero.api.internal.rest;
 
-import java.io.IOException;
-
+/**
+ * Represents a response from the Zotero REST api.
+ * 
+ * @author stran
+ *
+ * @param <T> Response payload type
+ */
 public interface RestResponse<T>
 {
+	/**
+	 * Gets whether the request was successful
+	 * 
+	 * @return True if successful
+	 */
 	boolean wasSuccessful();
 
+	/**
+	 * Gets the error message provided by the call.
+	 * 
+	 * @return Error message
+	 */
 	String getErrorMessage();
 
+	/**
+	 * Gets the response
+	 * 
+	 * @return Response
+	 */
 	T getResponse();
-
-	boolean hasNext();
-
-	RestResponse<T> next() throws IOException;
 
 	String getLink(String type);
 

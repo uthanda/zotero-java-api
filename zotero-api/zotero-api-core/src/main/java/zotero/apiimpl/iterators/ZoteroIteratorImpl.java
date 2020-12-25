@@ -1,13 +1,15 @@
-package zotero.apiimpl;
+package zotero.apiimpl.iterators;
 
-import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 
 import zotero.api.Library;
 import zotero.api.internal.rest.RestResponse;
+import zotero.api.internal.rest.builders.GetBuilder;
+import zotero.api.internal.rest.impl.ZoteroRestGetRequest;
 import zotero.api.internal.rest.model.ZoteroRestItem;
 import zotero.api.iterators.ZoteroIterator;
+import zotero.apiimpl.LibraryImpl;
 
 class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 {
@@ -30,7 +32,7 @@ class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 	@Override
 	public boolean hasNext()
 	{
-		return index < page.length || response.hasNext();
+		return index < page.length || response.getLink("next") != null;
 	}
 
 	@Override
@@ -38,20 +40,17 @@ class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 	{
 		if (index >= page.length)
 		{
-			if (!response.hasNext())
+			String nextLink = response.getLink("next");
+			
+			if (nextLink == null)
 			{
 				throw new NoSuchElementException();
 			}
 
-			try
-			{
-				response = response.next();
-			}
-			catch (IOException e)
-			{
-				throw new RuntimeException(e);
-			}
-
+			GetBuilder<ZoteroRestItem[]> builder = ZoteroRestGetRequest.Builder.createBuilder(ZoteroRestItem[].class).specialUrl(nextLink);
+			
+			response = ((LibraryImpl)library).performGet(builder);
+			
 			page = response.getResponse();
 			index = 0;
 		}

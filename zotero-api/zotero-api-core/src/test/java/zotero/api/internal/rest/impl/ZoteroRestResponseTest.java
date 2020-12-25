@@ -31,7 +31,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import zotero.api.ZoteroAPIKey;
-import zotero.api.internal.rest.RestGetRequest;
 import zotero.api.internal.rest.RestResponse;
 import zotero.api.internal.rest.impl.ZoteroRestGetRequest.Builder;
 import zotero.api.internal.rest.model.ZoteroRestItem;
@@ -60,13 +59,13 @@ public class ZoteroRestResponseTest
 		});
 
 		successfulWithLinks = new Builder<ZoteroRestItem[]>().apiKey(new ZoteroAPIKey(MockRestService.API_KEY)).url("successfulWithLinks")
-				.type(ZoteroRestItem[].class).build().get();
+				.type(ZoteroRestItem[].class).build().execute();
 		
 		successfulNoLinks = new Builder<ZoteroRestItem[]>().apiKey(new ZoteroAPIKey(MockRestService.API_KEY)).url("successfulNoLinks")
-				.type(ZoteroRestItem[].class).build().get();
+				.type(ZoteroRestItem[].class).build().execute();
 		
 		failed404 = new Builder<ZoteroRestItem[]>().apiKey(new ZoteroAPIKey(MockRestService.API_KEY)).url("failed404")
-				.type(ZoteroRestItem[].class).build().get();
+				.type(ZoteroRestItem[].class).build().execute();
 	}
 
 	@Test
@@ -93,14 +92,6 @@ public class ZoteroRestResponseTest
 		
 		items = successfulNoLinks.getResponse();
 		assertEquals(20, items.length);
-	}
-
-	@Test
-	public void testHasNext()
-	{
-		assertTrue(successfulWithLinks.hasNext());
-		assertFalse(successfulNoLinks.hasNext());
-		assertFalse(failed404.hasNext());
 	}
 
 	@Test

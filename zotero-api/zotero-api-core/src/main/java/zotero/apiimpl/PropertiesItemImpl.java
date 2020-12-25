@@ -1,7 +1,5 @@
 package zotero.apiimpl;
 
-import java.util.Map;
-
 import zotero.api.PropertiesItem;
 import zotero.api.constants.ItemType;
 import zotero.api.internal.rest.model.ZoteroRestItem;
@@ -16,14 +14,9 @@ public class PropertiesItemImpl implements PropertiesItem
 	{
 	}
 
-	PropertiesItemImpl(Map<String, Object> values)
-	{
-		this.properties = PropertiesImpl.from(values);
-	}
-
 	PropertiesItemImpl(ZoteroRestItem item)
 	{
-		this.properties = PropertiesImpl.from(item);
+		this.properties = PropertiesImpl.fromRest(item);
 	}
 
 	PropertiesItemImpl(ItemType type)

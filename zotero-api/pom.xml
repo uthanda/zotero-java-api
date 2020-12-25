@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.uthanda</groupId>
@@ -7,6 +8,7 @@
 	<packaging>pom</packaging>
 	<properties>
 		<version.log4j2>2.14.0</version.log4j2>
+		<version.easymock>4.2</version.easymock>
 		<version.jre>1.8</version.jre>
 		<version.powermock>1.7.4</version.powermock>
 		<version.gson>2.8.6</version.gson>
@@ -50,6 +52,12 @@
 				<version>${version.powermock}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.powermock</groupId>
+				<artifactId>powermock-api-easymock</artifactId>
+				<version>${version.powermock}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-api</artifactId>
 				<version>${version.log4j2}</version>
@@ -58,6 +66,12 @@
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-core</artifactId>
 				<version>${version.log4j2}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.easymock</groupId>
+				<artifactId>easymock</artifactId>
+				<version>${version.easymock}</version>
+				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

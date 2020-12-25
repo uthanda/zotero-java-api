@@ -1,12 +1,20 @@
 package zotero.api.constants;
 
+/**
+ * Known property/key names.
+ *
+ * @author stran
+ */
 public class ZoteroKeys
 {
-	public static final String NAME = "name";
 	private ZoteroKeys()
 	{
 	}
-
+	
+	public static final String NAME = "name";
+	public static final String LAST_NAME = "lastName";
+	public static final String FIRST_NAME = "firstName";
+	public static final String CREATOR_TYPE = "creatorType";
 	public static final String WEBSITE_TITLE = "websiteTitle";
 	public static final String BOOK_TITLE = "bookTitle";
 	public static final String PRESENTATION_TYPE = "presentationType";

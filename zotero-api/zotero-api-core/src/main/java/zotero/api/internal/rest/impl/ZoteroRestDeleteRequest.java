@@ -20,10 +20,10 @@ import zotero.api.internal.rest.ZoteroRestPaths;
 import zotero.api.internal.rest.builders.DeleteBuilder;
 import zotero.api.internal.rest.impl.ZoteroRestResponse.ZoteroRestResponseBuilder;
 
-public class ZoteroRestDeleteRequest extends ZoteroRestRequest<ZoteroRestDeleteRequest> implements RestDeleteRequest
+public class ZoteroRestDeleteRequest extends ZoteroRestRequest implements RestDeleteRequest
 {
 	private static Logger logger = LogManager.getLogger(ZoteroRestDeleteRequest.class);
-	
+
 	private static final String HEADER_IF_MODIFIED_SINCE_VERSION = "If-Modified-Since-Version";
 
 	private CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -34,38 +34,42 @@ public class ZoteroRestDeleteRequest extends ZoteroRestRequest<ZoteroRestDeleteR
 	private ZoteroRestDeleteRequest()
 	{
 	}
-	
+
 	@Override
-	public RestResponse<Boolean> delete()
+	public RestResponse<Boolean> execute()
 	{
 		logger.debug("Entering get()");
 
 		builder = new ZoteroRestResponse.ZoteroRestResponseBuilder<>();
-		
+
 		try
 		{
-			this.doGet();
+			this.doDelete();
 		}
 		catch (IOException ex)
 		{
 			builder.errorMessage(ex.getLocalizedMessage());
 		}
 
-		return builder.request(this).build();
+		return builder.build();
 	}
 
-	private void doGet() throws IOException
+	private void doDelete() throws IOException
 	{
-		HttpDelete get = new HttpDelete(this.buildURL());
-		super.addHeaders(get);
+		HttpDelete delete = new HttpDelete(this.buildURL());
+		super.addHeaders(delete);
 
 		// Allow for rate limiting
 		if (lastVersion != null)
 		{
-			get.addHeader(HEADER_IF_MODIFIED_SINCE_VERSION, lastVersion.toString());
+			delete.addHeader(HEADER_IF_MODIFIED_SINCE_VERSION, lastVersion.toString());
+		}
+		else
+		{
+			super.addWriteToken(delete);
 		}
 
-		CloseableHttpResponse response = httpClient.execute(get);
+		CloseableHttpResponse response = httpClient.execute(delete);
 
 		// Parse the various elements
 		parseTotalResultsHeader(response);
@@ -82,7 +86,7 @@ public class ZoteroRestDeleteRequest extends ZoteroRestRequest<ZoteroRestDeleteR
 				builder.response(Boolean.TRUE);
 				break;
 			}
-			
+
 			default:
 			{
 				builder.response(Boolean.FALSE);
@@ -167,20 +171,20 @@ public class ZoteroRestDeleteRequest extends ZoteroRestRequest<ZoteroRestDeleteR
 
 			return this;
 		}
-		
+
 		@Override
 		public RestDeleteRequest build()
 		{
 			ZoteroRestDeleteRequest delete = new ZoteroRestDeleteRequest();
-			
+
 			delete.lastVersion = lastVersion;
 			delete.queryParams = queryParams;
-			
+
 			super.apply(delete);
-			
+
 			return delete;
 		}
-		
+
 		public static DeleteBuilder createBuilder()
 		{
 			return new Builder();

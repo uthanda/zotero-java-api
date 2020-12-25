@@ -240,7 +240,7 @@ public final class ItemImpl extends EntryImpl implements Item
 		return (Tags) getProperties().getProperty(ZoteroKeys.TAGS).getValue();
 	}
 
-	static Item fromItem(ZoteroRestItem jsonItem, Library library)
+	public static Item fromItem(ZoteroRestItem jsonItem, Library library)
 	{
 		ItemImpl item = new ItemImpl(jsonItem, library);
 		item.jsonItem = jsonItem;
@@ -285,7 +285,7 @@ public final class ItemImpl extends EntryImpl implements Item
 			ZoteroRestItem item = buildRestItem(false);
 
 			PostBuilder builder = ZoteroRestPostRequest.Builder.createBuilder();
-			builder.content(item);
+			builder.content(item).url(ZoteroRestPaths.ITEMS);
 
 			libraryImpl.performPost((builder));
 		}
@@ -294,7 +294,7 @@ public final class ItemImpl extends EntryImpl implements Item
 			ZoteroRestItem item = buildRestItem(true);
 
 			PatchBuilder builder = ZoteroRestPatchRequest.Builder.createBuilder();
-			builder.content(item).itemKey(this.getKey());
+			builder.content(item).itemKey(this.getKey()).url(ZoteroRestPaths.ITEM);
 
 			libraryImpl.performPatch((builder));
 		}
@@ -302,13 +302,15 @@ public final class ItemImpl extends EntryImpl implements Item
 
 	private ZoteroRestItem buildRestItem(boolean deltaMode)
 	{
-		ZoteroRestItem item = new ZoteroRestItem();
-		item.setKey(this.getKey());
-
-		ZoteroRestData data = new ZoteroRestData();
-		PropertiesImpl.gatherProperties(data, this.getProperties(), deltaMode);
-		item.setData(data);
-		return item;
+		ZoteroRestItem.ItemBuilder ib = new ZoteroRestItem.ItemBuilder(deltaMode);
+		
+		ib.key(getKey());
+		
+		ZoteroRestData.DataBuilder db = ib.dataBuilder();
+		
+		((PropertiesImpl)getProperties()).addToBuilder(db);
+		
+		return ib.build();
 	}
 
 	@Override
@@ -317,9 +319,10 @@ public final class ItemImpl extends EntryImpl implements Item
 		checkDeletionStatus();
 
 		DeleteBuilder builder = ZoteroRestDeleteRequest.Builder.createBuilder();
-		builder.itemKey(this.getKey());
+		builder.itemKey(this.getKey()).url(ZoteroRestPaths.ITEM);
 		
-		((LibraryImpl)getLibrary()).performDelete();
+		((LibraryImpl)getLibrary()).performDelete(builder);
+		this.deleted = true;
 	}
 
 	@SuppressWarnings("unchecked")
