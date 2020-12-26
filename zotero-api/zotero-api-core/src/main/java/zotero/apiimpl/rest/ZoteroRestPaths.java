@@ -9,6 +9,7 @@ public final class ZoteroRestPaths
 	public static final String ITEM = "/items/{key}";
 	public static final String ITEM_CHILDREN = "/items/{key}/children";
 	public static final String ITEM_TAGS = "/items/{key}/tags";
+	public static final String ITEM_FILE = ITEM + "/file";
 
 	public static final String URL_PARAM_KEY = "key";
 	public static final String COLLECTIONS = "/collections";

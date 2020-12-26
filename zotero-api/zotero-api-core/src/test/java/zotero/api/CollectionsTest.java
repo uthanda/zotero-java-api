@@ -38,7 +38,7 @@ import zotero.apiimpl.rest.model.ZoteroRestItem;
 	ZoteroRestPatchRequest.class, ZoteroRestPatchRequest.Builder.class,
 	ZoteroRestPostRequest.class, ZoteroRestPostRequest.Builder.class
 })
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*"})
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "org.w3c.*", "javax.management.*"})
 public class CollectionsTest
 {
 	private static final String KEY_SUBS = "Y82V25U2";
@@ -191,6 +191,7 @@ public class CollectionsTest
 		assertNotNull(item.getData());
 		
 		ZoteroRestData data = item.getData();
+		// We should have 2 properties: name and parentCollection
 		assertEquals(2, data.size());
 		assertEquals("New collection", data.get(ZoteroKeys.NAME));		
 		assertEquals(KEY_NO_SUBS, data.get(ZoteroKeys.PARENT_COLLECTION));		

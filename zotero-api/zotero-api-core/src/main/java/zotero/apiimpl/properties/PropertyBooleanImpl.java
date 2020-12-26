@@ -7,6 +7,11 @@ public class PropertyBooleanImpl extends PropertyImpl<Boolean> implements Proper
 {
 	public PropertyBooleanImpl(String key, Boolean value)
 	{
-		super(PropertyType.BOOLEAN, key, value);
+		this(key,value,false);
+	}
+
+	public PropertyBooleanImpl(String key, Boolean value, boolean readOnly)
+	{
+		super(PropertyType.BOOLEAN, key, value, readOnly);
 	}
 }

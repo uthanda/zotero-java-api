@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import zotero.api.collections.Tags;
+import zotero.api.constants.ZoteroKeys;
 import zotero.apiimpl.properties.PropertyListImpl;
 
 public final class TagsImpl extends PropertyListImpl.ObservableList<String> implements Tags
@@ -17,11 +18,12 @@ public final class TagsImpl extends PropertyListImpl.ObservableList<String> impl
 
 	public TagsImpl()
 	{
+		super(ZoteroKeys.TAGS, null, false);
 	}
 
 	private TagsImpl(List<String> values)
 	{
-		super(values);
+		super(ZoteroKeys.TAGS, values, false);
 	}
 
 	public static List<Map<String, String>> toRest(Tags tags)

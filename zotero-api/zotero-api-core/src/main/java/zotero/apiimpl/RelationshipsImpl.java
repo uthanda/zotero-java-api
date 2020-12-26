@@ -13,23 +13,23 @@ import zotero.apiimpl.properties.PropertyListImpl.ObservableList;
 public final class RelationshipsImpl implements Relationships
 {
 	private EnumMap<RelationshipType, ObservableList<String>> relationships;
-	
+
 	public RelationshipsImpl()
 	{
 		this.relationships = new EnumMap<>(RelationshipType.class);
 	}
-	
+
 	@Override
 	public List<String> getRelationships(RelationshipType type)
 	{
-		if(!relationships.containsKey(type))
+		if (!relationships.containsKey(type))
 		{
-			relationships.put(type, new ObservableList<>());
+			relationships.put(type, new ObservableList<>(type.getZoteroName(), null, false));
 		}
-		
+
 		return relationships.get(type);
 	}
-	
+
 	public Set<RelationshipType> getTypes()
 	{
 		return relationships.keySet();
@@ -38,28 +38,30 @@ public final class RelationshipsImpl implements Relationships
 	@SuppressWarnings("unchecked")
 	public static RelationshipsImpl fromMap(Map<String, Object> values)
 	{
-		if(values == null) {
-			return new RelationshipsImpl();
-		}
-			
 		RelationshipsImpl r = new RelationshipsImpl();
 
-		values.forEach((stype,list)->{
-			RelationshipType type = RelationshipType.fromZoteroType(stype);
-			r.relationships.put(type, new ObservableList<>((List<String>)list));
-		});
+		if (values == null)
+		{
+			return r;
+		}
 		
+		values.forEach((stype, list) -> {
+			RelationshipType type = RelationshipType.fromZoteroType(stype);
+			r.relationships.put(type, new ObservableList<>(type.getZoteroName(), (List<String>) list, false));
+		});
+
 		return r;
 	}
-	
+
 	public boolean isDirty()
 	{
 		boolean isDirty = false;
-		
-		for(ObservableList<String> list : relationships.values()) {
+
+		for (ObservableList<String> list : relationships.values())
+		{
 			isDirty |= list.isDirty();
 		}
-		
+
 		return isDirty;
 	}
 

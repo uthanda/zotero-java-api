@@ -9,6 +9,11 @@ public class PropertyDateImpl extends PropertyImpl<Date> implements PropertyDate
 {
 	public PropertyDateImpl(String key, Date value)
 	{
-		super(PropertyType.DATE, key, value);
+		this(key,value,false);
+	}
+
+	public PropertyDateImpl(String key, Date value, boolean readOnly)
+	{
+		super(PropertyType.DATE, key, value, readOnly);
 	}
 }

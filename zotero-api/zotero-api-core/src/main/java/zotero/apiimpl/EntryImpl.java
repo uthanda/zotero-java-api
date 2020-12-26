@@ -4,6 +4,7 @@ import zotero.api.Entry;
 import zotero.api.Library;
 import zotero.api.Links;
 import zotero.api.constants.ItemType;
+import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.exceptions.ZoteroRuntimeException;
@@ -33,6 +34,12 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 	protected EntryImpl(ItemType type, Library library)
 	{
 		super(type);
+		this.library = library;
+	}
+	
+	protected EntryImpl(LinkMode mode, Library library)
+	{
+		super(ItemType.ATTACHMENT, mode);
 		this.library = library;
 	}
 

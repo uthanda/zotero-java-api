@@ -1,6 +1,8 @@
 package zotero.api;
 
+import zotero.api.attachments.Attachment;
 import zotero.api.constants.ItemType;
+import zotero.api.constants.LinkMode;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.search.CollectionSearch;
@@ -119,6 +121,10 @@ public abstract class Library
 	public abstract ItemSearch createItemSearch();
 
 	public abstract CollectionSearch createCollectionSearch();
+	
+	public abstract Attachment createAttachment(LinkMode mode);
+	
+	public abstract Attachment createAttachment(Item parent, LinkMode mode);
 
 	public static final Library createLibrary(String userId, ZoteroAPIKey apiKey)
 	{

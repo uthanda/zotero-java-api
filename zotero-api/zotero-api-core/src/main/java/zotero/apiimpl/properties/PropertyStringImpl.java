@@ -7,6 +7,11 @@ public class PropertyStringImpl extends PropertyImpl<String> implements Property
 {
 	public PropertyStringImpl(String key, String value)
 	{
-		super(PropertyType.STRING, key, value);
+		this(key, value, false);
+	}
+
+	public PropertyStringImpl(String key, String value, boolean readOnly)
+	{
+		super(PropertyType.STRING, key, value, readOnly);
 	}
 }

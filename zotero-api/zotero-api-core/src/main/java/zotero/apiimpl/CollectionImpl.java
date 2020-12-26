@@ -5,6 +5,7 @@ import zotero.api.Library;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
+import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.rest.ZoteroRestPaths;
 import zotero.apiimpl.rest.builders.DeleteBuilder;
 import zotero.apiimpl.rest.builders.PatchBuilder;
@@ -46,6 +47,7 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	public static CollectionImpl create(Library library, Collection parent)
 	{
 		CollectionImpl collection = new CollectionImpl(library);
+		PropertiesImpl.initializeCollectionProperties((PropertiesImpl) collection.getProperties());
 		collection.getProperties().putValue(ZoteroKeys.PARENT_COLLECTION, parent.getKey());
 		return collection;
 	}

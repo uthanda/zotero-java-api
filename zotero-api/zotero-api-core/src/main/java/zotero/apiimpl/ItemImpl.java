@@ -10,6 +10,7 @@ import zotero.api.Library;
 import zotero.api.Relationships;
 import zotero.api.collections.Tags;
 import zotero.api.constants.ItemType;
+import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.properties.PropertyObject;
@@ -32,11 +33,16 @@ public class ItemImpl extends EntryImpl implements Item
 		super(item, library);
 	}
 
-	ItemImpl(ItemType type, Library library)
+	protected ItemImpl(ItemType type, Library library)
 	{
 		super(type, library);
 	}
 
+	protected ItemImpl(LinkMode mode, Library library)
+	{
+		super(mode, library);
+	}
+	
 	@Override
 	public final String getTitle()
 	{

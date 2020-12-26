@@ -96,7 +96,7 @@ public class ZoteroRestGetRequest<T> extends ZoteroRestRequest implements RestGe
 				builder.errorMessage("Too many requests.  Please retry after " + response.getFirstHeader("Retry-After") + " seconds");
 				break;
 			}
-			
+
 			default:
 			{
 				builder.errorMessage(super.readResponse(entity));
@@ -105,13 +105,19 @@ public class ZoteroRestGetRequest<T> extends ZoteroRestRequest implements RestGe
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void parseEntity(HttpEntity entity) throws IOException
 	{
+		if (this.getType() == InputStream.class)
+		{
+			builder.response((T) entity.getContent());
+			return;
+		}
+
 		InputStream is = entity.getContent();
 
 		InputStreamReader reader = new InputStreamReader(is);
 
-		@SuppressWarnings("unchecked")
 		T result = (T) new Gson().fromJson(reader, super.getType());
 
 		builder.response(result);

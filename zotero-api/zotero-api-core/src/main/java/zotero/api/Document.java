@@ -11,6 +11,10 @@ public interface Document extends Item
 	// Read-only metadata
 	String getCreatorSummary();
 	
+	Date getDateAdded();
+	
+	Date getDateModified();
+	
 	String getParsedDate();
 
 	int getNumberOfChilden();
@@ -20,9 +24,4 @@ public interface Document extends Item
 	Creators getCreators();
 
 	void changeItemType(ItemType type);
-	
-	// Read-only Metadata
-	Date getDateAdded();
-	
-	Date getDateModified();
 }

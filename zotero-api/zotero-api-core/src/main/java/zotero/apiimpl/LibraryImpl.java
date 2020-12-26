@@ -5,11 +5,14 @@ import zotero.api.Document;
 import zotero.api.Item;
 import zotero.api.Library;
 import zotero.api.ZoteroAPIKey;
+import zotero.api.attachments.Attachment;
 import zotero.api.constants.ItemType;
+import zotero.api.constants.LinkMode;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.search.CollectionSearch;
 import zotero.api.search.ItemSearch;
+import zotero.apiimpl.attachments.PendingAttachmentImpl;
 import zotero.apiimpl.iterators.CollectionIteratorImpl;
 import zotero.apiimpl.iterators.ZoteroItemIteratorImpl;
 import zotero.apiimpl.rest.RestResponse;
@@ -217,5 +220,17 @@ public final class LibraryImpl extends Library
 	public CollectionSearch createCollectionSearch()
 	{
 		return new CollectionSearchImpl(this);
+	}
+
+	@Override
+	public Attachment createAttachment(LinkMode mode)
+	{
+		return new PendingAttachmentImpl(this, mode);
+	}
+
+	@Override
+	public Attachment createAttachment(Item parent, LinkMode mode)
+	{
+		return new PendingAttachmentImpl(this, mode, parent.getKey());
 	}
 }

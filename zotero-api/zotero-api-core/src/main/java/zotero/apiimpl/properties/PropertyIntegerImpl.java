@@ -7,6 +7,11 @@ public class PropertyIntegerImpl extends PropertyImpl<Integer> implements Proper
 {
 	public PropertyIntegerImpl(String key, Integer value)
 	{
-		super(PropertyType.INTEGER, key, value);
+		this(key,value,false);
+	}
+
+	public PropertyIntegerImpl(String key, Integer value, boolean readOnly)
+	{
+		super(PropertyType.INTEGER, key, value, readOnly);
 	}
 }

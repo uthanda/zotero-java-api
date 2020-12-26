@@ -9,7 +9,12 @@ public class PropertyEnumImpl<T extends Enum<T>> extends PropertyImpl<T> impleme
 
 	public PropertyEnumImpl(String key, Class<T> type, T value)
 	{
-		super(PropertyType.ENUM, key, value);
+		this(key,type,value,false);
+	}
+
+	public PropertyEnumImpl(String key, Class<T> type, T value, boolean readOnly)
+	{
+		super(PropertyType.ENUM, key, value, readOnly);
 		this.type = type;
 	}
 

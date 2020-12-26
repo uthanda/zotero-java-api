@@ -8,36 +8,51 @@ import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
 import zotero.api.constants.PropertyType;
+import zotero.api.constants.ZoteroExceptionCodes;
+import zotero.api.constants.ZoteroExceptionType;
+import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.properties.PropertyList;
+import zotero.apiimpl.collections.CreatorsImpl;
+import zotero.apiimpl.collections.TagsImpl;
 
-public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.ObservableList<T>> implements PropertyList<T,PropertyListImpl.ObservableList<T>>
+public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.ObservableList<T>> implements PropertyList<T, PropertyListImpl.ObservableList<T>>
 {
 	private Class<T> type;
 
 	public PropertyListImpl(String key, Class<T> type, List<T> values)
 	{
-		super(PropertyType.LIST, key, buildList(values));
+		this(key, type, values, false);
+	}
+
+	public PropertyListImpl(String key, Class<T> type, List<T> values, boolean readOnly)
+	{
+		super(PropertyType.LIST, key, buildList(key, values, readOnly), readOnly);
 		this.type = type;
 	}
 
-	private static <T> ObservableList<T> buildList(List<T> values)
+	static <T> ObservableList<T> buildList(String key, List<T> values, boolean readOnly)
 	{
-		if(values instanceof ObservableList)
+		// This allows for leaving the creators/tags collections alone as we
+		// cast them later
+		// TODO there may be an issue here if we're looking to copy a collection
+		if (values instanceof CreatorsImpl)
 		{
 			return (ObservableList<T>) values;
 		}
-		
-		ObservableList<T> list = new ObservableList<>();
-		list.addAll(values);
-		list.dirty = false;
-		
-		return list;
+		else if (values instanceof TagsImpl)
+		{
+			return (ObservableList<T>) values;
+		}
+		else
+		{
+			return new ObservableList<>(key, values, readOnly);
+		}
 	}
 
 	@Override
 	public final boolean isDirty()
 	{
-		return ((ObservableList<T>)getValue()).dirty;
+		return ((ObservableList<T>) getValue()).dirty;
 	}
 
 	public static class ObservableList<T> extends ArrayList<T>
@@ -47,19 +62,34 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 		 */
 		private static final long serialVersionUID = 7277287177675698114L;
 		private boolean dirty;
+		private boolean readOnly;
+		private String key;
 
-		public ObservableList()
+		public ObservableList(String key, List<T> values, boolean readOnly)
 		{
+			this.key = key;
+			this.readOnly = readOnly;
+
+			if (values != null)
+			{
+				super.addAll(values);
+			}
 		}
 
-		public ObservableList(Collection<T> values)
+		public ObservableList(Collection<T> values, String key)
 		{
 			super.addAll(values);
+			this.key = key;
 		}
-		
+
 		@Override
 		public void clear()
 		{
+			if (readOnly)
+			{
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.PROPERTY_READ_ONLY, "Property " + key + " is read-only");
+			}
+
 			this.dirty = true;
 			super.clear();
 		}
@@ -67,6 +97,11 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 		@Override
 		public void add(int index, T element)
 		{
+			if (readOnly)
+			{
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.PROPERTY_READ_ONLY, "Property " + key + " is read-only");
+			}
+
 			this.dirty = true;
 			super.add(index, element);
 		}
@@ -74,6 +109,11 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 		@Override
 		public void ensureCapacity(int minCapacity)
 		{
+			if (readOnly)
+			{
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.PROPERTY_READ_ONLY, "Property " + key + " is read-only");
+			}
+
 			this.dirty = true;
 			super.ensureCapacity(minCapacity);
 		}
@@ -81,6 +121,11 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 		@Override
 		public void trimToSize()
 		{
+			if (readOnly)
+			{
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.PROPERTY_READ_ONLY, "Property " + key + " is read-only");
+			}
+
 			this.dirty = true;
 			super.trimToSize();
 		}
@@ -88,6 +133,11 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 		@Override
 		public void sort(Comparator<? super T> c)
 		{
+			if (readOnly)
+			{
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.PROPERTY_READ_ONLY, "Property " + key + " is read-only");
+			}
+
 			this.dirty = true;
 			super.sort(c);
 		}
@@ -95,6 +145,11 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 		@Override
 		public T set(int index, T element)
 		{
+			if (readOnly)
+			{
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.PROPERTY_READ_ONLY, "Property " + key + " is read-only");
+			}
+
 			this.dirty = true;
 			return super.set(index, element);
 		}
@@ -102,6 +157,11 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 		@Override
 		public boolean retainAll(Collection<?> c)
 		{
+			if (readOnly)
+			{
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.PROPERTY_READ_ONLY, "Property " + key + " is read-only");
+			}
+
 			this.dirty = true;
 			return super.retainAll(c);
 		}
@@ -109,6 +169,11 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 		@Override
 		public void replaceAll(UnaryOperator<T> operator)
 		{
+			if (readOnly)
+			{
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.PROPERTY_READ_ONLY, "Property " + key + " is read-only");
+			}
+
 			this.dirty = true;
 			super.replaceAll(operator);
 		}
@@ -116,6 +181,11 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 		@Override
 		public boolean removeIf(Predicate<? super T> filter)
 		{
+			if (readOnly)
+			{
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.PROPERTY_READ_ONLY, "Property " + key + " is read-only");
+			}
+
 			this.dirty = true;
 			return super.removeIf(filter);
 		}
@@ -123,6 +193,11 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 		@Override
 		public boolean removeAll(Collection<?> c)
 		{
+			if (readOnly)
+			{
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.PROPERTY_READ_ONLY, "Property " + key + " is read-only");
+			}
+
 			this.dirty = true;
 			return super.removeAll(c);
 		}
@@ -130,6 +205,11 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 		@Override
 		public boolean remove(Object o)
 		{
+			if (readOnly)
+			{
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.PROPERTY_READ_ONLY, "Property " + key + " is read-only");
+			}
+
 			this.dirty = true;
 			return super.remove(o);
 		}
@@ -137,6 +217,11 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 		@Override
 		public T remove(int index)
 		{
+			if (readOnly)
+			{
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.PROPERTY_READ_ONLY, "Property " + key + " is read-only");
+			}
+
 			this.dirty = true;
 			return super.remove(index);
 		}
@@ -151,6 +236,11 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 		@Override
 		public boolean addAll(int index, Collection<? extends T> c)
 		{
+			if (readOnly)
+			{
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.PROPERTY_READ_ONLY, "Property " + key + " is read-only");
+			}
+
 			this.dirty = true;
 			return super.addAll(index, c);
 		}
@@ -158,6 +248,11 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 		@Override
 		public boolean addAll(Collection<? extends T> c)
 		{
+			if (readOnly)
+			{
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.PROPERTY_READ_ONLY, "Property " + key + " is read-only");
+			}
+
 			this.dirty = true;
 			return super.addAll(c);
 		}

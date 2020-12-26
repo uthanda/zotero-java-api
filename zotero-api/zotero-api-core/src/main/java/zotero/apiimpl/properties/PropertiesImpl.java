@@ -17,7 +17,13 @@ import zotero.api.Relationships;
 import zotero.api.collections.Creators;
 import zotero.api.collections.Tags;
 import zotero.api.constants.ItemType;
+import zotero.api.constants.LinkMode;
+import zotero.api.constants.ZoteroExceptionCodes;
+import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.constants.ZoteroKeys;
+import zotero.api.constants.ZoteroKeys.Attachment;
+import zotero.api.constants.ZoteroKeys.Entity;
+import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.properties.Properties;
 import zotero.api.properties.Property;
 import zotero.api.properties.PropertyDate;
@@ -211,7 +217,26 @@ public final class PropertiesImpl implements Properties
 		}
 	}
 
-	public static void initialize(ItemType type, PropertiesImpl properties, PropertiesImpl current)
+	public static void initializeCollectionProperties(PropertiesImpl properties)
+	{
+
+	}
+
+	public static void initializeDocumentProperties(ItemType type, PropertiesImpl properties, PropertiesImpl current)
+	{
+		if (type == ItemType.ATTACHMENT)
+		{
+			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.UNSUPPORTED_ENUM_VALUE,
+					"Cannot initalize an attachment using initalize document properties");
+		}
+
+		initializeItemProperties(type, properties, current);
+
+		properties.properties.put(ZoteroKeys.CREATORS, new PropertyListImpl<>(ZoteroKeys.CREATORS, Creator.class, new CreatorsImpl()));
+		properties.properties.put(ZoteroKeys.ITEM_TYPE, new PropertyEnumImpl<>(ZoteroKeys.ITEM_TYPE, ItemType.class, type));
+	}
+
+	static void initializeItemProperties(ItemType type, PropertiesImpl properties, PropertiesImpl current)
 	{
 		ZoteroSchema schema = ZoteroSchema.getCurrentSchema();
 		ZoteroType zoteroType = null;
@@ -227,22 +252,66 @@ public final class PropertiesImpl implements Properties
 
 		if (zoteroType == null)
 		{
-			throw new RuntimeException("Invalid type " + type.name());
+			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.UNSUPPORTED_ENUM_VALUE, "Invalid type " + type.name());
 		}
 
 		for (String key : zoteroType.getFields().keySet())
 		{
 			Property<?> prop = current != null ? current.getProperty(key) : null;
 
-			if(prop == null) {
+			if (prop == null)
+			{
 				prop = new PropertyStringImpl(key, null);
 			}
-			
+
 			properties.properties.put(key, prop);
 		}
+	}
 
-		properties.properties.put(ZoteroKeys.CREATORS, new PropertyListImpl<>(ZoteroKeys.CREATORS, Creator.class, new CreatorsImpl()));
-		properties.properties.put(ZoteroKeys.ITEM_TYPE, new PropertyEnumImpl<>(ZoteroKeys.ITEM_TYPE, ItemType.class, type));
+	public static void initializeAttachmentProperties(ItemType type, LinkMode mode, PropertiesImpl properties)
+	{
+		if (type != ItemType.ATTACHMENT)
+		{
+			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.UNSUPPORTED_ENUM_VALUE,
+					"Cannot initalize an document using initalize attachment properties");
+		}
+
+		initializeItemProperties(type, properties, null);
+
+		switch (mode)
+		{
+			case IMPORTED_FILE:
+			{
+				properties.properties.put(Attachment.FILENAME, new PropertyStringImpl(Attachment.FILENAME, null));
+				properties.properties.put(Attachment.MD5, new PropertyStringImpl(Attachment.MD5, null));
+				properties.properties.put(Attachment.MTIME, new PropertyStringImpl(Attachment.MTIME, null));
+				break;
+			}
+			case IMPORTED_URL:
+			{
+				properties.properties.put(Entity.URL, new PropertyStringImpl(Entity.URL, null));
+				properties.properties.put(Attachment.FILENAME, new PropertyStringImpl(Attachment.FILENAME, null));
+				properties.properties.put(Attachment.MD5, new PropertyStringImpl(Attachment.MD5, null));
+				properties.properties.put(Attachment.MTIME, new PropertyStringImpl(Attachment.MTIME, null));
+				break;
+			}
+			case LINKED_FILE:
+			{
+				properties.properties.put(Attachment.PATH, new PropertyStringImpl(Attachment.PATH, null));
+				break;
+			}
+			case LINKED_URL:
+			{
+				properties.properties.put(Entity.URL, new PropertyStringImpl(Entity.URL, null));
+				break;
+			}
+			default:
+			{
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.UNSUPPORTED_ENUM_VALUE,
+						"Cannot initalize an attachment of mode " + mode + ".  Mode not implemented.");
+			}
+
+		}
 	}
 
 	@Override
@@ -273,7 +342,7 @@ public final class PropertiesImpl implements Properties
 
 	public void addToBuilder(DataBuilder db)
 	{
-		for(Property<?> prop : properties.values())
+		for (Property<?> prop : properties.values())
 		{
 			db.addProperty(prop);
 		}

@@ -31,7 +31,6 @@ public class ZoteroKeys
 	public static final String EXTRA = "extra";
 	public static final String ACCESS_DATE = "accessDate";
 	public static final String SHORT_TITLE = "shortTitle";
-	public static final String URL = "url";
 	public static final String RIGHTS = "rights";
 	public static final String INTERVIEW_MEDIUM = "interviewMedium";
 	public static final String ISBN = "ISBN";
@@ -119,7 +118,6 @@ public class ZoteroKeys
 	public static final String ITEM_TYPE = "itemType";
 	public static final String DATE_MODIFIED = "dateModified";
 	public static final String DATE_ADDED = "dateAdded";
-	public static final String KEY = "key";
 	public static final String VERSION = "version";
 	public static final String CREATORS = "creators";
 	public static final String TAGS = "tags";
@@ -128,13 +126,44 @@ public class ZoteroKeys
 	public static final String PARENT_COLLECTION = "parentCollection";
 	public static final String NUM_CHILDREN = "numChildren";
 	public static final String LINK_MODE = "linkMode";
-	public static final String PATH = "path";
-	public static final String CONTENT_TYPE = "contentType";
-	public static final String CHARSET = "charset";
 	public static final String CREATOR_SUMMARY = "creatorSummary";
 	public static final String PARSED_DATE = "parsedDate";
-	public static final String MD5 = "md5";
-	public static final String MTIME = "mtime";
+
+	public static class Collection extends Entity
+	{
+		private Collection() {}
+	}
+	
+	public static class Entity
+	{
+		public static final String URL = "url";
+
+		private Entity() {}
+		
+		public static final String KEY = "key";
+	}
+	
+	public static class Item extends Entity
+	{
+		private Item() {}
+	}
+	
+	public static final class Document extends Item
+	{
+		private Document() {}
+	}
+	
+	public static final class Attachment extends Item
+	{
+		private Attachment() {}
+		
+		public static final String MD5 = "md5";
+		public static final String MTIME = "mtime";
+		public static final String FILENAME = "filename";
+		public static final String PATH = "path";
+		public static final String CONTENT_TYPE = "contentType";
+		public static final String CHARSET = "charset";
+	}
 	
 	public static final class Link
 	{

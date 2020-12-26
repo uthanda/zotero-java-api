@@ -2,6 +2,7 @@ package zotero.apiimpl;
 
 import zotero.api.PropertiesItem;
 import zotero.api.constants.ItemType;
+import zotero.api.constants.LinkMode;
 import zotero.api.properties.Properties;
 import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
@@ -19,10 +20,16 @@ public class PropertiesItemImpl implements PropertiesItem
 		this.properties = PropertiesImpl.fromRest(item);
 	}
 
+	PropertiesItemImpl(ItemType type, LinkMode mode)
+	{
+		this.properties = new PropertiesImpl();
+		PropertiesImpl.initializeAttachmentProperties(type, mode, this.properties);
+	}
+	
 	PropertiesItemImpl(ItemType type)
 	{
 		this.properties = new PropertiesImpl();
-		PropertiesImpl.initialize(type, this.properties, null);
+		PropertiesImpl.initializeDocumentProperties(type, this.properties, null);
 	}
 
 	@Override
@@ -37,6 +44,6 @@ public class PropertiesItemImpl implements PropertiesItem
 
 		this.properties = new PropertiesImpl();
 
-		PropertiesImpl.initialize(type, properties, current);
+		PropertiesImpl.initializeDocumentProperties(type, properties, current);
 	}
 }

@@ -41,7 +41,7 @@ public class ZoteroRestData extends HashMap<String, Object>
 		{
 			PropertyImpl<?> property = (PropertyImpl<?>) prop;
 			
-			if (delta && !property.isDirty())
+			if (prop == null || (delta && !property.isDirty()))
 			{
 				return this;
 			}
