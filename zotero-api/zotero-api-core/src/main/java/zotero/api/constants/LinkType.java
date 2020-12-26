@@ -4,6 +4,7 @@ public enum LinkType implements ZoteroEnum
 {
 	SELF("self"),
 	ALTERNATE("alternate"),
+	ENCLOSURE("enclosure"),
 	UP("up");
 
 	private String zoteroName;

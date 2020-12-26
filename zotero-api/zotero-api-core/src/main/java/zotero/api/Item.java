@@ -6,17 +6,18 @@ import zotero.api.collections.Creators;
 import zotero.api.collections.Tags;
 import zotero.api.constants.ItemType;
 import zotero.api.iterators.CollectionIterator;
-import zotero.api.iterators.ItemIterator;
 
-public interface Item extends Entry 
+public interface Item extends Entry
 {
-	ItemIterator fetchChildren();
+	ItemType getItemType();
 	
 	String getTitle();
 
 	void setTitle(String title);
 	
 	Creators getCreators();
+	
+	Tags getTags();
 
 	Date getDateAdded();
 
@@ -24,8 +25,6 @@ public interface Item extends Entry
 
 	Date getAccessDate();
 
-	ItemType getItemType();
-	
 	void changeItemType(ItemType type);
 
 	String getRights();
@@ -50,15 +49,5 @@ public interface Item extends Entry
 
 	CollectionIterator getCollections();
 
-	Tags getTags();
-
 	int getNumberOfChilden();
-
-	Relationships getRelationships();
-
-	void refresh();
-
-	void save();
-
-	void delete();
 }

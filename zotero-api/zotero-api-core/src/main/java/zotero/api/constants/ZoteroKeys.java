@@ -7,6 +7,10 @@ package zotero.api.constants;
  */
 public class ZoteroKeys
 {
+	public static final String PATH = "path";
+	public static final String LINK_MODE = "linkMode";
+	public static final String CONTENT_TYPE = "contentType";
+	public static final String CHARSET = "charset";
 	private ZoteroKeys()
 	{
 	}

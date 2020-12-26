@@ -3,6 +3,7 @@ package zotero.apiimpl;
 import zotero.api.Entry;
 import zotero.api.Library;
 import zotero.api.Links;
+import zotero.api.Relationships;
 import zotero.api.constants.ItemType;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.model.ZoteroRestLinks;
@@ -82,6 +83,13 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 	public final Links getLinks()
 	{
 		return links;
+	}
+
+	@Override
+	public Relationships getRelationships()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public static void loadLinks(EntryImpl entry, ZoteroRestLinks links)

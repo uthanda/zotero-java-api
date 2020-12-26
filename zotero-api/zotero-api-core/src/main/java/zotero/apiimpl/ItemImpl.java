@@ -30,7 +30,6 @@ import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.model.ZoteroRestMeta;
 
-@SuppressWarnings({ "squid:S2160" })
 public final class ItemImpl extends EntryImpl implements Item
 {
 	private ZoteroRestItem jsonItem;
@@ -247,7 +246,9 @@ public final class ItemImpl extends EntryImpl implements Item
 
 		EntryImpl.loadLinks(item, jsonItem.getLinks());
 
-		Double numChildren = (Double) jsonItem.getMeta().get(ZoteroRestMeta.NUM_CHILDREN);
+		Object numChildrenObject = jsonItem.getMeta().get(ZoteroRestMeta.NUM_CHILDREN);
+		
+		Double numChildren = numChildrenObject instanceof Double ? (Double) numChildrenObject : null;
 		item.numChildren = numChildren == null ? 0 : numChildren.intValue();
 		return item;
 	}

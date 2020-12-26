@@ -14,9 +14,11 @@ public interface Entry extends PropertiesItem
 
 	Links getLinks();
 
-	void refresh() throws Exception;
+	void refresh();
 
-	void save() throws Exception;
+	void save();
 
-	void delete() throws Exception;
+	void delete();
+	
+	Relationships getRelationships();
 }
