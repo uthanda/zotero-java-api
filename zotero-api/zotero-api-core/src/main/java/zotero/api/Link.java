@@ -1,10 +1,10 @@
 package zotero.api;
 
-public interface Link
+public interface Link extends PropertiesItem
 {
-	String getUri();
+	String getHref();
 
-	void setUri(String uri);
+	void setHref(String uri);
 
 	String getType();
 

@@ -7,10 +7,6 @@ package zotero.api.constants;
  */
 public class ZoteroKeys
 {
-	public static final String PATH = "path";
-	public static final String LINK_MODE = "linkMode";
-	public static final String CONTENT_TYPE = "contentType";
-	public static final String CHARSET = "charset";
 	private ZoteroKeys()
 	{
 	}
@@ -130,4 +126,23 @@ public class ZoteroKeys
 	public static final String COLLECTIONS = "collections";
 	public static final String RELATIONS = "relations";
 	public static final String PARENT_COLLECTION = "parentCollection";
+	public static final String NUM_CHILDREN = "numChildren";
+	public static final String LINK_MODE = "linkMode";
+	public static final String PATH = "path";
+	public static final String CONTENT_TYPE = "contentType";
+	public static final String CHARSET = "charset";
+	public static final String CREATOR_SUMMARY = "creatorSummary";
+	public static final String PARSED_DATE = "parsedDate";
+	public static final String MD5 = "md5";
+	public static final String MTIME = "mtime";
+	
+	public static final class Link
+	{
+		private Link() {}
+		
+		public static final String HREF = "href";
+		public static final String TYPE = "type";
+		public static final String LENGTH = "length";
+		public static final String TITLE = "title";
+	}
 }

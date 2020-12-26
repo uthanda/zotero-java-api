@@ -108,7 +108,7 @@ public abstract class Library
 	 *            Item type
 	 * @return Initialized item
 	 */
-	public abstract Item createItem(ItemType type);
+	public abstract Document createDocument(ItemType type);
 
 	public abstract ItemIterator fetchItemsAll();
 

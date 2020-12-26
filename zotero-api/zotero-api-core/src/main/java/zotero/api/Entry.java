@@ -19,6 +19,4 @@ public interface Entry extends PropertiesItem
 	void save();
 
 	void delete();
-	
-	Relationships getRelationships();
 }

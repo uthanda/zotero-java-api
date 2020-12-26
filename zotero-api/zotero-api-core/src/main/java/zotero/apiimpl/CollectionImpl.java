@@ -150,4 +150,10 @@ public final class CollectionImpl extends EntryImpl implements Collection
 
 		return ((LibraryImpl) getLibrary()).fetchCollection(parentCollectionKey);
 	}
+
+	@Override
+	String getDeletePath()
+	{
+		return ZoteroRestPaths.COLLECTIONS;
+	}
 }

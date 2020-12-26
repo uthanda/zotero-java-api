@@ -1,6 +1,7 @@
 package zotero.apiimpl;
 
 import zotero.api.Collection;
+import zotero.api.Document;
 import zotero.api.Item;
 import zotero.api.Library;
 import zotero.api.ZoteroAPIKey;
@@ -148,9 +149,9 @@ public final class LibraryImpl extends Library
 	}
 
 	@Override
-	public Item createItem(ItemType type)
+	public Document createDocument(ItemType type)
 	{
-		return new ItemImpl(type, this);
+		return new DocumentImpl(type, this);
 	}
 
 	public <T> RestResponse<T> performGet(GetBuilder<T> builder)

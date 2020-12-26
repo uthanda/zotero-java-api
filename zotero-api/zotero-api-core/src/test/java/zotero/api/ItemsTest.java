@@ -20,6 +20,7 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import zotero.api.attachments.Attachment;
 import zotero.api.collections.Creators;
 import zotero.api.collections.Tags;
 import zotero.api.constants.CreatorType;
@@ -51,14 +52,14 @@ import zotero.apiimpl.rest.model.ZoteroRestItem;
 	ZoteroRestPatchRequest.class, ZoteroRestPatchRequest.Builder.class,
 	ZoteroRestPostRequest.class, ZoteroRestPostRequest.Builder.class
 })
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*"})
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "org.w3c.*", "javax.management.*"})
 public class ItemsTest
 {
 	private static final String TEST_ITEM_B4ERDVS4 = "B4ERDVS4";
 	// Static setups
 	private static MockRestService service = new MockRestService();
 	private static Library library;
-	private static Item item;
+	private static Document item;
 
 	@BeforeClass
 	public static void setUp() throws NoSuchMethodException, SecurityException
@@ -66,7 +67,7 @@ public class ItemsTest
 		// Initialize the mock service for the static setup
 		service.initialize();
 		library = Library.createLibrary(MockRestService.API_ID, new ZoteroAPIKey(MockRestService.API_KEY));
-		item = library.fetchItem(TEST_ITEM_B4ERDVS4);
+		item = (Document) library.fetchItem(TEST_ITEM_B4ERDVS4);
 	}
 
 	@Before
@@ -86,18 +87,13 @@ public class ItemsTest
 	@Test
 	public void testZoteroItemFixedProperties() throws IOException
 	{
-		assertEquals("abstractNoteContent", item.getAbstractNote());
 		assertEquals(DatatypeConverter.parseDateTime("2020-07-04T19:06:47Z").getTimeInMillis(), item.getAccessDate().getTime());
 		assertEquals(DatatypeConverter.parseDateTime("2020-07-03T10:31:52Z").getTimeInMillis(), item.getDateAdded().getTime());
 		assertEquals(DatatypeConverter.parseDateTime("2020-12-10T06:28:27Z").getTimeInMillis(), item.getDateModified().getTime());
-		assertEquals("tex.ids: hewelt_toward_2019, hewelt_towards_nodate", item.getExtra());
 		assertEquals(ItemType.JOURNAL_ARTICLE, item.getItemType());
 		assertEquals(TEST_ITEM_B4ERDVS4, item.getKey());
 		assertEquals(2, item.getNumberOfChilden());
-		assertEquals("rightsContent", item.getRights());
-		assertEquals("TAMFCM", item.getShortTitle());
 		assertEquals("Toward a methodology for case modeling", item.getTitle());
-		assertEquals("http://link.springer.com/10.1007/s10270-019-00766-5", item.getURL());
 		assertEquals(2906, item.getVersion());
 	}
 
@@ -213,10 +209,12 @@ public class ItemsTest
 		Item child = i.next();
 		assertNotNull(child);
 		assertEquals(ItemType.ATTACHMENT, child.getItemType());
+		assertTrue(child instanceof Attachment);
 
 		child = i.next();
 		assertNotNull(child);
 		assertEquals(ItemType.ATTACHMENT, child.getItemType());
+		assertTrue(child instanceof Attachment);
 
 		assertFalse(i.hasNext());
 	}
@@ -229,7 +227,7 @@ public class ItemsTest
 			return Boolean.TRUE;
 		});
 
-		Item update = library.createItem(ItemType.CASE);
+		Document update = (Document) library.createDocument(ItemType.CASE);
 
 		update.getCreators().add(CreatorType.CARTOGRAPHER, "John", "Dewey");
 		update.save();
@@ -265,7 +263,7 @@ public class ItemsTest
 			return Boolean.TRUE;
 		});
 
-		Item update = library.fetchItem(TEST_ITEM_B4ERDVS4);
+		Document update = (Document) library.fetchItem(TEST_ITEM_B4ERDVS4);
 
 		update.getCreators().add(CreatorType.CARTOGRAPHER, "John", "Dewey");
 		update.setTitle("Changed title");
@@ -334,6 +332,6 @@ public class ItemsTest
 		Item delete = library.fetchItem(TEST_ITEM_B4ERDVS4);
 		delete.delete();
 		
-		delete.getAbstractNote();
+		delete.getKey();
 	}
 }

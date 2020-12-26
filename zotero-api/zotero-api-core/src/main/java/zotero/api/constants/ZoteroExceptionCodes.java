@@ -20,5 +20,6 @@ public final class ZoteroExceptionCodes
 		 * Indicates that an operation was attempted on an item that has been deleted.
 		 */
 		public static final int OBJECT_DELETED = 0x0;
+		public static final int UNSUPPORTED_ENUM_VALUE = 0x1;
 	}
 }

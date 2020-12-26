@@ -1,6 +1,6 @@
 package zotero.api.constants;
 
-public enum AttachmentType implements ZoteroEnum
+public enum LinkMode implements ZoteroEnum
 {
 	/**
 	 * 
@@ -21,7 +21,7 @@ public enum AttachmentType implements ZoteroEnum
 
 	private final String zoteroName;
 
-	private AttachmentType(String zoteroName)
+	private LinkMode(String zoteroName)
 	{
 		this.zoteroName = zoteroName;
 	}
@@ -32,15 +32,15 @@ public enum AttachmentType implements ZoteroEnum
 		return zoteroName;
 	}
 	
-	public static AttachmentType fromZoteroType(String zoteroType)
+	public static LinkMode fromZoteroType(String zoteroType)
 	{
-		for(AttachmentType type : AttachmentType.values())
+		for(LinkMode type : LinkMode.values())
 		{
 			if(type.zoteroName.equals(zoteroType)) {
 				return type;
 			}
 		}
 		
-		throw new EnumConstantNotPresentException(AttachmentType.class, zoteroType);
+		throw new EnumConstantNotPresentException(LinkMode.class, zoteroType);
 	}
 }
