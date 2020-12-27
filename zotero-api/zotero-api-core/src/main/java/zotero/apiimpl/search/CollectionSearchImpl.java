@@ -7,9 +7,9 @@ import zotero.api.search.CollectionSearch;
 import zotero.api.search.Direction;
 import zotero.api.search.ItemEndpointSearch;
 import zotero.apiimpl.iterators.CollectionIteratorImpl;
-import zotero.apiimpl.rest.RestResponse;
 import zotero.apiimpl.rest.ZoteroRestPaths;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
+import zotero.apiimpl.rest.response.RestResponse;
 
 public class CollectionSearchImpl extends ItemEndpointSearchImpl<CollectionSearch, CollectionIterator> implements CollectionSearch
 {

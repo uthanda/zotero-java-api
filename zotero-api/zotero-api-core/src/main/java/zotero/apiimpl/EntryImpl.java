@@ -8,10 +8,10 @@ import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.exceptions.ZoteroRuntimeException;
-import zotero.apiimpl.rest.builders.DeleteBuilder;
-import zotero.apiimpl.rest.impl.ZoteroRestDeleteRequest;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.model.ZoteroRestLinks;
+import zotero.apiimpl.rest.request.builders.DeleteBuilder;
+import zotero.apiimpl.rest.response.SuccessResponseBuilder;
 
 abstract class EntryImpl extends PropertiesItemImpl implements Entry
 {
@@ -119,10 +119,10 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 	{
 		checkDeletionStatus();
 	
-		DeleteBuilder builder = ZoteroRestDeleteRequest.Builder.createBuilder();
+		DeleteBuilder<?,?> builder = DeleteBuilder.createBuilder(new SuccessResponseBuilder());
 		builder.itemKey(this.getKey()).url(getDeletePath());
 		
-		((LibraryImpl)getLibrary()).performDelete(builder);
+		((LibraryImpl)getLibrary()).performRequest(builder);
 		this.deleted = true;
 	}
 

@@ -1,29 +1,29 @@
 package zotero.apiimpl;
 
+import zotero.api.Attachment;
 import zotero.api.Collection;
 import zotero.api.Document;
 import zotero.api.Item;
 import zotero.api.Library;
 import zotero.api.ZoteroAPIKey;
-import zotero.api.attachments.Attachment;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
+import zotero.api.constants.ZoteroExceptionCodes;
+import zotero.api.constants.ZoteroExceptionType;
+import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.search.CollectionSearch;
 import zotero.api.search.ItemSearch;
-import zotero.apiimpl.attachments.PendingAttachmentImpl;
 import zotero.apiimpl.iterators.CollectionIteratorImpl;
 import zotero.apiimpl.iterators.ZoteroItemIteratorImpl;
-import zotero.apiimpl.rest.RestResponse;
 import zotero.apiimpl.rest.ZoteroRestPaths;
-import zotero.apiimpl.rest.builders.Builder;
-import zotero.apiimpl.rest.builders.DeleteBuilder;
-import zotero.apiimpl.rest.builders.GetBuilder;
-import zotero.apiimpl.rest.builders.PatchBuilder;
-import zotero.apiimpl.rest.builders.PostBuilder;
-import zotero.apiimpl.rest.impl.ZoteroRestGetRequest;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
+import zotero.apiimpl.rest.request.builders.BaseBuilder;
+import zotero.apiimpl.rest.request.builders.GetBuilder;
+import zotero.apiimpl.rest.response.JSONRestResponseBuilder;
+import zotero.apiimpl.rest.response.ResponseBuilder;
+import zotero.apiimpl.rest.response.RestResponse;
 import zotero.apiimpl.search.CollectionSearchImpl;
 import zotero.apiimpl.search.ItemSearchImpl;
 
@@ -52,11 +52,11 @@ public final class LibraryImpl extends Library
 	@Override
 	public Collection fetchCollection(String key)
 	{
-		GetBuilder<ZoteroRestItem> req = ZoteroRestGetRequest.Builder.createBuilder(ZoteroRestItem.class);
+		GetBuilder<ZoteroRestItem,?> req = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem.class));
 
 		req.url(ZoteroRestPaths.COLLECTION).urlParam("key", key);
 
-		RestResponse<ZoteroRestItem> response = performGet(req);
+		RestResponse<ZoteroRestItem> response = performRequest(req);
 
 		return CollectionImpl.fromItem(response.getResponse(), this);
 	}
@@ -93,7 +93,7 @@ public final class LibraryImpl extends Library
 
 	CollectionIterator fetchCollections(String url, String key)
 	{
-		GetBuilder<ZoteroRestItem[]> builder = ZoteroRestGetRequest.Builder.createBuilder(ZoteroRestItem[].class);
+		GetBuilder<ZoteroRestItem[],?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class));
 		builder.url(url);
 
 		if (key != null)
@@ -101,7 +101,7 @@ public final class LibraryImpl extends Library
 			builder.urlParam("key", key);
 		}
 
-		RestResponse<ZoteroRestItem[]> response = performGet(builder);
+		RestResponse<ZoteroRestItem[]> response = performRequest(builder);
 
 		return new CollectionIteratorImpl(response, this);
 	}
@@ -127,18 +127,18 @@ public final class LibraryImpl extends Library
 	@Override
 	public Item fetchItem(String key)
 	{
-		GetBuilder<ZoteroRestItem> builder = ZoteroRestGetRequest.Builder.createBuilder(ZoteroRestItem.class);
+		GetBuilder<ZoteroRestItem,?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem.class));
 
 		builder.url(ZoteroRestPaths.ITEM).urlParam("key", key);
 
-		RestResponse<ZoteroRestItem> response = performGet(builder);
+		RestResponse<ZoteroRestItem> response = performRequest(builder);
 
 		return ItemImpl.fromItem(response.getResponse(), this);
 	}
 
 	ItemIterator fetchItems(String url, String key)
 	{
-		GetBuilder<ZoteroRestItem[]> builder = ZoteroRestGetRequest.Builder.createBuilder(ZoteroRestItem[].class);
+		GetBuilder<ZoteroRestItem[],?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class));
 		builder.url(url);
 
 		if (key != null)
@@ -146,7 +146,7 @@ public final class LibraryImpl extends Library
 			builder.urlParam("key", key);
 		}
 
-		RestResponse<ZoteroRestItem[]> response = performGet(builder);
+		RestResponse<ZoteroRestItem[]> response = performRequest(builder);
 
 		return new ZoteroItemIteratorImpl(response, this);
 	}
@@ -157,7 +157,7 @@ public final class LibraryImpl extends Library
 		return new DocumentImpl(type, this);
 	}
 
-	public <T> RestResponse<T> performGet(GetBuilder<T> builder)
+	public <T,B extends BaseBuilder<T,B,R>,R extends ResponseBuilder<T>> RestResponse<T> performRequest(BaseBuilder<T,B,R> builder)
 	{
 		RestResponse<T> resp = builder.apiKey(apiKey).id(id).setUsers().build().execute();
 
@@ -166,48 +166,7 @@ public final class LibraryImpl extends Library
 			return resp;
 		}
 
-		throw new RuntimeException(resp.getErrorMessage());
-	}
-
-	public void performPost(PostBuilder builder)
-	{
-		RestResponse<Boolean> resp = applyCommon(builder).build().execute();
-
-		if (resp.wasSuccessful())
-		{
-			return;
-		}
-
-		throw new RuntimeException(resp.getErrorMessage());
-	}
-
-	private <T extends Builder<T>> T applyCommon(T builder)
-	{
-		return builder.apiKey(apiKey).id(id).setUsers();
-	}
-
-	public void performPatch(PatchBuilder builder)
-	{
-		RestResponse<Boolean> resp = applyCommon(builder).build().execute();
-
-		if (resp.wasSuccessful())
-		{
-			return;
-		}
-
-		throw new RuntimeException(resp.getErrorMessage());
-	}
-
-	public void performDelete(DeleteBuilder builder)
-	{
-		RestResponse<Boolean> resp = applyCommon(builder).build().execute();
-
-		if (resp.wasSuccessful())
-		{
-			return;
-		}
-
-		throw new RuntimeException(resp.getErrorMessage());
+		throw new ZoteroRuntimeException(ZoteroExceptionType.IO, ZoteroExceptionCodes.IO.API_ERROR, resp.getErrorMessage());
 	}
 
 	@Override
@@ -225,12 +184,12 @@ public final class LibraryImpl extends Library
 	@Override
 	public Attachment createAttachment(LinkMode mode)
 	{
-		return new PendingAttachmentImpl(this, mode);
+		return new AttachmentImpl(mode, this);
 	}
 
 	@Override
 	public Attachment createAttachment(Item parent, LinkMode mode)
 	{
-		return new PendingAttachmentImpl(this, mode, parent.getKey());
+		return new AttachmentImpl(mode, this, parent.getKey());
 	}
 }

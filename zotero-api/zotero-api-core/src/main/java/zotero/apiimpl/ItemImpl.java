@@ -14,15 +14,13 @@ import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.properties.PropertyObject;
-import zotero.apiimpl.attachments.AttachmentImpl;
 import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.rest.ZoteroRestPaths;
-import zotero.apiimpl.rest.builders.PatchBuilder;
-import zotero.apiimpl.rest.builders.PostBuilder;
-import zotero.apiimpl.rest.impl.ZoteroRestPatchRequest;
-import zotero.apiimpl.rest.impl.ZoteroRestPostRequest;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
+import zotero.apiimpl.rest.request.builders.PatchBuilder;
+import zotero.apiimpl.rest.request.builders.PostBuilder;
+import zotero.apiimpl.rest.response.SuccessResponseBuilder;
 
 public class ItemImpl extends EntryImpl implements Item
 {
@@ -143,6 +141,7 @@ public class ItemImpl extends EntryImpl implements Item
 	public void save()
 	{
 		checkDeletionStatus();
+		validate();
 
 		// This is a new item, so we do a post
 		LibraryImpl libraryImpl = (LibraryImpl) getLibrary();
@@ -151,20 +150,25 @@ public class ItemImpl extends EntryImpl implements Item
 		{
 			ZoteroRestItem item = buildRestItem(false);
 
-			PostBuilder builder = ZoteroRestPostRequest.Builder.createBuilder();
-			builder.content(item).url(ZoteroRestPaths.ITEMS);
+			PostBuilder<?,?> builder = PostBuilder.createBuilder(new SuccessResponseBuilder());
+			builder.jsonObject(item).url(ZoteroRestPaths.ITEMS);
 
-			libraryImpl.performPost((builder));
+			libraryImpl.performRequest((builder));
 		}
 		else
 		{
 			ZoteroRestItem item = buildRestItem(true);
 
-			PatchBuilder builder = ZoteroRestPatchRequest.Builder.createBuilder();
-			builder.content(item).itemKey(this.getKey()).url(ZoteroRestPaths.ITEM);
+			PatchBuilder<?,?> builder = PatchBuilder.createBuilder(new SuccessResponseBuilder());
+			builder.jsonObject(item).itemKey(this.getKey()).url(ZoteroRestPaths.ITEM);
 
-			libraryImpl.performPatch((builder));
+			libraryImpl.performRequest((builder));
 		}
+	}
+
+	public void validate()
+	{
+		// Content and property validation goes here
 	}
 
 	private ZoteroRestItem buildRestItem(boolean deltaMode)

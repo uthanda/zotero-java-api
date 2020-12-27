@@ -1,8 +1,11 @@
 package zotero.apiimpl.search;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.impl.client.HttpClients;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,28 +23,17 @@ import zotero.api.search.ItemSearch;
 import zotero.api.search.QuickSearchMode;
 import zotero.api.util.MockRestService;
 import zotero.api.util.Params;
-import zotero.apiimpl.rest.builders.GetBuilder;
-import zotero.apiimpl.rest.builders.PostBuilder;
-import zotero.apiimpl.rest.impl.ZoteroRestDeleteRequest;
-import zotero.apiimpl.rest.impl.ZoteroRestGetRequest;
-import zotero.apiimpl.rest.impl.ZoteroRestPatchRequest;
-import zotero.apiimpl.rest.impl.ZoteroRestPostRequest;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({
-	ZoteroRestGetRequest.class, ZoteroRestGetRequest.Builder.class,
-	ZoteroRestDeleteRequest.class, ZoteroRestDeleteRequest.Builder.class,
-	ZoteroRestPatchRequest.class, ZoteroRestPatchRequest.Builder.class,
-	ZoteroRestPostRequest.class, ZoteroRestPostRequest.Builder.class
-})
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*"})
+@PrepareForTest({ HttpClients.class })
+@PowerMockIgnore({ "com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "org.w3c.*", "javax.management.*" })
 public class CollectionSearchImplTest
 {
 	private static MockRestService service = new MockRestService();
 	private static Library library;
 
 	@BeforeClass
-	public static void setUp() throws NoSuchMethodException, SecurityException
+	public static void setUp() throws NoSuchMethodException, SecurityException, ClientProtocolException, IOException
 	{
 		// Initialize the mock service for the static setup
 		service.initialize();
@@ -49,18 +41,10 @@ public class CollectionSearchImplTest
 	}
 
 	@Before
-	public void initialize() throws NoSuchMethodException, SecurityException
+	public void initialize() throws NoSuchMethodException, SecurityException, ClientProtocolException, IOException
 	{
 		// Initialize the service for the thread as well ....
 		service.initialize();
-
-		GetBuilder<?> gb = ZoteroRestGetRequest.Builder.createBuilder(Object.class);
-
-		assertTrue(gb instanceof zotero.api.util.MockGetRequest.MockRequestBuilder);
-
-		PostBuilder pb = ZoteroRestPostRequest.Builder.createBuilder();
-
-		assertTrue(pb instanceof zotero.api.util.MockPostRequest.MockRequestBuilder);
 	}
 	
 	@Test

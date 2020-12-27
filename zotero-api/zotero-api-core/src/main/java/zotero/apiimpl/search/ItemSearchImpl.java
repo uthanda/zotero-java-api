@@ -9,9 +9,9 @@ import zotero.api.search.Direction;
 import zotero.api.search.ItemEndpointSearch;
 import zotero.api.search.ItemSearch;
 import zotero.apiimpl.iterators.ZoteroItemIteratorImpl;
-import zotero.apiimpl.rest.RestResponse;
 import zotero.apiimpl.rest.ZoteroRestPaths;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
+import zotero.apiimpl.rest.response.RestResponse;
 
 public class ItemSearchImpl extends ItemEndpointSearchImpl<ItemSearch, ItemIterator> implements ItemSearch
 {

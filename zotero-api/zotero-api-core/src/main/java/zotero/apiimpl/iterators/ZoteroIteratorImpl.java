@@ -6,10 +6,10 @@ import java.util.function.BiFunction;
 import zotero.api.Library;
 import zotero.api.iterators.ZoteroIterator;
 import zotero.apiimpl.LibraryImpl;
-import zotero.apiimpl.rest.RestResponse;
-import zotero.apiimpl.rest.builders.GetBuilder;
-import zotero.apiimpl.rest.impl.ZoteroRestGetRequest;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
+import zotero.apiimpl.rest.request.builders.GetBuilder;
+import zotero.apiimpl.rest.response.JSONRestResponseBuilder;
+import zotero.apiimpl.rest.response.RestResponse;
 
 class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 {
@@ -47,9 +47,9 @@ class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 				throw new NoSuchElementException();
 			}
 
-			GetBuilder<ZoteroRestItem[]> b = ZoteroRestGetRequest.Builder.createBuilder(ZoteroRestItem[].class).specialUrl(nextLink);
+			GetBuilder<ZoteroRestItem[],?> b = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class)).specialUrl(nextLink);
 			
-			response = ((LibraryImpl)library).performGet(b);
+			response = ((LibraryImpl)library).performRequest(b);
 			
 			page = response.getResponse();
 			index = 0;

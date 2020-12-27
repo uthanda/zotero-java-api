@@ -7,14 +7,12 @@ import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.rest.ZoteroRestPaths;
-import zotero.apiimpl.rest.builders.DeleteBuilder;
-import zotero.apiimpl.rest.builders.PatchBuilder;
-import zotero.apiimpl.rest.builders.PostBuilder;
-import zotero.apiimpl.rest.impl.ZoteroRestDeleteRequest;
-import zotero.apiimpl.rest.impl.ZoteroRestPatchRequest;
-import zotero.apiimpl.rest.impl.ZoteroRestPostRequest;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
+import zotero.apiimpl.rest.request.builders.DeleteBuilder;
+import zotero.apiimpl.rest.request.builders.PatchBuilder;
+import zotero.apiimpl.rest.request.builders.PostBuilder;
+import zotero.apiimpl.rest.response.SuccessResponseBuilder;
 
 @SuppressWarnings({ "squid:S2160" })
 public final class CollectionImpl extends EntryImpl implements Collection
@@ -72,16 +70,18 @@ public final class CollectionImpl extends EntryImpl implements Collection
 
 	private void performPatch()
 	{
-		PatchBuilder builder = ZoteroRestPatchRequest.Builder.createBuilder();
-		builder.url(ZoteroRestPaths.COLLECTION).content(buildContent(true));
-		((LibraryImpl)getLibrary()).performPatch(builder);
+		PatchBuilder<Boolean,?> builder = PatchBuilder.createBuilder(new SuccessResponseBuilder());
+		ZoteroRestItem jsonContent = buildContent(true);
+		builder.url(ZoteroRestPaths.COLLECTION).jsonObject(jsonContent);
+		((LibraryImpl)getLibrary()).performRequest(builder);
 	}
 
 	private void performCreate()
 	{
-		PostBuilder builder = ZoteroRestPostRequest.Builder.createBuilder();
-		builder.url(ZoteroRestPaths.COLLECTIONS).content(buildContent(false));
-		((LibraryImpl)getLibrary()).performPost(builder);
+		PostBuilder<Boolean,?> builder = PostBuilder.createBuilder(new SuccessResponseBuilder());
+		ZoteroRestItem jsonContent = buildContent(true);
+		builder.url(ZoteroRestPaths.COLLECTION).jsonObject(jsonContent);
+		((LibraryImpl)getLibrary()).performRequest(builder);
 	}
 
 	private ZoteroRestItem buildContent(boolean delta)
@@ -99,9 +99,9 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	@Override
 	public void delete()
 	{
-		DeleteBuilder builder = ZoteroRestDeleteRequest.Builder.createBuilder();
+		DeleteBuilder<Boolean,?> builder = DeleteBuilder.createBuilder(new SuccessResponseBuilder());
 		builder.url(ZoteroRestPaths.COLLECTIONS).itemKey(this.getKey());
-		((LibraryImpl)getLibrary()).performDelete(builder);
+		((LibraryImpl)getLibrary()).performRequest(builder);
 	}
 
 	@Override

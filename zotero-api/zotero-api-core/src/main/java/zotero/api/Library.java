@@ -1,6 +1,5 @@
 package zotero.api;
 
-import zotero.api.attachments.Attachment;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.iterators.CollectionIterator;

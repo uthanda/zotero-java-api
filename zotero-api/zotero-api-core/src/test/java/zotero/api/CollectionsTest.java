@@ -6,8 +6,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.util.NoSuchElementException;
 
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.impl.client.HttpClients;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,27 +21,20 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.google.gson.Gson;
+
 import zotero.api.constants.LinkType;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
-import zotero.api.util.MockPatchRequest;
-import zotero.api.util.MockPostRequest;
 import zotero.api.util.MockRestService;
-import zotero.apiimpl.rest.ZoteroRestPaths;
-import zotero.apiimpl.rest.impl.ZoteroRestDeleteRequest;
-import zotero.apiimpl.rest.impl.ZoteroRestGetRequest;
-import zotero.apiimpl.rest.impl.ZoteroRestPatchRequest;
-import zotero.apiimpl.rest.impl.ZoteroRestPostRequest;
+import zotero.api.util.PassThruInputStream;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({
-	ZoteroRestGetRequest.class, ZoteroRestGetRequest.Builder.class,
-	ZoteroRestDeleteRequest.class, ZoteroRestDeleteRequest.Builder.class,
-	ZoteroRestPatchRequest.class, ZoteroRestPatchRequest.Builder.class,
-	ZoteroRestPostRequest.class, ZoteroRestPostRequest.Builder.class
+	HttpClients.class
 })
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "org.w3c.*", "javax.management.*"})
 public class CollectionsTest
@@ -49,7 +47,7 @@ public class CollectionsTest
 	private static Collection collectionSubCollections;
 
 	@BeforeClass
-	public static void setUp() throws NoSuchMethodException, SecurityException
+	public static void setUp() throws NoSuchMethodException, SecurityException, ClientProtocolException, IOException
 	{
 		// Initialize the mock service for the static setup
 		service.initialize();
@@ -59,7 +57,7 @@ public class CollectionsTest
 	}
 
 	@Before
-	public void initialize() throws NoSuchMethodException, SecurityException
+	public void initialize() throws NoSuchMethodException, SecurityException, ClientProtocolException, IOException
 	{
 		// Initialize the mock service for each subsequent run
 		service.initialize();
@@ -170,9 +168,11 @@ public class CollectionsTest
 	@Test
 	public void testCreateCollection()
 	{
-		service.setPostCallbackFunction(req ->{
-			testPost(req);
-			return Boolean.TRUE;
+		service.setPost(post -> {
+
+			post.setEntity(new InputStreamEntity(new PassThruInputStream(post, this::testCreate), ContentType.APPLICATION_JSON));
+
+			return MockRestService.postSuccess.apply(post);
 		});
 		
 		Collection child = library.createCollection(collectionNoSubCollections);
@@ -180,13 +180,9 @@ public class CollectionsTest
 		child.save();
 	}
 
-	private void testPost(MockPostRequest req)
+	private void testCreate(byte[] content)
 	{
-		assertEquals(ZoteroRestPaths.COLLECTIONS, req.getUrl());
-		
-		assertNotNull(req.getContent());
-		
-		ZoteroRestItem item = (ZoteroRestItem) req.getContent();
+		ZoteroRestItem item = new Gson().fromJson(new String(content), ZoteroRestItem.class);
 		assertEquals(null, item.getKey());
 		assertNotNull(item.getData());
 		
@@ -200,23 +196,21 @@ public class CollectionsTest
 	@Test
 	public void testUpdateCollection()
 	{
-		service.setPatchCallbackFunction(req ->{
-			testPatch(req);
-			return Boolean.TRUE;
+		service.setPatch(patch -> {
+
+			patch.setEntity(new InputStreamEntity(new PassThruInputStream(patch, this::testUpdate), ContentType.APPLICATION_JSON));
+
+			return MockRestService.patchSuccess.apply(patch);
 		});
-		
+
 		Collection parent = library.fetchCollection(KEY_SUBS);
 		parent.setName("Changed name");
 		parent.save();
 	}
 	
-	private void testPatch(MockPatchRequest req)
+	private void testUpdate(byte[] content)
 	{
-		assertEquals(ZoteroRestPaths.COLLECTION, req.getUrl());
-		
-		assertNotNull(req.getContent());
-		
-		ZoteroRestItem item = (ZoteroRestItem) req.getContent();
+		ZoteroRestItem item = new Gson().fromJson(new String(content), ZoteroRestItem.class);
 		assertEquals(null, item.getKey());
 		assertNotNull(item.getData());
 		

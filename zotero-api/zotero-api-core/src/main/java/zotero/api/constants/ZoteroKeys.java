@@ -163,6 +163,8 @@ public class ZoteroKeys
 		public static final String PATH = "path";
 		public static final String CONTENT_TYPE = "contentType";
 		public static final String CHARSET = "charset";
+		public static final String PARENT_ITEM = "parentItem";
+		public static final String FILE_SIZE = "filesize";
 	}
 	
 	public static final class Link

@@ -9,7 +9,7 @@ public enum ZoteroExceptionType
 	/**
 	 * 
 	 */
-	NETWORK,
+	IO,
 	
 	/**
 	 * 

@@ -14,6 +14,7 @@
 		<version.powermock>2.0.9</version.powermock>
 		<version.gson>2.8.6</version.gson>
 		<version.apache.httpcomponents>4.5.13</version.apache.httpcomponents>
+		<version.apache.commons-io>2.8.0</version.apache.commons-io>
 	</properties>
 	<build>
 		<plugins>
@@ -44,6 +45,11 @@
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
 				<version>${version.apache.httpcomponents}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${version.apache.commons-io}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.powermock</groupId>

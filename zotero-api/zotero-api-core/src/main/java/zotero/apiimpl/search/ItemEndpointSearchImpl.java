@@ -12,10 +12,10 @@ import zotero.api.search.ItemEndpointSearch;
 import zotero.api.search.QuickSearchMode;
 
 import zotero.apiimpl.*;
-import zotero.apiimpl.rest.RestResponse;
-import zotero.apiimpl.rest.builders.GetBuilder;
-import zotero.apiimpl.rest.impl.ZoteroRestGetRequest;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
+import zotero.apiimpl.rest.request.builders.GetBuilder;
+import zotero.apiimpl.rest.response.JSONRestResponseBuilder;
+import zotero.apiimpl.rest.response.RestResponse;
 
 public abstract class ItemEndpointSearchImpl<S,T> extends SearchImpl<ItemEndpointSearch<S,T>> implements ItemEndpointSearch<S,T>
 {
@@ -54,12 +54,12 @@ public abstract class ItemEndpointSearchImpl<S,T> extends SearchImpl<ItemEndpoin
 	
 	protected RestResponse<ZoteroRestItem[]> execute()
 	{
-		GetBuilder<ZoteroRestItem[]> builder = ZoteroRestGetRequest.Builder.createBuilder(ZoteroRestItem[].class);
+		GetBuilder<ZoteroRestItem[],?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class));
 		this.apply(builder::queryParam);
 		
 		builder.url(url);
 		
-		RestResponse<ZoteroRestItem[]> response = ((LibraryImpl)library).performGet(builder);
+		RestResponse<ZoteroRestItem[]> response = ((LibraryImpl)library).performRequest(builder);
 		return response;
 	}
 

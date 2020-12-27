@@ -1,8 +1,7 @@
-package zotero.api.attachments;
+package zotero.api;
 
 import java.io.InputStream;
 
-import zotero.api.Item;
 import zotero.api.constants.LinkMode;
 
 public interface Attachment extends Item

@@ -18,6 +18,13 @@ public class ZoteroRuntimeException extends RuntimeException
 		this.type = type;
 		this.exceptionCode = exceptionCode;
 	}
+	
+	public ZoteroRuntimeException(ZoteroExceptionType type, int exceptionCode, String message, Throwable t)
+	{
+		super(message,t);
+		this.type = type;
+		this.exceptionCode = exceptionCode;
+	}
 
 	public ZoteroExceptionType getType()
 	{

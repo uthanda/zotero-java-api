@@ -147,6 +147,10 @@ public final class PropertiesImpl implements Properties
 			{
 				property = new PropertyEnumImpl<>(e.getKey(), ItemType.class, ItemType.fromZoteroType((String) e.getValue()));
 			}
+			else if (ZoteroKeys.LINK_MODE.equals(e.getKey()))
+			{
+				property = new PropertyEnumImpl<>(e.getKey(), LinkMode.class, LinkMode.fromZoteroType((String) e.getValue()));
+			}
 			else if (value instanceof Double)
 			{
 				property = new PropertyIntegerImpl(name, ((Double) value).intValue());
@@ -285,6 +289,7 @@ public final class PropertiesImpl implements Properties
 				properties.properties.put(Attachment.FILENAME, new PropertyStringImpl(Attachment.FILENAME, null));
 				properties.properties.put(Attachment.MD5, new PropertyStringImpl(Attachment.MD5, null));
 				properties.properties.put(Attachment.MTIME, new PropertyStringImpl(Attachment.MTIME, null));
+				properties.properties.put(Attachment.FILE_SIZE, new PropertyIntegerImpl(Attachment.FILE_SIZE, null));
 				break;
 			}
 			case IMPORTED_URL:

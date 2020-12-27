@@ -17,7 +17,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import zotero.apiimpl.collections.CreatorsImpl;
-import zotero.apiimpl.rest.ZoteroRestPaths;
 
 @RunWith(PowerMockRunner.class)
 public class CreatorsTest
@@ -29,7 +28,7 @@ public class CreatorsTest
 	public static void setup()
 	{
 		data = (JsonObject) JsonParser.parseReader(new InputStreamReader(CreatorsTest.class.getResourceAsStream("/zotero/testData.json")));
-		JsonArray array = data.get(ZoteroRestPaths.ITEM).getAsJsonObject().get("/key=B4ERDVS4").getAsJsonObject().get("<empty>").getAsJsonObject().get("item").getAsJsonObject().get("data").getAsJsonObject().get("creators").getAsJsonArray();
+		JsonArray array = data.get("/users/apiId/items/B4ERDVS4").getAsJsonObject().get("<empty>").getAsJsonObject().get("item").getAsJsonObject().get("data").getAsJsonObject().get("creators").getAsJsonArray();
 		
 		@SuppressWarnings("unchecked")
 		List<Map<String,Object>> creators = new Gson().fromJson(array, List.class);
