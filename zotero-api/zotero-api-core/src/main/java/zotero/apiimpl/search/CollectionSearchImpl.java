@@ -1,11 +1,11 @@
 package zotero.apiimpl.search;
 
-import zotero.api.Library;
 import zotero.api.constants.Sort;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.search.CollectionSearch;
 import zotero.api.search.Direction;
 import zotero.api.search.ItemEndpointSearch;
+import zotero.apiimpl.LibraryImpl;
 import zotero.apiimpl.iterators.CollectionIteratorImpl;
 import zotero.apiimpl.rest.ZoteroRestPaths;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
@@ -13,7 +13,7 @@ import zotero.apiimpl.rest.response.RestResponse;
 
 public class CollectionSearchImpl extends ItemEndpointSearchImpl<CollectionSearch, CollectionIterator> implements CollectionSearch
 {
-	public CollectionSearchImpl(Library library)
+	public CollectionSearchImpl(LibraryImpl library)
 	{
 		super(library, ZoteroRestPaths.COLLECTIONS);
 	}

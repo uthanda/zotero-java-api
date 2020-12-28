@@ -25,27 +25,27 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 
 	private boolean deleted = false;
 
-	protected EntryImpl(Library library)
+	protected EntryImpl(LibraryImpl library)
 	{
 		super();
 		this.library = library;
 	}
 
-	protected EntryImpl(ItemType type, Library library)
+	protected EntryImpl(ItemType type, LibraryImpl library)
 	{
 		super(type);
 		this.library = library;
 	}
 	
-	protected EntryImpl(LinkMode mode, Library library)
+	protected EntryImpl(LinkMode mode, LibraryImpl library)
 	{
 		super(ItemType.ATTACHMENT, mode);
 		this.library = library;
 	}
 
-	EntryImpl(ZoteroRestItem item, Library library)
+	EntryImpl(ZoteroRestItem item, LibraryImpl library)
 	{
-		super(item);
+		super(library, item);
 		this.key = item.getKey();
 		this.version = item.getVersion();
 		this.library = library;

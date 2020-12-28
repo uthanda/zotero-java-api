@@ -26,7 +26,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.google.gson.Gson;
 
+import zotero.api.collections.Collections;
 import zotero.api.collections.Creators;
+import zotero.api.collections.Relationships;
 import zotero.api.collections.Tags;
 import zotero.api.constants.CreatorType;
 import zotero.api.constants.ItemType;
@@ -160,7 +162,8 @@ public class ItemsTest
 	@Test
 	public void testCollections()
 	{
-		CollectionIterator iterator = item.getCollections();
+		Collections collections = item.getCollections();
+		CollectionIterator iterator = collections.iterator();
 		assertEquals(2, iterator.getTotalCount());
 
 		assertTrue(iterator.hasNext());

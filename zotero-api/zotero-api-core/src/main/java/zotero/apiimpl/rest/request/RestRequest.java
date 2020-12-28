@@ -1,15 +1,10 @@
 package zotero.apiimpl.rest.request;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -19,8 +14,8 @@ import org.apache.http.impl.client.HttpClients;
 
 import zotero.api.Library;
 import zotero.apiimpl.rest.ZoteroRestPaths;
-import zotero.apiimpl.rest.response.RestResponse;
 import zotero.apiimpl.rest.response.ResponseBuilder;
+import zotero.apiimpl.rest.response.RestResponse;
 
 public abstract class RestRequest<T>
 {
@@ -117,25 +112,6 @@ public abstract class RestRequest<T>
 		CloseableHttpResponse httpResponse = client.execute(httpRequest);
 
 		this.responseBuilder.response(httpResponse);
-	}
-
-	private String readTextResponse(HttpEntity entity)
-	{
-		try
-		{
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			InputStream is = entity.getContent();
-
-			IOUtils.copy(is, bos);
-
-			is.close();
-
-			return new String(bos.toByteArray());
-		}
-		catch (UnsupportedOperationException | IOException e)
-		{
-			return e.getLocalizedMessage();
-		}
 	}
 
 	String buildURL() throws URISyntaxException

@@ -2,12 +2,12 @@ package zotero.apiimpl.search;
 
 import java.util.function.BiConsumer;
 
-import zotero.api.Library;
 import zotero.api.constants.Sort;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.search.Direction;
 import zotero.api.search.ItemEndpointSearch;
 import zotero.api.search.ItemSearch;
+import zotero.apiimpl.LibraryImpl;
 import zotero.apiimpl.iterators.ZoteroItemIteratorImpl;
 import zotero.apiimpl.rest.ZoteroRestPaths;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
@@ -17,7 +17,7 @@ public class ItemSearchImpl extends ItemEndpointSearchImpl<ItemSearch, ItemItera
 {
 	private Boolean includeTrashed;
 
-	public ItemSearchImpl(Library library)
+	public ItemSearchImpl(LibraryImpl library)
 	{
 		super(library, ZoteroRestPaths.ITEMS);
 	}

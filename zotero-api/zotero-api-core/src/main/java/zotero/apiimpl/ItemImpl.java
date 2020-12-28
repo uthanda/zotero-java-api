@@ -1,18 +1,14 @@
 package zotero.apiimpl;
 
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
-import zotero.api.Collection;
 import zotero.api.Item;
-import zotero.api.Library;
-import zotero.api.Relationships;
+import zotero.api.collections.Collections;
+import zotero.api.collections.Relationships;
 import zotero.api.collections.Tags;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroKeys;
-import zotero.api.iterators.CollectionIterator;
 import zotero.api.properties.PropertyObject;
 import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.rest.ZoteroRestPaths;
@@ -26,17 +22,17 @@ public class ItemImpl extends EntryImpl implements Item
 {
 	private ZoteroRestItem jsonItem;
 
-	protected ItemImpl(ZoteroRestItem item, Library library)
+	protected ItemImpl(ZoteroRestItem item, LibraryImpl library)
 	{
 		super(item, library);
 	}
 
-	protected ItemImpl(ItemType type, Library library)
+	protected ItemImpl(ItemType type, LibraryImpl library)
 	{
 		super(type, library);
 	}
 
-	protected ItemImpl(LinkMode mode, Library library)
+	protected ItemImpl(LinkMode mode, LibraryImpl library)
 	{
 		super(mode, library);
 	}
@@ -74,34 +70,11 @@ public class ItemImpl extends EntryImpl implements Item
 	}
 
 	@Override
-	public final CollectionIterator getCollections()
+	public final Collections getCollections()
 	{
 		checkDeletionStatus();
 
-		return new CollectionIterator()
-		{
-			@SuppressWarnings("unchecked")
-			private List<String> set = (List<String>) getProperties().getProperty(ZoteroKeys.COLLECTIONS).getValue();
-			private Iterator<String> i = set.iterator();
-
-			@Override
-			public boolean hasNext()
-			{
-				return i.hasNext();
-			}
-
-			@Override
-			public Collection next()
-			{
-				return getLibrary().fetchCollection(i.next());
-			}
-
-			@Override
-			public int getTotalCount()
-			{
-				return set.size();
-			}
-		};
+		return (Collections) getProperties().getProperty(ZoteroKeys.COLLECTIONS).getValue();
 	}
 
 	@Override
@@ -112,7 +85,7 @@ public class ItemImpl extends EntryImpl implements Item
 		return (Tags) getProperties().getProperty(ZoteroKeys.TAGS).getValue();
 	}
 
-	public static Item fromItem(ZoteroRestItem jsonItem, Library library)
+	public static Item fromItem(ZoteroRestItem jsonItem, LibraryImpl library)
 	{
 		ItemImpl item;
 		if (jsonItem.getData().get(ZoteroKeys.ITEM_TYPE).equals(ItemType.ATTACHMENT.getZoteroName()))

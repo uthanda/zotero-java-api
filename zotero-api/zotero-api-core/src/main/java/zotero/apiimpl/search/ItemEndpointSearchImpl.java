@@ -6,12 +6,10 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-import zotero.api.Library;
 import zotero.api.constants.ItemType;
 import zotero.api.search.ItemEndpointSearch;
 import zotero.api.search.QuickSearchMode;
-
-import zotero.apiimpl.*;
+import zotero.apiimpl.LibraryImpl;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.request.builders.GetBuilder;
 import zotero.apiimpl.rest.response.JSONRestResponseBuilder;
@@ -19,13 +17,13 @@ import zotero.apiimpl.rest.response.RestResponse;
 
 public abstract class ItemEndpointSearchImpl<S,T> extends SearchImpl<ItemEndpointSearch<S,T>> implements ItemEndpointSearch<S,T>
 {
-	protected final Library library;
+	protected final LibraryImpl library;
 	private final String url;
 	
 	private QuickSearchMode mode;
 	private Set<String> itemTypes = new LinkedHashSet<>();
 	
-	public ItemEndpointSearchImpl(Library library, String url)
+	public ItemEndpointSearchImpl(LibraryImpl library, String url)
 	{
 		this.library = library;
 		this.url = url;
@@ -59,7 +57,7 @@ public abstract class ItemEndpointSearchImpl<S,T> extends SearchImpl<ItemEndpoin
 		
 		builder.url(url);
 		
-		RestResponse<ZoteroRestItem[]> response = ((LibraryImpl)library).performRequest(builder);
+		RestResponse<ZoteroRestItem[]> response = library.performRequest(builder);
 		return response;
 	}
 

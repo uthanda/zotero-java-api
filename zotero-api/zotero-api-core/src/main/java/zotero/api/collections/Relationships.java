@@ -1,4 +1,4 @@
-package zotero.api;
+package zotero.api.collections;
 
 import java.util.List;
 import java.util.Set;

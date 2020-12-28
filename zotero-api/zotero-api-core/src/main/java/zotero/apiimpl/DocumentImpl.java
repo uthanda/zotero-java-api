@@ -3,7 +3,6 @@ package zotero.apiimpl;
 import java.util.Date;
 
 import zotero.api.Document;
-import zotero.api.Library;
 import zotero.api.collections.Creators;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.ZoteroKeys;
@@ -17,7 +16,7 @@ public class DocumentImpl extends ItemImpl implements Document
 	private String parsedDate;
 	private String creatorSummary;
 
-	DocumentImpl(ZoteroRestItem jsonItem, Library library)
+	DocumentImpl(ZoteroRestItem jsonItem, LibraryImpl library)
 	{
 		super(jsonItem, library);
 	}
@@ -87,7 +86,7 @@ public class DocumentImpl extends ItemImpl implements Document
 		super.reinitialize(type);
 	}
 
-	public static ItemImpl fromRest(ZoteroRestItem jsonItem, Library library)
+	public static ItemImpl fromRest(ZoteroRestItem jsonItem, LibraryImpl library)
 	{
 		DocumentImpl document = new DocumentImpl(jsonItem,library);
 		

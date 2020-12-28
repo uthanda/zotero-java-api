@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import zotero.api.Relationships;
+import zotero.api.collections.Relationships;
 import zotero.api.constants.RelationshipType;
 import zotero.apiimpl.properties.PropertyListImpl.ObservableList;
 

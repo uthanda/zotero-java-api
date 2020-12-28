@@ -6,7 +6,9 @@ import zotero.api.constants.LinkMode;
 
 public interface Attachment extends Item
 {
-	LinkMode getType();
+	LinkMode getLinkMode();
+	
+	void changeLinkMode(LinkMode mode);
 
 	String getContentType();
 

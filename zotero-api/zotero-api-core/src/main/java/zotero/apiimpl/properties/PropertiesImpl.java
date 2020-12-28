@@ -13,8 +13,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import zotero.api.Creator;
-import zotero.api.Relationships;
+import zotero.api.collections.Collections;
 import zotero.api.collections.Creators;
+import zotero.api.collections.Relationships;
 import zotero.api.collections.Tags;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
@@ -31,12 +32,14 @@ import zotero.api.properties.PropertyInteger;
 import zotero.api.properties.PropertyList;
 import zotero.api.properties.PropertyObject;
 import zotero.api.properties.PropertyString;
+import zotero.apiimpl.LibraryImpl;
 import zotero.apiimpl.RelationshipsImpl;
+import zotero.apiimpl.collections.CollectionsImpl;
 import zotero.apiimpl.collections.CreatorsImpl;
 import zotero.apiimpl.collections.TagsImpl;
 import zotero.apiimpl.rest.model.ZoteroRestData;
-import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.model.ZoteroRestData.DataBuilder;
+import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.schema.ZoteroSchema;
 import zotero.apiimpl.rest.schema.ZoteroSchema.ZoteroType;
 
@@ -71,7 +74,7 @@ public final class PropertiesImpl implements Properties
 	}
 
 	@SuppressWarnings("unchecked")
-	public static PropertiesImpl fromRest(ZoteroRestItem item)
+	public static PropertiesImpl fromRest(LibraryImpl library, ZoteroRestItem item)
 	{
 		PropertiesImpl properties = new PropertiesImpl();
 		ZoteroSchema schema = ZoteroSchema.getCurrentSchema();
@@ -110,7 +113,8 @@ public final class PropertiesImpl implements Properties
 					}
 					case ZoteroKeys.COLLECTIONS:
 					{
-						property = new PropertyListImpl<>(ZoteroKeys.COLLECTIONS, String.class, (List<String>) listValue);
+						Collections collections = CollectionsImpl.fromRest(library, (List<String>) listValue);
+						property = new PropertyObjectImpl<>(ZoteroKeys.COLLECTIONS, Collections.class, collections);
 						break;
 					}
 					default:
@@ -223,7 +227,7 @@ public final class PropertiesImpl implements Properties
 
 	public static void initializeCollectionProperties(PropertiesImpl properties)
 	{
-
+		// TODO
 	}
 
 	public static void initializeDocumentProperties(ItemType type, PropertiesImpl properties, PropertiesImpl current)

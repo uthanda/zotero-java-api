@@ -3,7 +3,6 @@ package zotero.apiimpl.iterators;
 import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 
-import zotero.api.Library;
 import zotero.api.iterators.ZoteroIterator;
 import zotero.apiimpl.LibraryImpl;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
@@ -17,10 +16,10 @@ class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 	private ZoteroRestItem[] page;
 	private RestResponse<ZoteroRestItem[]> response;
 	private int index = 0;
-	private BiFunction<ZoteroRestItem, Library, T> builder;
-	private Library library;
+	private BiFunction<ZoteroRestItem, LibraryImpl, T> builder;
+	private LibraryImpl library;
 
-	protected ZoteroIteratorImpl(RestResponse<ZoteroRestItem[]> response, BiFunction<ZoteroRestItem, Library, T> builder, Library library)
+	protected ZoteroIteratorImpl(RestResponse<ZoteroRestItem[]> response, BiFunction<ZoteroRestItem, LibraryImpl, T> builder, LibraryImpl library)
 	{
 		this.totalCount = response.getTotalResults();
 		this.page = response.getResponse();
@@ -49,7 +48,7 @@ class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 
 			GetBuilder<ZoteroRestItem[],?> b = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class)).specialUrl(nextLink);
 			
-			response = ((LibraryImpl)library).performRequest(b);
+			response = library.performRequest(b);
 			
 			page = response.getResponse();
 			index = 0;

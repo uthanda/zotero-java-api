@@ -1,18 +1,9 @@
 package zotero.apiimpl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
-import javax.xml.bind.DatatypeConverter;
-
-import org.apache.commons.io.IOUtils;
-
 import zotero.api.Attachment;
-import zotero.api.Library;
 import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
@@ -34,12 +25,12 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	private boolean pending = false;
 	private InputStream is;
 
-	public AttachmentImpl(ZoteroRestItem jsonItem, Library library)
+	public AttachmentImpl(ZoteroRestItem jsonItem, LibraryImpl library)
 	{
 		super(jsonItem, library);
 	}
 
-	public AttachmentImpl(LinkMode mode, Library library)
+	public AttachmentImpl(LinkMode mode, LibraryImpl library)
 	{
 		super(mode, library);
 	}
@@ -52,7 +43,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	 * @param library
 	 * @param parentKey
 	 */
-	public AttachmentImpl(LinkMode mode, Library library, String parentKey)
+	public AttachmentImpl(LinkMode mode, LibraryImpl library, String parentKey)
 	{
 		super(mode, library);
 		this.pending = true;
@@ -61,7 +52,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	}
 
 	@Override
-	public LinkMode getType()
+	public LinkMode getLinkMode()
 	{
 		super.checkDeletionStatus();
 		checkPendingStatus();
@@ -114,7 +105,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		getProperties().putValue(zotero.api.constants.ZoteroKeys.Attachment.CONTENT_TYPE, type);
 	}
 
-	public static ItemImpl fromRest(ZoteroRestItem jsonItem, Library library)
+	public static ItemImpl fromRest(ZoteroRestItem jsonItem, LibraryImpl library)
 	{
 		return new AttachmentImpl(jsonItem, library);
 	}
@@ -125,13 +116,13 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		super.checkDeletionStatus();
 		checkPendingStatus();
 
-		if (getType() != LinkMode.IMPORTED_FILE)
+		if (getLinkMode() != LinkMode.IMPORTED_FILE)
 		{
 			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.INVALID_ATTACHMENT_TYPE,
 					"Attachment must be of type IMPORTED_FILE to support retrieveContent()");
 		}
 
-		GetBuilder<InputStream,?> builder = GetBuilder.createBuilder(new StreamResponseBuilder());
+		GetBuilder<InputStream, ?> builder = GetBuilder.createBuilder(new StreamResponseBuilder());
 		builder.url(ZoteroRestPaths.ITEM_FILE).urlParam(Entity.KEY, getKey());
 
 		return ((LibraryImpl) getLibrary()).performRequest(builder).getResponse();
@@ -150,6 +141,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 
 	public void provideContent(InputStream is)
 	{
+
 		this.is = is;
 	}
 
@@ -171,53 +163,22 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 
 	private void processContent()
 	{
-		PostBuilder<?,?> builder = PostBuilder.createBuilder(new JSONRestResponseBuilder<>(Map.class));
+		PostBuilder<?, ?> builder = PostBuilder.createBuilder(new JSONRestResponseBuilder<>(Map.class));
 
 		Properties props = getProperties();
-		
+
 		String md5 = props.getString(ZoteroKeys.Attachment.MD5);
 		Integer fileSize = props.getInteger(ZoteroKeys.Attachment.FILE_SIZE);
 		String mtime = props.getString(ZoteroKeys.Attachment.MTIME);
-		
-		builder.url(ZoteroRestPaths.ITEM_FILE)
-			.url(this.getKey())
-			.formParam("md5", md5)
-			.formParam(ZoteroKeys.Attachment.FILENAME, props.getString(ZoteroKeys.Attachment.FILENAME))
-			.formParam("filesize", Integer.toString(fileSize))
-			.formParam("mtime", mtime)
-			.build()
-			.execute();
+
+		builder.url(ZoteroRestPaths.ITEM_FILE).url(this.getKey()).formParam("md5", md5)
+				.formParam(ZoteroKeys.Attachment.FILENAME, props.getString(ZoteroKeys.Attachment.FILENAME)).formParam("filesize", Integer.toString(fileSize))
+				.formParam("mtime", mtime).build().execute();
 	}
 
-	private String hashContent(byte[] attachment)
+	@Override
+	public void changeLinkMode(LinkMode mode)
 	{
-		try
-		{
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			byte[] md5 = md.digest(attachment);
-			String md5sum = DatatypeConverter.printHexBinary(md5);
-			return md5sum;
-		}
-		catch (NoSuchAlgorithmException e)
-		{
-			throw new ZoteroRuntimeException(ZoteroExceptionType.IO, ZoteroExceptionCodes.IO.MISSING_ALGORITM, e.getLocalizedMessage(), e);
-		}
-	}
-
-	private byte[] loadContent()
-	{
-		try
-		{
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			IOUtils.copy(this.is, bos);
-			this.is.close();
-
-			byte[] attachment = bos.toByteArray();
-			return attachment;
-		}
-		catch (IOException ex)
-		{
-			throw new ZoteroRuntimeException(ZoteroExceptionType.IO, ZoteroExceptionCodes.IO.READ_DATA, "Failed reading attachment content", ex);
-		}
+		throw new UnsupportedOperationException("Changing attachment types is not currently supported");
 	}
 }

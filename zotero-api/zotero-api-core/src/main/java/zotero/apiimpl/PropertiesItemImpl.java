@@ -15,9 +15,9 @@ public class PropertiesItemImpl implements PropertiesItem
 	{
 	}
 
-	PropertiesItemImpl(ZoteroRestItem item)
+	PropertiesItemImpl(LibraryImpl library, ZoteroRestItem item)
 	{
-		this.properties = PropertiesImpl.fromRest(item);
+		this.properties = PropertiesImpl.fromRest(library, item);
 	}
 
 	PropertiesItemImpl(ItemType type, LinkMode mode)

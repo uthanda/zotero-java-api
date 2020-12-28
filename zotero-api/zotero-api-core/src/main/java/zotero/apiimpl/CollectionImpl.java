@@ -1,7 +1,6 @@
 package zotero.apiimpl;
 
 import zotero.api.Collection;
-import zotero.api.Library;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
@@ -21,7 +20,7 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	private int numCollections;
 	private ZoteroRestItem item;
 
-	private CollectionImpl(ZoteroRestItem item, Library library)
+	private CollectionImpl(ZoteroRestItem item, LibraryImpl library)
 	{
 		super(item, library);
 		this.numCollections = ((Double) item.getMeta().get("numCollections")).intValue();
@@ -29,7 +28,7 @@ public final class CollectionImpl extends EntryImpl implements Collection
 		this.item = item;
 	}
 
-	private CollectionImpl(Library library)
+	private CollectionImpl(LibraryImpl library)
 	{
 		super(library);
 		this.numCollections = 0;
@@ -42,7 +41,7 @@ public final class CollectionImpl extends EntryImpl implements Collection
 		return getLibrary().fetchCollectionItems(this.getKey());
 	}
 
-	public static CollectionImpl create(Library library, Collection parent)
+	public static CollectionImpl create(LibraryImpl library, Collection parent)
 	{
 		CollectionImpl collection = new CollectionImpl(library);
 		PropertiesImpl.initializeCollectionProperties((PropertiesImpl) collection.getProperties());
@@ -50,7 +49,7 @@ public final class CollectionImpl extends EntryImpl implements Collection
 		return collection;
 	}
 
-	public static CollectionImpl fromItem(ZoteroRestItem item, Library library)
+	public static CollectionImpl fromItem(ZoteroRestItem item, LibraryImpl library)
 	{
 		return new CollectionImpl(item, library);
 	}
