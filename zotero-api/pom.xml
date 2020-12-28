@@ -87,4 +87,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<modules>
+		<module>zotero-java-api-samples</module>
+	</modules>
 </project>
