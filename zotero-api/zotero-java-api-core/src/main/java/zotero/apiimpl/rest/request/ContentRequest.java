@@ -1,11 +1,12 @@
 package zotero.apiimpl.rest.request;
 
+import static zotero.apiimpl.rest.ZoteroRest.Headers.ZOTERO_WRITE_TOKEN;
+
 import java.util.UUID;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
 
-import zotero.apiimpl.rest.ZoteroRestPaths;
 
 public abstract class ContentRequest<T> extends RestRequest<T>
 {
@@ -22,6 +23,6 @@ public abstract class ContentRequest<T> extends RestRequest<T>
 
 	protected void addWriteToken(HttpRequest request)
 	{
-		request.addHeader(ZoteroRestPaths.HEADER_ZOTERO_WRITE_TOKEN, UUID.randomUUID().toString().replace("-", ""));
+		request.addHeader(ZOTERO_WRITE_TOKEN, UUID.randomUUID().toString().replace("-", ""));
 	}
 }

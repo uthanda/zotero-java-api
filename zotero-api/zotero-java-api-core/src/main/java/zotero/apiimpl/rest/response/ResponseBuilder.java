@@ -1,5 +1,7 @@
 package zotero.apiimpl.rest.response;
 
+import static zotero.apiimpl.rest.ZoteroRest.Headers.*;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -10,8 +12,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
-
-import zotero.apiimpl.rest.ZoteroRestPaths;
 
 public abstract class ResponseBuilder<T>
 {
@@ -80,7 +80,7 @@ public abstract class ResponseBuilder<T>
 
 			case 429:
 			{
-				errorMessage("Too many requests.  Please retry after " + response.getFirstHeader(ZoteroRestPaths.HEADER_RETRY_AFTER) + " seconds");
+				errorMessage("Too many requests.  Please retry after " + response.getFirstHeader(RETRY_AFTER) + " seconds");
 				break;
 			}
 
@@ -94,7 +94,7 @@ public abstract class ResponseBuilder<T>
 	private void parseLinks(CloseableHttpResponse response)
 	{
 		Header header;
-		header = response.getFirstHeader(ZoteroRestPaths.HEADER_LINK);
+		header = response.getFirstHeader(LINK);
 		if (header != null && header.getValue() != null)
 		{
 			String[] links = header.getValue().split(",");
@@ -113,7 +113,7 @@ public abstract class ResponseBuilder<T>
 	private void parseLastVersionHeader(CloseableHttpResponse response)
 	{
 		Header header;
-		header = response.getFirstHeader(ZoteroRestPaths.HEADER_LAST_MODIFIED_VERSION);
+		header = response.getFirstHeader(LAST_MODIFIED_VERSION);
 		if (header != null && header.getValue() != null)
 		{
 			lastModifyVersion(Integer.valueOf(header.getValue()));
@@ -122,7 +122,7 @@ public abstract class ResponseBuilder<T>
 
 	private void parseTotalResultsHeader(CloseableHttpResponse response)
 	{
-		Header header = response.getFirstHeader(ZoteroRestPaths.HEADER_TOTAL_RESULTS);
+		Header header = response.getFirstHeader(TOTAL_RESULTS);
 		if (header != null && header.getValue() != null)
 		{
 			totalResults(Integer.valueOf(header.getValue()));

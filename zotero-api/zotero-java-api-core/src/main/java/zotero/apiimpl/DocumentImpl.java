@@ -1,13 +1,19 @@
 package zotero.apiimpl;
 
+import static zotero.api.constants.ZoteroKeys.Document.CREATORS;
+import static zotero.api.constants.ZoteroKeys.Document.DATE_ADDED;
+import static zotero.api.constants.ZoteroKeys.Document.DATE_MODIFIED;
+import static zotero.api.constants.ZoteroKeys.Meta.CREATOR_SUMMARY;
+import static zotero.api.constants.ZoteroKeys.Meta.NUM_CHILDREN;
+import static zotero.api.constants.ZoteroKeys.Meta.PARSED_DATE;
+import static zotero.apiimpl.rest.ZoteroRest.Items.CHILDREN;
+
 import java.util.Date;
 
 import zotero.api.Document;
 import zotero.api.collections.Creators;
 import zotero.api.constants.ItemType;
-import zotero.api.constants.ZoteroKeys;
 import zotero.api.iterators.ItemIterator;
-import zotero.apiimpl.rest.ZoteroRestPaths;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 
 public class DocumentImpl extends ItemImpl implements Document
@@ -31,7 +37,7 @@ public class DocumentImpl extends ItemImpl implements Document
 	{
 		checkDeletionStatus();
 
-		return super.getProperties().getDate(ZoteroKeys.DATE_ADDED);
+		return super.getProperties().getDate(DATE_ADDED);
 	}
 
 	@Override
@@ -39,7 +45,7 @@ public class DocumentImpl extends ItemImpl implements Document
 	{
 		checkDeletionStatus();
 
-		return super.getProperties().getDate(ZoteroKeys.DATE_MODIFIED);
+		return super.getProperties().getDate(DATE_MODIFIED);
 	}
 
 	@Override
@@ -67,7 +73,7 @@ public class DocumentImpl extends ItemImpl implements Document
 	{
 		checkDeletionStatus();
 
-		return ((LibraryImpl) getLibrary()).fetchItems(ZoteroRestPaths.ITEM_CHILDREN, this.getKey());
+		return ((LibraryImpl) getLibrary()).fetchItems(CHILDREN, this.getKey());
 	}
 
 	@Override
@@ -75,7 +81,7 @@ public class DocumentImpl extends ItemImpl implements Document
 	{
 		checkDeletionStatus();
 
-		return (Creators) super.getProperties().getProperty(ZoteroKeys.CREATORS).getValue();
+		return (Creators) super.getProperties().getProperty(CREATORS).getValue();
 	}
 
 	@Override
@@ -90,9 +96,9 @@ public class DocumentImpl extends ItemImpl implements Document
 	{
 		DocumentImpl document = new DocumentImpl(jsonItem,library);
 		
-		document.numChildren = ((Double)jsonItem.getMeta().get(ZoteroKeys.NUM_CHILDREN)).intValue();
-		document.creatorSummary = (String) jsonItem.getMeta().get(ZoteroKeys.CREATOR_SUMMARY);
-		document.parsedDate = (String) jsonItem.getMeta().get(ZoteroKeys.PARSED_DATE);
+		document.numChildren = ((Double)jsonItem.getMeta().get(NUM_CHILDREN)).intValue();
+		document.creatorSummary = (String) jsonItem.getMeta().get(CREATOR_SUMMARY);
+		document.parsedDate = (String) jsonItem.getMeta().get(PARSED_DATE);
 		
 		return document;
 	}

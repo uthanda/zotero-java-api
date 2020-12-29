@@ -1,5 +1,10 @@
 package zotero.apiimpl.search;
 
+import static zotero.api.constants.ZoteroKeys.Search.INCLUDE_TRASHED;
+import static zotero.api.constants.ZoteroKeys.Search.INCLUDE_TRASHED_FALSE;
+import static zotero.api.constants.ZoteroKeys.Search.INCLUDE_TRASHED_TRUE;
+import static zotero.apiimpl.rest.ZoteroRest.Items.ALL;
+
 import java.util.function.BiConsumer;
 
 import zotero.api.constants.Sort;
@@ -9,7 +14,6 @@ import zotero.api.search.ItemEndpointSearch;
 import zotero.api.search.ItemSearch;
 import zotero.apiimpl.LibraryImpl;
 import zotero.apiimpl.iterators.ZoteroItemIteratorImpl;
-import zotero.apiimpl.rest.ZoteroRestPaths;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.response.RestResponse;
 
@@ -19,7 +23,7 @@ public class ItemSearchImpl extends ItemEndpointSearchImpl<ItemSearch, ItemItera
 
 	public ItemSearchImpl(LibraryImpl library)
 	{
-		super(library, ZoteroRestPaths.ITEMS);
+		super(library, ALL);
 	}
 
 	@Override
@@ -44,7 +48,7 @@ public class ItemSearchImpl extends ItemEndpointSearchImpl<ItemSearch, ItemItera
 
 		if (includeTrashed != null)
 		{
-			params.accept("includeTrashed", includeTrashed.booleanValue() ? "1" : "0");
+			params.accept(INCLUDE_TRASHED, includeTrashed.booleanValue() ? INCLUDE_TRASHED_TRUE : INCLUDE_TRASHED_FALSE);
 		}
 	}
 

@@ -21,9 +21,10 @@ import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
-import zotero.api.constants.ZoteroKeys;
 import zotero.api.constants.ZoteroKeys.Attachment;
+import zotero.api.constants.ZoteroKeys.Document;
 import zotero.api.constants.ZoteroKeys.Entity;
+import zotero.api.constants.ZoteroKeys.Item;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.properties.Properties;
 import zotero.api.properties.Property;
@@ -96,25 +97,25 @@ public final class PropertiesImpl implements Properties
 
 				switch (e.getKey())
 				{
-					case ZoteroKeys.CREATORS:
+					case Document.CREATORS:
 					{
 						// Convert to a list of Creators
-						property = new PropertyListImpl<>(ZoteroKeys.CREATORS, Creator.class, CreatorsImpl.fromRest(listValue));
+						property = new PropertyListImpl<>(Document.CREATORS, Creator.class, CreatorsImpl.fromRest(listValue));
 						break;
 					}
-					case ZoteroKeys.TAGS:
+					case Item.TAGS:
 					{
 						List<Map<String, Object>> jsonTags = (List<Map<String, Object>>) value;
 
 						Tags tags = TagsImpl.from(jsonTags);
 
-						property = new PropertyListImpl<>(ZoteroKeys.TAGS, String.class, tags);
+						property = new PropertyListImpl<>(Item.TAGS, String.class, tags);
 						break;
 					}
-					case ZoteroKeys.COLLECTIONS:
+					case Item.COLLECTIONS:
 					{
 						Collections collections = CollectionsImpl.fromRest(library, (List<String>) listValue);
-						property = new PropertyObjectImpl<>(ZoteroKeys.COLLECTIONS, Collections.class, collections);
+						property = new PropertyObjectImpl<>(Item.COLLECTIONS, Collections.class, collections);
 						break;
 					}
 					default:
@@ -127,10 +128,10 @@ public final class PropertiesImpl implements Properties
 			{
 				switch (e.getKey())
 				{
-					case ZoteroKeys.RELATIONS:
+					case Item.RELATIONS:
 					{
 						Relationships relationships = RelationshipsImpl.fromMap((Map<String, Object>) value);
-						property = new PropertyObjectImpl<>(ZoteroKeys.RELATIONS, Relationships.class, relationships);
+						property = new PropertyObjectImpl<>(Item.RELATIONS, Relationships.class, relationships);
 						break;
 					}
 					default:
@@ -147,11 +148,11 @@ public final class PropertiesImpl implements Properties
 
 				property = new PropertyDateImpl(name, dateValue);
 			}
-			else if (ZoteroKeys.ITEM_TYPE.equals(e.getKey()))
+			else if (Item.ITEM_TYPE.equals(e.getKey()))
 			{
 				property = new PropertyEnumImpl<>(e.getKey(), ItemType.class, ItemType.fromZoteroType((String) e.getValue()));
 			}
-			else if (ZoteroKeys.LINK_MODE.equals(e.getKey()))
+			else if (Attachment.LINK_MODE.equals(e.getKey()))
 			{
 				property = new PropertyEnumImpl<>(e.getKey(), LinkMode.class, LinkMode.fromZoteroType((String) e.getValue()));
 			}
@@ -193,28 +194,28 @@ public final class PropertiesImpl implements Properties
 
 			switch (key)
 			{
-				case ZoteroKeys.CREATORS:
+				case Document.CREATORS:
 				{
 					Creators creators = ((PropertyList<Creator, Creators>) prop).getValue();
-					data.put(ZoteroKeys.CREATORS, CreatorsImpl.toRest(creators));
+					data.put(Document.CREATORS, CreatorsImpl.toRest(creators));
 					break;
 				}
-				case ZoteroKeys.TAGS:
+				case Item.TAGS:
 				{
 					Tags tags = ((PropertyList<String, Tags>) prop).getValue();
-					data.put(ZoteroKeys.TAGS, TagsImpl.toRest(tags));
+					data.put(Item.TAGS, TagsImpl.toRest(tags));
 					break;
 				}
-				case ZoteroKeys.COLLECTIONS:
+				case Item.COLLECTIONS:
 				{
 					List<String> collections = ((PropertyList<String, List<String>>) prop).getValue();
-					data.put(ZoteroKeys.COLLECTIONS, collections);
+					data.put(Item.COLLECTIONS, collections);
 					break;
 				}
-				case ZoteroKeys.RELATIONS:
+				case Item.RELATIONS:
 				{
 					Relationships relationships = ((PropertyObject<Relationships>) prop).getValue();
-					data.put(ZoteroKeys.RELATIONS, RelationshipsImpl.toRest(relationships));
+					data.put(Item.RELATIONS, RelationshipsImpl.toRest(relationships));
 					break;
 				}
 				default:
@@ -240,8 +241,8 @@ public final class PropertiesImpl implements Properties
 
 		initializeItemProperties(type, properties, current);
 
-		properties.properties.put(ZoteroKeys.CREATORS, new PropertyListImpl<>(ZoteroKeys.CREATORS, Creator.class, new CreatorsImpl()));
-		properties.properties.put(ZoteroKeys.ITEM_TYPE, new PropertyEnumImpl<>(ZoteroKeys.ITEM_TYPE, ItemType.class, type));
+		properties.properties.put(Document.CREATORS, new PropertyListImpl<>(Document.CREATORS, Creator.class, new CreatorsImpl()));
+		properties.properties.put(Item.ITEM_TYPE, new PropertyEnumImpl<>(Item.ITEM_TYPE, ItemType.class, type));
 	}
 
 	static void initializeItemProperties(ItemType type, PropertiesImpl properties, PropertiesImpl current)

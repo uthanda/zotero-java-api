@@ -2,6 +2,7 @@ package zotero.apiimpl.rest.request.builders;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import zotero.api.ZoteroAPIKey;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.exceptions.ZoteroRuntimeException;
+import zotero.apiimpl.rest.ZoteroRest.URLParameter;
 import zotero.apiimpl.rest.request.RestRequest;
 import zotero.apiimpl.rest.response.ResponseBuilder;
 
@@ -19,7 +21,7 @@ public abstract class BaseBuilder<T, B extends BaseBuilder<T, B, R>, R extends R
 	private boolean isUser;
 	private ZoteroAPIKey apiKey;
 	private String apiUrl;
-	private Map<String, String> urlParams;
+	private Map<URLParameter, String> urlParams;
 	private String id;
 	private Map<String, List<String>> queryParams;
 	private R responseBuilder;
@@ -60,11 +62,11 @@ public abstract class BaseBuilder<T, B extends BaseBuilder<T, B, R>, R extends R
 		return (B) this;
 	}
 
-	public B urlParam(String param, String value)
+	public B urlParam(URLParameter param, String value)
 	{
 		if (urlParams == null)
 		{
-			urlParams = new HashMap<>();
+			urlParams = new EnumMap<>(URLParameter.class);
 		}
 
 		urlParams.put(param, value);
@@ -104,10 +106,7 @@ public abstract class BaseBuilder<T, B extends BaseBuilder<T, B, R>, R extends R
 			this.queryParams = new HashMap<>();
 		}
 
-		if (!this.queryParams.containsKey(param))
-		{
-			this.queryParams.put(param, new ArrayList<>());
-		}
+		this.queryParams.computeIfAbsent(param, name -> new ArrayList<>());
 
 		this.queryParams.get(param).add(value);
 

@@ -8,6 +8,8 @@ import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.exceptions.ZoteroRuntimeException;
+import zotero.apiimpl.rest.ZoteroRest.Collections;
+import zotero.apiimpl.rest.ZoteroRest.Items;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.model.ZoteroRestLinks;
 import zotero.apiimpl.rest.request.builders.DeleteBuilder;
@@ -36,7 +38,7 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 		super(type);
 		this.library = library;
 	}
-	
+
 	protected EntryImpl(LinkMode mode, LibraryImpl library)
 	{
 		super(ItemType.ATTACHMENT, mode);
@@ -78,7 +80,7 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 	public final String getKey()
 	{
 		checkDeletionStatus();
-		
+
 		return key;
 	}
 
@@ -86,7 +88,7 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 	public final int getVersion()
 	{
 		checkDeletionStatus();
-		
+
 		return version;
 	}
 
@@ -94,7 +96,7 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 	public final Library getLibrary()
 	{
 		checkDeletionStatus();
-		
+
 		return library;
 	}
 
@@ -102,7 +104,7 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 	public final Links getLinks()
 	{
 		checkDeletionStatus();
-		
+
 		return links;
 	}
 
@@ -118,15 +120,25 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 	public void delete()
 	{
 		checkDeletionStatus();
-	
-		DeleteBuilder<?,?> builder = DeleteBuilder.createBuilder(new SuccessResponseBuilder());
-		builder.itemKey(this.getKey()).url(getDeletePath());
-		
-		((LibraryImpl)getLibrary()).performRequest(builder);
+
+		DeleteBuilder<?, ?> builder = DeleteBuilder.createBuilder(new SuccessResponseBuilder());
+
+		if (this instanceof ItemImpl)
+		{
+			builder.itemKey(this.getKey()).url(Items.SPECIFIC);
+		}
+		else if (this instanceof CollectionImpl)
+		{
+			builder.collectionKey(this.getKey()).url(Collections.SPECIFIC);
+		}
+		else
+		{
+			throw new IllegalStateException("Delete unimplmented for item type " + this.getClass().getSimpleName());
+		}
+
+		((LibraryImpl) getLibrary()).performRequest(builder);
 		this.deleted = true;
 	}
-
-	abstract String getDeletePath();
 
 	public static void loadLinks(EntryImpl entry, ZoteroRestLinks links)
 	{

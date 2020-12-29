@@ -1,5 +1,8 @@
 package zotero.apiimpl.rest.request;
 
+import static zotero.apiimpl.rest.ZoteroRest.*;
+
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -13,7 +16,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 import zotero.api.Library;
-import zotero.apiimpl.rest.ZoteroRestPaths;
+import zotero.apiimpl.rest.ZoteroRest.API;
+import zotero.apiimpl.rest.ZoteroRest.Headers;
 import zotero.apiimpl.rest.response.ResponseBuilder;
 import zotero.apiimpl.rest.response.RestResponse;
 
@@ -27,7 +31,7 @@ public abstract class RestRequest<T>
 	private String apiKey;
 
 	private String apiUrl;
-	private Map<String, String> urlParams;
+	private Map<URLParameter, String> urlParams;
 
 	private URIBuilder builder = new URIBuilder();
 	private Map<String, List<String>> queryParams;
@@ -35,10 +39,10 @@ public abstract class RestRequest<T>
 
 	private ResponseBuilder<T> responseBuilder;
 
-	public RestRequest()
+	protected RestRequest()
 	{
 		builder.setScheme("https");
-		builder.setHost(ZoteroRestPaths.ZOTERO_API_HOST);
+		builder.setHost(API.HOST);
 	}
 
 	public void setLastVersion(Integer lastVersion)
@@ -66,7 +70,7 @@ public abstract class RestRequest<T>
 		this.apiUrl = apiUrl;
 	}
 
-	public void setUrlParams(Map<String, String> urlParams)
+	public void setUrlParams(Map<URLParameter, String> urlParams)
 	{
 		this.urlParams = urlParams;
 	}
@@ -121,7 +125,7 @@ public abstract class RestRequest<T>
 			throw new IllegalStateException("apiUrl cannot be null");
 		}
 
-		String finalUri = String.format("%s%s%s", isUser ? ZoteroRestPaths.ZOTERO_API_USERS_BASE : ZoteroRestPaths.ZOTERO_API_GROUPS_BASE, id, apiUrl);
+		String finalUri = String.format("%s%s%s", isUser ? API.USERS_BASE : API.GROUPS_BASE, id, apiUrl);
 
 		finalUri = processUrlParams(finalUri);
 
@@ -142,9 +146,9 @@ public abstract class RestRequest<T>
 			return finalUri;
 		}
 
-		for (Map.Entry<String, String> e : urlParams.entrySet())
+		for (Map.Entry<URLParameter, String> e : urlParams.entrySet())
 		{
-			String key = e.getKey();
+			String key = e.getKey().getZoteroName();
 			String value = e.getValue();
 
 			if (!key.startsWith("{"))
@@ -165,13 +169,13 @@ public abstract class RestRequest<T>
 
 	private void addHeaders(HttpRequestBase request)
 	{
-		request.addHeader(ZoteroRestPaths.HEADER_ZOTERO_API_KEY, apiKey);
-		request.addHeader(ZoteroRestPaths.HEADER_ZOTERO_API_VERSION, ZoteroRestPaths.ZOTERO_API_VERSION);
-		request.addHeader(ZoteroRestPaths.HEADER_USER_AGENT, USER_AGENT);
+		request.addHeader(Headers.ZOTERO_API_KEY, apiKey);
+		request.addHeader(Headers.ZOTERO_API_VERSION, API.VERSION);
+		request.addHeader(Headers.USER_AGENT, USER_AGENT);
 
 		if (lastVersion != null)
 		{
-			request.addHeader(ZoteroRestPaths.HEADER_IF_MODIFIED_SINCE_VERSION, lastVersion.toString());
+			request.addHeader(Headers.IF_MODIFIED_SINCE_VERSION, lastVersion.toString());
 		}
 	}
 }

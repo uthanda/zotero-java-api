@@ -1,5 +1,7 @@
 package zotero.apiimpl.iterators;
 
+import static zotero.apiimpl.rest.ZoteroRest.Link.NEXT;
+
 import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 
@@ -31,7 +33,7 @@ class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 	@Override
 	public boolean hasNext()
 	{
-		return index < page.length || response.getLink("next") != null;
+		return index < page.length || response.getLink(NEXT) != null;
 	}
 
 	@Override
@@ -39,7 +41,7 @@ class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 	{
 		if (index >= page.length)
 		{
-			String nextLink = response.getLink("next");
+			String nextLink = response.getLink(NEXT);
 			
 			if (nextLink == null)
 			{

@@ -1,5 +1,7 @@
 package zotero.apiimpl.collections;
 
+import static zotero.api.constants.ZoteroKeys.Document.CREATORS;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -7,7 +9,6 @@ import java.util.stream.Collectors;
 import zotero.api.Creator;
 import zotero.api.collections.Creators;
 import zotero.api.constants.CreatorType;
-import zotero.api.constants.ZoteroKeys;
 import zotero.apiimpl.CreatorImpl;
 import zotero.apiimpl.properties.PropertyListImpl;
 
@@ -20,12 +21,12 @@ public final class CreatorsImpl extends PropertyListImpl.ObservableList<Creator>
 	
 	public CreatorsImpl()
 	{
-		super(ZoteroKeys.CREATORS, null, false);
+		super(CREATORS, null, false);
 	}
 	
 	public CreatorsImpl(List<Creator> list)
 	{
-		super(ZoteroKeys.CREATORS, list, false);
+		super(CREATORS, list, false);
 	}
 	
 	@Override

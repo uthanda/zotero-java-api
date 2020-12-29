@@ -1,5 +1,14 @@
 package zotero.apiimpl;
 
+import static zotero.api.constants.ZoteroKeys.Item.ACCESS_DATE;
+import static zotero.api.constants.ZoteroKeys.Item.COLLECTIONS;
+import static zotero.api.constants.ZoteroKeys.Item.ITEM_TYPE;
+import static zotero.api.constants.ZoteroKeys.Item.RELATIONS;
+import static zotero.api.constants.ZoteroKeys.Item.TAGS;
+import static zotero.api.constants.ZoteroKeys.Item.TITLE;
+import static zotero.apiimpl.rest.ZoteroRest.Items.SPECIFIC;
+import static zotero.apiimpl.rest.ZoteroRest.Items.ALL;
+
 import java.util.Date;
 
 import zotero.api.Item;
@@ -8,10 +17,8 @@ import zotero.api.collections.Relationships;
 import zotero.api.collections.Tags;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
-import zotero.api.constants.ZoteroKeys;
 import zotero.api.properties.PropertyObject;
 import zotero.apiimpl.properties.PropertiesImpl;
-import zotero.apiimpl.rest.ZoteroRestPaths;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.request.builders.PatchBuilder;
@@ -42,7 +49,7 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		checkDeletionStatus();
 
-		return super.getProperties().getString(ZoteroKeys.TITLE);
+		return super.getProperties().getString(TITLE);
 	}
 
 	@Override
@@ -50,7 +57,7 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		checkDeletionStatus();
 
-		super.getProperties().putValue(ZoteroKeys.TITLE, title);
+		super.getProperties().putValue(TITLE, title);
 	}
 
 	@Override
@@ -58,7 +65,7 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		checkDeletionStatus();
 
-		return (ItemType) getProperties().getProperty(ZoteroKeys.ITEM_TYPE).getValue();
+		return (ItemType) getProperties().getProperty(ITEM_TYPE).getValue();
 	}
 
 	@Override
@@ -66,7 +73,7 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		checkDeletionStatus();
 
-		return super.getProperties().getDate(ZoteroKeys.ACCESS_DATE);
+		return super.getProperties().getDate(ACCESS_DATE);
 	}
 
 	@Override
@@ -74,7 +81,7 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		checkDeletionStatus();
 
-		return (Collections) getProperties().getProperty(ZoteroKeys.COLLECTIONS).getValue();
+		return (Collections) getProperties().getProperty(COLLECTIONS).getValue();
 	}
 
 	@Override
@@ -82,13 +89,13 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		checkDeletionStatus();
 
-		return (Tags) getProperties().getProperty(ZoteroKeys.TAGS).getValue();
+		return (Tags) getProperties().getProperty(TAGS).getValue();
 	}
 
 	public static Item fromItem(ZoteroRestItem jsonItem, LibraryImpl library)
 	{
 		ItemImpl item;
-		if (jsonItem.getData().get(ZoteroKeys.ITEM_TYPE).equals(ItemType.ATTACHMENT.getZoteroName()))
+		if (jsonItem.getData().get(ITEM_TYPE).equals(ItemType.ATTACHMENT.getZoteroName()))
 		{
 			item = AttachmentImpl.fromRest(jsonItem, library);
 		}
@@ -124,7 +131,7 @@ public class ItemImpl extends EntryImpl implements Item
 			ZoteroRestItem item = buildRestItem(false);
 
 			PostBuilder<?,?> builder = PostBuilder.createBuilder(new SuccessResponseBuilder());
-			builder.jsonObject(item).url(ZoteroRestPaths.ITEMS);
+			builder.jsonObject(item).url(ALL);
 
 			libraryImpl.performRequest((builder));
 		}
@@ -133,7 +140,7 @@ public class ItemImpl extends EntryImpl implements Item
 			ZoteroRestItem item = buildRestItem(true);
 
 			PatchBuilder<?,?> builder = PatchBuilder.createBuilder(new SuccessResponseBuilder());
-			builder.jsonObject(item).itemKey(this.getKey()).url(ZoteroRestPaths.ITEM);
+			builder.jsonObject(item).itemKey(this.getKey()).url(SPECIFIC);
 
 			libraryImpl.performRequest((builder));
 		}
@@ -161,12 +168,6 @@ public class ItemImpl extends EntryImpl implements Item
 	@Override
 	public final Relationships getRelationships()
 	{
-		return ((PropertyObject<Relationships>) super.getProperties().getProperty(ZoteroKeys.RELATIONS)).getValue();
-	}
-
-	@Override
-	String getDeletePath()
-	{
-		return ZoteroRestPaths.ITEM;
+		return ((PropertyObject<Relationships>) super.getProperties().getProperty(RELATIONS)).getValue();
 	}
 }

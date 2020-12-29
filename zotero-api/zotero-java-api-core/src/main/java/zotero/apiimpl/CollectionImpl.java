@@ -1,11 +1,12 @@
 package zotero.apiimpl;
 
-import zotero.api.Collection;
 import zotero.api.constants.ZoteroKeys;
+import zotero.apiimpl.rest.ZoteroRest;
+
+import zotero.api.Collection;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.apiimpl.properties.PropertiesImpl;
-import zotero.apiimpl.rest.ZoteroRestPaths;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.request.builders.DeleteBuilder;
@@ -23,8 +24,8 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	private CollectionImpl(ZoteroRestItem item, LibraryImpl library)
 	{
 		super(item, library);
-		this.numCollections = ((Double) item.getMeta().get("numCollections")).intValue();
-		this.numItems = ((Double) item.getMeta().get("numItems")).intValue();
+		this.numCollections = ((Double) item.getMeta().get(ZoteroKeys.Meta.NUM_COLLECTIONS)).intValue();
+		this.numItems = ((Double) item.getMeta().get(ZoteroKeys.Meta.NUM_ITEMS)).intValue();
 		this.item = item;
 	}
 
@@ -45,7 +46,7 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	{
 		CollectionImpl collection = new CollectionImpl(library);
 		PropertiesImpl.initializeCollectionProperties((PropertiesImpl) collection.getProperties());
-		collection.getProperties().putValue(ZoteroKeys.PARENT_COLLECTION, parent.getKey());
+		collection.getProperties().putValue(ZoteroKeys.Collection.PARENT_COLLECTION, parent.getKey());
 		return collection;
 	}
 
@@ -71,7 +72,7 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	{
 		PatchBuilder<Boolean,?> builder = PatchBuilder.createBuilder(new SuccessResponseBuilder());
 		ZoteroRestItem jsonContent = buildContent(true);
-		builder.url(ZoteroRestPaths.COLLECTION).jsonObject(jsonContent);
+		builder.url(ZoteroRest.Collections.SPECIFIC).jsonObject(jsonContent);
 		((LibraryImpl)getLibrary()).performRequest(builder);
 	}
 
@@ -79,7 +80,7 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	{
 		PostBuilder<Boolean,?> builder = PostBuilder.createBuilder(new SuccessResponseBuilder());
 		ZoteroRestItem jsonContent = buildContent(true);
-		builder.url(ZoteroRestPaths.COLLECTION).jsonObject(jsonContent);
+		builder.url(ZoteroRest.Collections.SPECIFIC).jsonObject(jsonContent);
 		((LibraryImpl)getLibrary()).performRequest(builder);
 	}
 
@@ -89,8 +90,8 @@ public final class CollectionImpl extends EntryImpl implements Collection
 		
 		ZoteroRestData.DataBuilder db = ib.dataBuilder();
 		
-		db.addProperty(getProperties().getProperty(ZoteroKeys.PARENT_COLLECTION));
-		db.addProperty(getProperties().getProperty(ZoteroKeys.NAME));
+		db.addProperty(getProperties().getProperty(ZoteroKeys.Collection.PARENT_COLLECTION));
+		db.addProperty(getProperties().getProperty(ZoteroKeys.Collection.NAME));
 		
 		return ib.build();
 	}
@@ -99,7 +100,7 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	public void delete()
 	{
 		DeleteBuilder<Boolean,?> builder = DeleteBuilder.createBuilder(new SuccessResponseBuilder());
-		builder.url(ZoteroRestPaths.COLLECTIONS).itemKey(this.getKey());
+		builder.url(ZoteroRest.Collections.ALL).itemKey(this.getKey());
 		((LibraryImpl)getLibrary()).performRequest(builder);
 	}
 
@@ -112,19 +113,19 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	@Override
 	public CollectionIterator fetchSubCollections()
 	{
-		return ((LibraryImpl) getLibrary()).fetchCollections(ZoteroRestPaths.COLLECTIONS_SUBCOLLECTIONS, this.getKey());
+		return ((LibraryImpl) getLibrary()).fetchCollections(ZoteroRest.Collections.SUBCOLLECTIONS, this.getKey());
 	}
 
 	@Override
 	public String getName()
 	{
-		return getProperties().getString(ZoteroKeys.NAME);
+		return getProperties().getString(ZoteroKeys.Collection.NAME);
 	}
 
 	@Override
 	public void setName(String name)
 	{
-		getProperties().putValue(ZoteroKeys.NAME, name);
+		getProperties().putValue(ZoteroKeys.Collection.NAME, name);
 	}
 
 	@Override
@@ -142,7 +143,7 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	@Override
 	public Collection fetchParentCollection()
 	{
-		String parentCollectionKey = getProperties().getString(ZoteroKeys.PARENT_COLLECTION);
+		String parentCollectionKey = getProperties().getString(ZoteroKeys.Collection.PARENT_COLLECTION);
 
 		if (parentCollectionKey == null)
 		{
@@ -150,11 +151,5 @@ public final class CollectionImpl extends EntryImpl implements Collection
 		}
 
 		return ((LibraryImpl) getLibrary()).fetchCollection(parentCollectionKey);
-	}
-
-	@Override
-	String getDeletePath()
-	{
-		return ZoteroRestPaths.COLLECTIONS;
 	}
 }

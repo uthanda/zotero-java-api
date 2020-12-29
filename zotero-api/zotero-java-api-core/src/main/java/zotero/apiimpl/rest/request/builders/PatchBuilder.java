@@ -1,8 +1,9 @@
 package zotero.apiimpl.rest.request.builders;
 
+import static zotero.apiimpl.rest.ZoteroRest.URLParameter.KEY;
+
 import org.apache.http.entity.StringEntity;
 
-import zotero.apiimpl.rest.ZoteroRestPaths;
 import zotero.apiimpl.rest.request.PatchRequest;
 import zotero.apiimpl.rest.request.RestRequest;
 import zotero.apiimpl.rest.response.ResponseBuilder;
@@ -17,7 +18,7 @@ public class PatchBuilder<T, R extends ResponseBuilder<T>> extends ContentBuilde
 
 	public PatchBuilder<T,R> itemKey(String key)
 	{
-		super.urlParam(ZoteroRestPaths.URL_PARAM_KEY, key);
+		super.urlParam(KEY, key);
 		return this;
 	}
 

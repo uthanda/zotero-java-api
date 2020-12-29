@@ -24,7 +24,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import com.google.gson.Gson;
 
 import zotero.api.constants.LinkType;
-import zotero.api.constants.ZoteroKeys;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.util.MockRestService;
@@ -189,8 +188,8 @@ public class CollectionsTest
 		ZoteroRestData data = item.getData();
 		// We should have 2 properties: name and parentCollection
 		assertEquals(2, data.size());
-		assertEquals("New collection", data.get(ZoteroKeys.NAME));		
-		assertEquals(KEY_NO_SUBS, data.get(ZoteroKeys.PARENT_COLLECTION));		
+		assertEquals("New collection", data.get(zotero.api.constants.ZoteroKeys.Collection.NAME));		
+		assertEquals(KEY_NO_SUBS, data.get(zotero.api.constants.ZoteroKeys.Collection.PARENT_COLLECTION));		
 	}
 	
 	@Test
@@ -216,6 +215,6 @@ public class CollectionsTest
 		
 		ZoteroRestData data = item.getData();
 		assertEquals(1, data.size());
-		assertEquals("Changed name", data.get(ZoteroKeys.NAME));		
+		assertEquals("Changed name", data.get(zotero.api.constants.ZoteroKeys.Collection.NAME));		
 	}
 }

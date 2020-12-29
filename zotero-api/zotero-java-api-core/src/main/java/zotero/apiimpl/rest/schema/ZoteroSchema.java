@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import zotero.api.constants.ZoteroKeys;
+import zotero.api.constants.ZoteroKeys.Document;
 import zotero.apiimpl.rest.schema.ZoteroRestSchema.CreatorType;
 import zotero.apiimpl.rest.schema.ZoteroRestSchema.Field;
 import zotero.apiimpl.rest.schema.ZoteroRestSchema.ItemType;
@@ -36,7 +36,7 @@ public class ZoteroSchema
 	private Map<String, ZoteroField> fields = new HashMap<>();
 	private List<ZoteroType> types;
 	
-	private List<String> dateKeys = Collections.unmodifiableList(Arrays.asList(ZoteroKeys.ACCESS_DATE, ZoteroKeys.DATE_ADDED, ZoteroKeys.DATE_MODIFIED));
+	private List<String> dateKeys = Collections.unmodifiableList(Arrays.asList(Document.ACCESS_DATE, Document.DATE_ADDED, Document.DATE_MODIFIED));
 
 	public static ZoteroSchema fromStream(InputStream is) throws IOException
 	{

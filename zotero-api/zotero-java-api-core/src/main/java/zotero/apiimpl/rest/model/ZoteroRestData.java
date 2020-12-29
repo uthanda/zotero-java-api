@@ -12,7 +12,8 @@ import zotero.api.Creator;
 import zotero.api.collections.Creators;
 import zotero.api.collections.Tags;
 import zotero.api.constants.ZoteroEnum;
-import zotero.api.constants.ZoteroKeys;
+import zotero.api.constants.ZoteroKeys.Document;
+import zotero.api.constants.ZoteroKeys.Item;
 import zotero.api.properties.Property;
 import zotero.api.properties.PropertyList;
 import zotero.apiimpl.CreatorImpl;
@@ -92,13 +93,13 @@ public class ZoteroRestData extends HashMap<String, Object>
 					{
 						@SuppressWarnings("unchecked")
 						Creators list = ((PropertyList<Creator,Creators>)property).getValue();
-						data.put(ZoteroKeys.CREATORS, list.stream().map(CreatorImpl::toRest).collect(Collectors.toList()));
+						data.put(Document.CREATORS, list.stream().map(CreatorImpl::toRest).collect(Collectors.toList()));
 					}
 					else if (type == Tag.class)
 					{
 						@SuppressWarnings("unchecked")
 						Tags list = ((PropertyList<String,Tags>)property).getValue();
-						data.put(ZoteroKeys.TAGS, TagsImpl.toRest(list));
+						data.put(Item.TAGS, TagsImpl.toRest(list));
 					}
 
 					break;

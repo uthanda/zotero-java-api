@@ -1,5 +1,8 @@
 package zotero.apiimpl;
 
+import zotero.api.constants.ZoteroKeys;
+import static zotero.apiimpl.rest.ZoteroRest.Items.FILE;
+
 import java.io.InputStream;
 import java.util.Map;
 
@@ -7,13 +10,11 @@ import zotero.api.Attachment;
 import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
-import zotero.api.constants.ZoteroKeys;
-import zotero.api.constants.ZoteroKeys.Entity;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.properties.Properties;
 import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.properties.PropertyStringImpl;
-import zotero.apiimpl.rest.ZoteroRestPaths;
+import zotero.apiimpl.rest.ZoteroRest.URLParameter;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.request.builders.GetBuilder;
 import zotero.apiimpl.rest.request.builders.PostBuilder;
@@ -57,7 +58,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		super.checkDeletionStatus();
 		checkPendingStatus();
 
-		return (LinkMode) getProperties().getProperty(ZoteroKeys.LINK_MODE).getValue();
+		return (LinkMode) getProperties().getProperty(ZoteroKeys.Attachment.LINK_MODE).getValue();
 	}
 
 	private void checkPendingStatus()
@@ -75,7 +76,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		super.checkDeletionStatus();
 		checkPendingStatus();
 
-		return getProperties().getString(zotero.api.constants.ZoteroKeys.Attachment.CHARSET);
+		return getProperties().getString(ZoteroKeys.Attachment.CHARSET);
 	}
 
 	@Override
@@ -84,7 +85,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		super.checkDeletionStatus();
 		checkPendingStatus();
 
-		getProperties().putValue(zotero.api.constants.ZoteroKeys.Attachment.CHARSET, charset);
+		getProperties().putValue(ZoteroKeys.Attachment.CHARSET, charset);
 	}
 
 	@Override
@@ -93,7 +94,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		super.checkDeletionStatus();
 		checkPendingStatus();
 
-		return getProperties().getString(zotero.api.constants.ZoteroKeys.Attachment.CONTENT_TYPE);
+		return getProperties().getString(ZoteroKeys.Attachment.CONTENT_TYPE);
 	}
 
 	@Override
@@ -102,7 +103,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		super.checkDeletionStatus();
 		checkPendingStatus();
 
-		getProperties().putValue(zotero.api.constants.ZoteroKeys.Attachment.CONTENT_TYPE, type);
+		getProperties().putValue(ZoteroKeys.Attachment.CONTENT_TYPE, type);
 	}
 
 	public static ItemImpl fromRest(ZoteroRestItem jsonItem, LibraryImpl library)
@@ -123,7 +124,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		}
 
 		GetBuilder<InputStream, ?> builder = GetBuilder.createBuilder(new StreamResponseBuilder());
-		builder.url(ZoteroRestPaths.ITEM_FILE).urlParam(Entity.KEY, getKey());
+		builder.url(FILE).urlParam(URLParameter.ITEM_KEY, getKey());
 
 		return ((LibraryImpl) getLibrary()).performRequest(builder).getResponse();
 	}
@@ -132,7 +133,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	public void validate()
 	{
 		// If we're pending and have not set content then we throw and exception
-		if (pending && is == null && getProperties().getProperty(ZoteroKeys.LINK_MODE).getValue() == LinkMode.IMPORTED_FILE)
+		if (pending && is == null && getProperties().getProperty(ZoteroKeys.Attachment.LINK_MODE).getValue() == LinkMode.IMPORTED_FILE)
 		{
 			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_NO_CONTENT,
 					"Attempted to save an attachment with no content");
@@ -171,9 +172,9 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		Integer fileSize = props.getInteger(ZoteroKeys.Attachment.FILE_SIZE);
 		String mtime = props.getString(ZoteroKeys.Attachment.MTIME);
 
-		builder.url(ZoteroRestPaths.ITEM_FILE).url(this.getKey()).formParam("md5", md5)
-				.formParam(ZoteroKeys.Attachment.FILENAME, props.getString(ZoteroKeys.Attachment.FILENAME)).formParam("filesize", Integer.toString(fileSize))
-				.formParam("mtime", mtime).build().execute();
+		builder.url(FILE).url(this.getKey()).formParam(ZoteroKeys.Attachment.MD5, md5)
+				.formParam(ZoteroKeys.Attachment.FILENAME, props.getString(ZoteroKeys.Attachment.FILENAME)).formParam(ZoteroKeys.Attachment.FILE_SIZE, Integer.toString(fileSize))
+				.formParam(ZoteroKeys.Attachment.MTIME, mtime).build().execute();
 	}
 
 	@Override
