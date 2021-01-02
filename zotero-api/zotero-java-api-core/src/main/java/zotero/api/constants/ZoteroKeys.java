@@ -101,7 +101,11 @@ public class ZoteroKeys
 		public static final String EDITION = "edition";
 		public static final String PROGRAMMING_LANGUAGE = "programmingLanguage";
 		public static final String REPORT_NUMBER = "reportNumber";
-		public static final String ABSTRACT_NOTE = "abstractNote";
+		/**
+		 * The abstract for a document or item.<br/><br/>
+		 * REST API Property: <code>&quot;abstractNote&quot;</code>
+		 */
+		public static final String ABSTRACT = "abstractNote";
 		public static final String UNIVERSITY = "university";
 		public static final String SESSION = "session";
 		public static final String AUDIO_RECORDING_FORMAT = "audioRecordingFormat";

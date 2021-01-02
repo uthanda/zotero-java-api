@@ -3,13 +3,16 @@ package zotero.api.util;
 import static org.mockito.ArgumentMatchers.any;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.function.Function;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -122,13 +125,22 @@ public class MockRestService
 
 		String path = uri.getPath();
 		String query = uri.getQuery();
+		String methodName = "GET";
+
 		query = query != null ? query : "<empty>";
+
+		return getEntityFromData(path, query, methodName);
+	};
+
+	protected static CloseableHttpResponse getEntityFromData(String path, String query, String methodName) throws RuntimeException
+	{
+		String error = String.format("Not found: '%s'.'%s'.'%s'", path, methodName, query);
 
 		if (!data.has(path))
 		{
 			try
 			{
-				return new TestResponse(HttpURLConnection.HTTP_NOT_FOUND, new StringEntity(String.format("Not found: '%s'.'%s'", path, query)));
+				return new TestResponse(HttpURLConnection.HTTP_NOT_FOUND, new StringEntity(error));
 			}
 			catch (UnsupportedEncodingException e1)
 			{
@@ -136,12 +148,18 @@ public class MockRestService
 			}
 		}
 
-		JsonObject pathNode = data.get(path).getAsJsonObject();
+		JsonObject getNode = data.get(path).getAsJsonObject();
+
+		if (!getNode.has(methodName))
+		{
+			return new TestResponse(HttpURLConnection.HTTP_NOT_FOUND, createStringEntity(error));
+		}
+
+		JsonObject pathNode = getNode.get(methodName).getAsJsonObject();
 
 		if (!pathNode.has(query))
 		{
-			String format = String.format("Not found: '%s'.'%s'", path, query);
-			return new TestResponse(HttpURLConnection.HTTP_NOT_FOUND, createStringEntity(format));
+			return new TestResponse(HttpURLConnection.HTTP_NOT_FOUND, createStringEntity(error));
 		}
 
 		JsonObject node = pathNode.get(query).getAsJsonObject();
@@ -158,7 +176,7 @@ public class MockRestService
 		response.setEntity(entity);
 
 		return response;
-	};
+	}
 
 	private static StringEntity createStringEntity(String format)
 	{
@@ -173,7 +191,28 @@ public class MockRestService
 	}
 
 	public static Function<HttpPost, CloseableHttpResponse> postSuccess = post -> {
-		return new TestResponse(HttpURLConnection.HTTP_OK, createStringEntity(""));
+
+		URI uri = post.getURI();
+
+		String path = uri.getPath();
+		String query = uri.getQuery();
+		String methodName = "POST";
+
+		try
+		{
+			InputStream is = post.getEntity().getContent();
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			IOUtils.copy(is, bos);
+			is.close();
+
+			query = new String(bos.toByteArray());
+		}
+		catch (UnsupportedOperationException | IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		return getEntityFromData(path, query, methodName);
 	};
 
 	public static Function<HttpDelete, CloseableHttpResponse> deleteSuccess = delete -> {
@@ -181,7 +220,28 @@ public class MockRestService
 	};
 
 	public static Function<HttpPatch, CloseableHttpResponse> patchSuccess = patch -> {
-		return new TestResponse(HttpURLConnection.HTTP_OK, createStringEntity(""));
+
+		URI uri = patch.getURI();
+
+		String path = uri.getPath();
+		String query = uri.getQuery();
+		String methodName = "PATCH";
+
+		try
+		{
+			InputStream is = patch.getEntity().getContent();
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			IOUtils.copy(is, bos);
+			is.close();
+
+			query = new String(bos.toByteArray());
+		}
+		catch (UnsupportedOperationException | IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		return getEntityFromData(path, query, methodName);
 	};
 
 	public static Function<HttpPut, CloseableHttpResponse> putSuccess = put -> {

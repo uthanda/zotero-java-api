@@ -21,9 +21,9 @@ public interface Entry extends PropertiesItem
 	/**
 	 * Gets the item version.
 	 * 
-	 * @return Item version
+	 * @return Item version (or null if the item has not been created yet)
 	 */
-	int getVersion();
+	Integer getVersion();
 
 	/**
 	 * Gets the library for the item.

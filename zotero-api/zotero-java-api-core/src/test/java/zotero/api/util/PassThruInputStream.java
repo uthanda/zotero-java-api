@@ -25,6 +25,7 @@ public final class PassThruInputStream extends InputStream
 		try
 		{
 			this.is = entity.getContent();
+			this.test = test;
 		}
 		catch (UnsupportedOperationException | IOException e)
 		{
@@ -41,24 +42,37 @@ public final class PassThruInputStream extends InputStream
 	public int read() throws IOException
 	{
 		int b = is.read();
+		
+		if(b == -1) {
+			return b;
+		}
+		
 		bos.write(b);
 		return b;
 	}
 
-	@Override
-	public int read(byte[] b) throws IOException
-	{
-		int length = super.read(b);
-		
-		bos.write(b, 0, length);
-		
-		return length;
-	}
-
+//	@Override
+//	public int read(byte[] b) throws IOException
+//	{
+//		int length = super.read(b);
+//
+//		if (length > -1)
+//		{
+//			bos.write(b, 0, length);
+//		}
+//
+//		return length;
+//	}
+//
 	@Override
 	public void close() throws IOException
 	{
 		super.close();
+		
+		if(test == null) {
+			return;
+		}
+		
 		test.accept(bos.toByteArray());
 	}
 }

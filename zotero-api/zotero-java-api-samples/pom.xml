@@ -6,4 +6,11 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>zotero-java-api-samples</artifactId>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.uthanda</groupId>
+  		<artifactId>zotero-java-api-core</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
 </project>

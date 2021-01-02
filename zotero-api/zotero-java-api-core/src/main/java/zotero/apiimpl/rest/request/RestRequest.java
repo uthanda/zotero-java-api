@@ -109,6 +109,7 @@ public abstract class RestRequest<T>
 	private void doExecute() throws URISyntaxException, IOException, ClientProtocolException
 	{
 		HttpRequestBase httpRequest = prepare(buildURL());
+		
 		this.addHeaders(httpRequest);
 
 		CloseableHttpClient client = HttpClients.createDefault();
@@ -167,15 +168,55 @@ public abstract class RestRequest<T>
 		return finalUri;
 	}
 
-	private void addHeaders(HttpRequestBase request)
+	public void addHeaders(HttpRequestBase request)
 	{
 		request.addHeader(Headers.ZOTERO_API_KEY, apiKey);
 		request.addHeader(Headers.ZOTERO_API_VERSION, API.VERSION);
 		request.addHeader(Headers.USER_AGENT, USER_AGENT);
+	}
 
-		if (lastVersion != null)
-		{
-			request.addHeader(Headers.IF_MODIFIED_SINCE_VERSION, lastVersion.toString());
-		}
+	public String getId()
+	{
+		return id;
+	}
+
+	public boolean isUser()
+	{
+		return isUser;
+	}
+
+	public String getApiKey()
+	{
+		return apiKey;
+	}
+
+	public String getApiUrl()
+	{
+		return apiUrl;
+	}
+
+	public Map<URLParameter, String> getUrlParams()
+	{
+		return urlParams;
+	}
+
+	public URIBuilder getBuilder()
+	{
+		return builder;
+	}
+
+	public Map<String, List<String>> getQueryParams()
+	{
+		return queryParams;
+	}
+
+	public Integer getLastVersion()
+	{
+		return lastVersion;
+	}
+
+	public ResponseBuilder<T> getResponseBuilder()
+	{
+		return responseBuilder;
 	}
 }

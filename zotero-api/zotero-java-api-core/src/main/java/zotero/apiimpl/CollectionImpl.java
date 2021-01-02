@@ -1,32 +1,25 @@
 package zotero.apiimpl;
 
-import zotero.api.constants.ZoteroKeys;
-import zotero.apiimpl.rest.ZoteroRest;
-
 import zotero.api.Collection;
+import zotero.api.constants.ZoteroKeys;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.apiimpl.properties.PropertiesImpl;
+import zotero.apiimpl.rest.ZoteroRest;
+import zotero.apiimpl.rest.ZoteroRest.URLParameter;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
-import zotero.apiimpl.rest.request.builders.DeleteBuilder;
-import zotero.apiimpl.rest.request.builders.PatchBuilder;
-import zotero.apiimpl.rest.request.builders.PostBuilder;
-import zotero.apiimpl.rest.response.SuccessResponseBuilder;
 
-@SuppressWarnings({ "squid:S2160" })
 public final class CollectionImpl extends EntryImpl implements Collection
 {
 	private int numItems;
 	private int numCollections;
-	private ZoteroRestItem item;
 
 	private CollectionImpl(ZoteroRestItem item, LibraryImpl library)
 	{
 		super(item, library);
 		this.numCollections = ((Double) item.getMeta().get(ZoteroKeys.Meta.NUM_COLLECTIONS)).intValue();
 		this.numItems = ((Double) item.getMeta().get(ZoteroKeys.Meta.NUM_ITEMS)).intValue();
-		this.item = item;
 	}
 
 	private CollectionImpl(LibraryImpl library)
@@ -58,7 +51,7 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	@Override
 	public void save()
 	{
-		if (item == null)
+		if (getVersion() == null)
 		{
 			performCreate();
 		}
@@ -70,38 +63,37 @@ public final class CollectionImpl extends EntryImpl implements Collection
 
 	private void performPatch()
 	{
-		PatchBuilder<Boolean,?> builder = PatchBuilder.createBuilder(new SuccessResponseBuilder());
-		ZoteroRestItem jsonContent = buildContent(true);
-		builder.url(ZoteroRest.Collections.SPECIFIC).jsonObject(jsonContent);
-		((LibraryImpl)getLibrary()).performRequest(builder);
+		// Either If-Unmodified-Since-Version or object version property must be
+		// provided for key-based writes
+		ZoteroRestItem item = buildContent(true);
+
+		super.executeUpdate(ZoteroRest.Collections.SPECIFIC, URLParameter.COLLECTION_KEY, getKey(), item);
 	}
 
 	private void performCreate()
 	{
-		PostBuilder<Boolean,?> builder = PostBuilder.createBuilder(new SuccessResponseBuilder());
-		ZoteroRestItem jsonContent = buildContent(true);
-		builder.url(ZoteroRest.Collections.SPECIFIC).jsonObject(jsonContent);
-		((LibraryImpl)getLibrary()).performRequest(builder);
+		ZoteroRestItem item = buildContent(false);
+
+		item = super.executeCreate(ZoteroRest.Collections.ALL, item);
+
+		this.refresh(item);
 	}
 
 	private ZoteroRestItem buildContent(boolean delta)
 	{
 		ZoteroRestItem.ItemBuilder ib = new ZoteroRestItem.ItemBuilder(delta);
-		
+
 		ZoteroRestData.DataBuilder db = ib.dataBuilder();
-		
+
 		db.addProperty(getProperties().getProperty(ZoteroKeys.Collection.PARENT_COLLECTION));
 		db.addProperty(getProperties().getProperty(ZoteroKeys.Collection.NAME));
-		
-		return ib.build();
-	}
 
-	@Override
-	public void delete()
-	{
-		DeleteBuilder<Boolean,?> builder = DeleteBuilder.createBuilder(new SuccessResponseBuilder());
-		builder.url(ZoteroRest.Collections.ALL).itemKey(this.getKey());
-		((LibraryImpl)getLibrary()).performRequest(builder);
+		if (getVersion() != null)
+		{
+			ib.version(getVersion());
+		}
+
+		return ib.build();
 	}
 
 	@Override

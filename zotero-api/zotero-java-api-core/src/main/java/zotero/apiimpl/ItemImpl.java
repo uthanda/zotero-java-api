@@ -1,13 +1,8 @@
 package zotero.apiimpl;
 
-import static zotero.api.constants.ZoteroKeys.Item.ACCESS_DATE;
-import static zotero.api.constants.ZoteroKeys.Item.COLLECTIONS;
-import static zotero.api.constants.ZoteroKeys.Item.ITEM_TYPE;
-import static zotero.api.constants.ZoteroKeys.Item.RELATIONS;
-import static zotero.api.constants.ZoteroKeys.Item.TAGS;
-import static zotero.api.constants.ZoteroKeys.Item.TITLE;
-import static zotero.apiimpl.rest.ZoteroRest.Items.SPECIFIC;
-import static zotero.apiimpl.rest.ZoteroRest.Items.ALL;
+import zotero.api.constants.ZoteroKeys;
+import zotero.apiimpl.rest.ZoteroRest;
+import zotero.apiimpl.rest.ZoteroRest.URLParameter;
 
 import java.util.Date;
 
@@ -21,14 +16,9 @@ import zotero.api.properties.PropertyObject;
 import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
-import zotero.apiimpl.rest.request.builders.PatchBuilder;
-import zotero.apiimpl.rest.request.builders.PostBuilder;
-import zotero.apiimpl.rest.response.SuccessResponseBuilder;
 
 public class ItemImpl extends EntryImpl implements Item
 {
-	private ZoteroRestItem jsonItem;
-
 	protected ItemImpl(ZoteroRestItem item, LibraryImpl library)
 	{
 		super(item, library);
@@ -43,13 +33,13 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		super(mode, library);
 	}
-	
+
 	@Override
 	public final String getTitle()
 	{
 		checkDeletionStatus();
 
-		return super.getProperties().getString(TITLE);
+		return super.getProperties().getString(ZoteroKeys.Item.TITLE);
 	}
 
 	@Override
@@ -57,7 +47,7 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		checkDeletionStatus();
 
-		super.getProperties().putValue(TITLE, title);
+		super.getProperties().putValue(ZoteroKeys.Item.TITLE, title);
 	}
 
 	@Override
@@ -65,7 +55,7 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		checkDeletionStatus();
 
-		return (ItemType) getProperties().getProperty(ITEM_TYPE).getValue();
+		return (ItemType) getProperties().getProperty(ZoteroKeys.Item.ITEM_TYPE).getValue();
 	}
 
 	@Override
@@ -73,7 +63,7 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		checkDeletionStatus();
 
-		return super.getProperties().getDate(ACCESS_DATE);
+		return super.getProperties().getDate(ZoteroKeys.Item.ACCESS_DATE);
 	}
 
 	@Override
@@ -81,7 +71,7 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		checkDeletionStatus();
 
-		return (Collections) getProperties().getProperty(COLLECTIONS).getValue();
+		return (Collections) getProperties().getProperty(ZoteroKeys.Item.COLLECTIONS).getValue();
 	}
 
 	@Override
@@ -89,13 +79,13 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		checkDeletionStatus();
 
-		return (Tags) getProperties().getProperty(TAGS).getValue();
+		return (Tags) getProperties().getProperty(ZoteroKeys.Item.TAGS).getValue();
 	}
 
 	public static Item fromItem(ZoteroRestItem jsonItem, LibraryImpl library)
 	{
 		ItemImpl item;
-		if (jsonItem.getData().get(ITEM_TYPE).equals(ItemType.ATTACHMENT.getZoteroName()))
+		if (jsonItem.getData().get(ZoteroKeys.Item.ITEM_TYPE).equals(ItemType.ATTACHMENT.getZoteroName()))
 		{
 			item = AttachmentImpl.fromRest(jsonItem, library);
 		}
@@ -103,8 +93,6 @@ public class ItemImpl extends EntryImpl implements Item
 		{
 			item = DocumentImpl.fromRest(jsonItem, library);
 		}
-
-		item.jsonItem = jsonItem;
 
 		EntryImpl.loadLinks(item, jsonItem.getLinks());
 
@@ -123,27 +111,35 @@ public class ItemImpl extends EntryImpl implements Item
 		checkDeletionStatus();
 		validate();
 
-		// This is a new item, so we do a post
-		LibraryImpl libraryImpl = (LibraryImpl) getLibrary();
-
-		if (this.jsonItem == null)
+		if (getVersion() == null)
 		{
-			ZoteroRestItem item = buildRestItem(false);
-
-			PostBuilder<?,?> builder = PostBuilder.createBuilder(new SuccessResponseBuilder());
-			builder.jsonObject(item).url(ALL);
-
-			libraryImpl.performRequest((builder));
+			createItem();
 		}
 		else
 		{
-			ZoteroRestItem item = buildRestItem(true);
-
-			PatchBuilder<?,?> builder = PatchBuilder.createBuilder(new SuccessResponseBuilder());
-			builder.jsonObject(item).itemKey(this.getKey()).url(SPECIFIC);
-
-			libraryImpl.performRequest((builder));
+			updateItem();
 		}
+	}
+
+	private void updateItem()
+	{
+		ZoteroRestItem item = buildRestItem(true);
+		
+		super.executeUpdate(ZoteroRest.Items.SPECIFIC, URLParameter.ITEM_KEY, this.getKey(), item);
+	}
+
+	private void createItem()
+	{
+		ZoteroRestItem item = buildRestItem(false);
+
+		item = executeCreate(ZoteroRest.Items.ALL, item);
+		
+		this.refresh(item);
+	}
+
+	protected void refresh(ZoteroRestItem refresh)
+	{
+		super.refresh(refresh);
 	}
 
 	public void validate()
@@ -161,6 +157,10 @@ public class ItemImpl extends EntryImpl implements Item
 
 		((PropertiesImpl) getProperties()).addToBuilder(db);
 
+		if(getVersion() != null) {
+			ib.version(getVersion());
+		}
+		
 		return ib.build();
 	}
 
@@ -168,6 +168,6 @@ public class ItemImpl extends EntryImpl implements Item
 	@Override
 	public final Relationships getRelationships()
 	{
-		return ((PropertyObject<Relationships>) super.getProperties().getProperty(RELATIONS)).getValue();
+		return ((PropertyObject<Relationships>) super.getProperties().getProperty(ZoteroKeys.Item.RELATIONS)).getValue();
 	}
 }

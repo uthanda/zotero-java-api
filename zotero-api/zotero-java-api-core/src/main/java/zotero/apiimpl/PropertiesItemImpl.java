@@ -46,4 +46,9 @@ public class PropertiesItemImpl implements PropertiesItem
 
 		PropertiesImpl.initializeDocumentProperties(type, properties, current);
 	}
+
+	protected void refresh(LibraryImpl library, ZoteroRestItem item)
+	{
+		this.properties = PropertiesImpl.fromRest(library, item);
+	}
 }

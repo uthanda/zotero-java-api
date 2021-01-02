@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -39,6 +40,7 @@ import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.util.MockRestService;
 import zotero.api.util.PassThruInputStream;
+import zotero.apiimpl.rest.ZoteroRest;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 
@@ -80,7 +82,7 @@ public class ItemsTest
 		assertEquals(TEST_ITEM_B4ERDVS4, item.getKey());
 		assertEquals(2, item.getNumberOfChilden());
 		assertEquals("Toward a methodology for case modeling", item.getTitle());
-		assertEquals(2906, item.getVersion());
+		assertEquals(2906, item.getVersion().intValue());
 	}
 
 	@Test
@@ -209,22 +211,36 @@ public class ItemsTest
 	@Test
 	public void testCreate()
 	{
+		AtomicInteger ai = new AtomicInteger();
+
 		service.setPost(post -> {
 
 			post.setEntity(new InputStreamEntity(new PassThruInputStream(post, this::testCreate), ContentType.APPLICATION_JSON));
 
+			ai.incrementAndGet();
+
 			return MockRestService.postSuccess.apply(post);
 		});
 
-		Document update = (Document) library.createDocument(ItemType.CASE);
+		Document item = (Document) library.createDocument(ItemType.CASE);
 
-		update.getCreators().add(CreatorType.CARTOGRAPHER, "John", "Dewey");
-		update.save();
+		item.getCreators().add(CreatorType.AUTHOR, "John", "Dewey");
+		item.save();
+
+		assertEquals(1, ai.intValue());
+
+		assertEquals("R2E8GCGX", item.getKey());
 	}
 
 	private void testCreate(byte[] content)
 	{
-		ZoteroRestItem item = new Gson().fromJson(new String(content), ZoteroRestItem.class);
+		String json = new String(content);
+
+		ZoteroRestItem[] items = new Gson().fromJson(json, ZoteroRestItem[].class);
+
+		assertEquals(1, items.length);
+
+		ZoteroRestItem item = items[0];
 
 		assertNull(item.getKey());
 
@@ -235,7 +251,7 @@ public class ItemsTest
 		List<Map<String, String>> creators = (List<Map<String, String>>) data.get(zotero.api.constants.ZoteroKeys.Document.CREATORS);
 		assertEquals(1, creators.size());
 		Map<String, String> creator = creators.get(0);
-		assertEquals(CreatorType.CARTOGRAPHER.getZoteroName(), creator.get(zotero.api.constants.ZoteroKeys.Creator.CREATOR_TYPE));
+		assertEquals(CreatorType.AUTHOR.getZoteroName(), creator.get(zotero.api.constants.ZoteroKeys.Creator.CREATOR_TYPE));
 		assertEquals("John", creator.get(zotero.api.constants.ZoteroKeys.Creator.FIRST_NAME));
 		assertEquals("Dewey", creator.get(zotero.api.constants.ZoteroKeys.Creator.LAST_NAME));
 	}
@@ -243,9 +259,13 @@ public class ItemsTest
 	@Test
 	public void testUpdate()
 	{
+		AtomicInteger ai = new AtomicInteger();
+
 		service.setPatch(patch -> {
 
 			patch.setEntity(new InputStreamEntity(new PassThruInputStream(patch, this::testUpdate), ContentType.APPLICATION_JSON));
+
+			ai.incrementAndGet();
 
 			return MockRestService.patchSuccess.apply(patch);
 		});
@@ -256,6 +276,9 @@ public class ItemsTest
 		update.setTitle("Changed title");
 
 		update.save();
+
+		assertEquals(1, ai.intValue());
+		assertEquals(2907, update.getVersion().intValue());
 	}
 
 	private void testUpdate(byte[] content)
@@ -286,13 +309,24 @@ public class ItemsTest
 	@Test
 	public void testDelete()
 	{
-		service.setDelete(delete ->{
+		AtomicInteger ai = new AtomicInteger();
+		
+		service.setDelete(delete -> {
+
+			// Check the request info.  Should be the right URL and have the If-Unmodified-Since-Version header set
 			assertEquals("/users/apiId/items/B4ERDVS4", delete.getURI().getPath());
+			assertNotNull(delete.getFirstHeader(ZoteroRest.Headers.IF_UNMODIFIED_SINCE_VERSION));
+			assertEquals("2906", delete.getFirstHeader(ZoteroRest.Headers.IF_UNMODIFIED_SINCE_VERSION).getValue());
+			
+			ai.incrementAndGet();
+			
 			return MockRestService.deleteSuccess.apply(delete);
 		});
-		
+
 		Item delete = library.fetchItem(TEST_ITEM_B4ERDVS4);
 		delete.delete();
+		
+		assertEquals(1, ai.intValue());
 	}
 
 	@Test(expected = ZoteroRuntimeException.class)

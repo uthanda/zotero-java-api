@@ -3,11 +3,13 @@ package zotero.api;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.entity.ContentType;
@@ -28,6 +30,7 @@ import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.util.MockRestService;
 import zotero.api.util.PassThruInputStream;
+import zotero.apiimpl.rest.ZoteroRest;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 
@@ -167,44 +170,92 @@ public class CollectionsTest
 	@Test
 	public void testCreateCollection()
 	{
+		// A hackish way of checking that the call was made
+		AtomicInteger ai = new AtomicInteger();
+		
 		service.setPost(post -> {
 
 			post.setEntity(new InputStreamEntity(new PassThruInputStream(post, this::testCreate), ContentType.APPLICATION_JSON));
 
+			ai.incrementAndGet();
+			
 			return MockRestService.postSuccess.apply(post);
 		});
 		
+		// Create the collection and save
 		Collection child = library.createCollection(collectionNoSubCollections);
 		child.setName("New collection");
 		child.save();
+		
+		// Check the POST call was simulated (there's a better way somehow to do this)
+		assertEquals(1, ai.intValue());
+
+		// Test the Meta data and key
+		assertEquals("QP52ERNW", child.getKey());
+		assertEquals(0, child.getNumberOfCollections());
+		assertEquals(0, child.getNumberOfItems());
+		assertEquals(3643, child.getVersion().intValue());
+		
+		// Test the link data
+		assertTrue(child.getLinks().has(LinkType.SELF));
+		assertEquals("https://api.zotero.org/users/5787467/collections/QP52ERNW", child.getLinks().get(LinkType.SELF).getHref());
+		assertEquals("application/json", child.getLinks().get(LinkType.SELF).getType());
+
+		assertTrue(child.getLinks().has(LinkType.ALTERNATE));
+		assertEquals("https://www.zotero.org/uthanda/collections/QP52ERNW", child.getLinks().get(LinkType.ALTERNATE).getHref());
+		assertEquals("text/html", child.getLinks().get(LinkType.ALTERNATE).getType());
+
+		assertTrue(child.getLinks().has(LinkType.UP));
+		assertEquals("https://api.zotero.org/users/5787467/collections/FJ3SUIFZ", child.getLinks().get(LinkType.UP).getHref());
+		assertEquals("application/json", child.getLinks().get(LinkType.UP).getType());
 	}
 
-	private void testCreate(byte[] content)
+	private void testCreate(byte[] buffer)
 	{
-		ZoteroRestItem item = new Gson().fromJson(new String(content), ZoteroRestItem.class);
-		assertEquals(null, item.getKey());
+		String json = new String(buffer);
+		ZoteroRestItem[] items = new Gson().fromJson(json, ZoteroRestItem[].class);
+		
+		assertEquals(1, items.length);
+		
+		ZoteroRestItem item = items[0];
+		
+		// Each of these items should NOT be set
+		assertNull(item.getKey());
+		assertNull(item.getMeta());
+		assertNull(item.getLibrary());
+		assertNull(item.getLinks());
+		
+		// We should have data
 		assertNotNull(item.getData());
 		
 		ZoteroRestData data = item.getData();
+		
 		// We should have 2 properties: name and parentCollection
 		assertEquals(2, data.size());
 		assertEquals("New collection", data.get(zotero.api.constants.ZoteroKeys.Collection.NAME));		
-		assertEquals(KEY_NO_SUBS, data.get(zotero.api.constants.ZoteroKeys.Collection.PARENT_COLLECTION));		
+		assertEquals(KEY_NO_SUBS, data.get(zotero.api.constants.ZoteroKeys.Collection.PARENT_COLLECTION));
 	}
 	
 	@Test
 	public void testUpdateCollection()
 	{
+		AtomicInteger ai = new AtomicInteger();
+		
 		service.setPatch(patch -> {
 
 			patch.setEntity(new InputStreamEntity(new PassThruInputStream(patch, this::testUpdate), ContentType.APPLICATION_JSON));
 
+			ai.incrementAndGet();
+			
 			return MockRestService.patchSuccess.apply(patch);
 		});
 
 		Collection parent = library.fetchCollection(KEY_SUBS);
 		parent.setName("Changed name");
 		parent.save();
+		
+		assertEquals(1, ai.intValue());
+		assertEquals(3649, parent.getVersion().intValue());
 	}
 	
 	private void testUpdate(byte[] content)
@@ -216,5 +267,28 @@ public class CollectionsTest
 		ZoteroRestData data = item.getData();
 		assertEquals(1, data.size());
 		assertEquals("Changed name", data.get(zotero.api.constants.ZoteroKeys.Collection.NAME));		
+	}
+	
+	@Test
+	public void testDeleteCollection()
+	{
+		AtomicInteger ai = new AtomicInteger();
+		
+		service.setDelete(delete -> {
+
+			ai.incrementAndGet();
+			
+			// Check the request info.  Should be the right URL and have the If-Unmodified-Since-Version header set
+			assertEquals("/users/apiId/collections/" + KEY_SUBS, delete.getURI().getPath());
+			assertNotNull(delete.getFirstHeader(ZoteroRest.Headers.IF_UNMODIFIED_SINCE_VERSION));
+			assertEquals("44", delete.getFirstHeader(ZoteroRest.Headers.IF_UNMODIFIED_SINCE_VERSION).getValue());
+			
+			return MockRestService.deleteSuccess.apply(delete);
+		});
+
+		Collection parent = library.fetchCollection(KEY_SUBS);
+		parent.delete();
+		
+		assertEquals(1, ai.intValue());
 	}
 }
