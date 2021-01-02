@@ -22,7 +22,7 @@ public final class CollectionImpl extends EntryImpl implements Collection
 		this.numItems = ((Double) item.getMeta().get(ZoteroKeys.Meta.NUM_ITEMS)).intValue();
 	}
 
-	private CollectionImpl(LibraryImpl library)
+	public CollectionImpl(LibraryImpl library)
 	{
 		super(library);
 		this.numCollections = 0;

@@ -9,9 +9,10 @@ import java.util.Set;
 import zotero.api.Collection;
 import zotero.api.collections.Collections;
 import zotero.api.iterators.CollectionIterator;
+import zotero.apiimpl.ChangeTracker;
 import zotero.apiimpl.LibraryImpl;
 
-public class CollectionsImpl implements Collections
+public class CollectionsImpl implements Collections, ChangeTracker
 {
 	private Set<String> collections = new LinkedHashSet<>();
 	private LibraryImpl library;
@@ -23,7 +24,7 @@ public class CollectionsImpl implements Collections
 		return new CollectionIterator()
 		{
 			private Iterator<String> i = collections.iterator();
-			
+
 			@Override
 			public boolean hasNext()
 			{
@@ -62,18 +63,24 @@ public class CollectionsImpl implements Collections
 	{
 		return isDirty;
 	}
-	
-	public static Collections fromRest(LibraryImpl library, List<String> collectionList)
+
+	public static CollectionsImpl fromRest(LibraryImpl library, List<String> collectionList)
 	{
 		CollectionsImpl collections = new CollectionsImpl();
 		collections.library = library;
 		collections.collections.addAll(collectionList);
-		
+
 		return collections;
 	}
-	
+
 	public static List<String> toRest(CollectionsImpl collections)
 	{
 		return Arrays.asList(collections.collections.toArray(new String[collections.collections.size()]));
+	}
+
+	@Override
+	public String toString()
+	{
+		return String.format("[Collections list:%s, dirty:%b]", this.collections.toString(), isDirty);
 	}
 }

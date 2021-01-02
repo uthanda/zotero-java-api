@@ -23,7 +23,7 @@ public final class TagsImpl extends PropertyListImpl.ObservableList<String> impl
 		super(TAGS, null, false);
 	}
 
-	private TagsImpl(List<String> values)
+	public TagsImpl(List<String> values)
 	{
 		super(TAGS, values, false);
 	}
@@ -43,12 +43,24 @@ public final class TagsImpl extends PropertyListImpl.ObservableList<String> impl
 		return zrt;
 	}
 
-	public static Tags from(List<Map<String, Object>> jsonTags)
+	@SuppressWarnings("unchecked")
+	public static Tags fromRest(Object value)
 	{
+		if (value instanceof Boolean && Boolean.FALSE.equals(value))
+		{
+			return new TagsImpl();
+		}
+
 		List<String> values = new ArrayList<>();
 
-		jsonTags.forEach(e -> values.add((String) e.get(TAG)));
+		((List<Map<String, Object>>) value).forEach(e -> values.add((String) e.get(TAG)));
 
 		return new TagsImpl(values);
+	}
+
+	@Override
+	public String toString()
+	{
+		return String.format("[Tags: tags:%s, dirty:%b]", super.toString(), this.isDirty());
 	}
 }

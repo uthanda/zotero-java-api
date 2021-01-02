@@ -2,8 +2,9 @@ package zotero.apiimpl.properties;
 
 import zotero.api.constants.PropertyType;
 import zotero.api.properties.PropertyObject;
+import zotero.apiimpl.ChangeTracker;
 
-public class PropertyObjectImpl<T> extends PropertyImpl<T> implements PropertyObject<T>
+public class PropertyObjectImpl<T extends ChangeTracker> extends PropertyImpl<T> implements PropertyObject<T>
 {
 	private Class<T> type;
 
@@ -21,5 +22,11 @@ public class PropertyObjectImpl<T> extends PropertyImpl<T> implements PropertyOb
 	public Class<T> getType()
 	{
 		return type;
+	}
+	
+	@Override
+	public boolean isDirty()
+	{
+		return super.isDirty() || (getValue() != null && getValue().isDirty());
 	}
 }

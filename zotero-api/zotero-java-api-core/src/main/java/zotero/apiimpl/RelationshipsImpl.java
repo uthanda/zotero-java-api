@@ -10,7 +10,7 @@ import zotero.api.collections.Relationships;
 import zotero.api.constants.RelationshipType;
 import zotero.apiimpl.properties.PropertyListImpl.ObservableList;
 
-public final class RelationshipsImpl implements Relationships
+public final class RelationshipsImpl implements Relationships, ChangeTracker
 {
 	private EnumMap<RelationshipType, ObservableList<String>> relationships;
 
@@ -72,5 +72,11 @@ public final class RelationshipsImpl implements Relationships
 		relationships.getTypes().forEach(type -> zrs.put(type.getZoteroName(), relationships.getRelatedKeys(type)));
 
 		return zrs;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return String.format("[Relationships: map:%s, dirty:%b]", relationships.toString(), isDirty());
 	}
 }

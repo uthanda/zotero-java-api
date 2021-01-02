@@ -50,7 +50,7 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 
 	protected EntryImpl(LinkMode mode, LibraryImpl library)
 	{
-		super(ItemType.ATTACHMENT, mode);
+		super(mode);
 		this.library = library;
 	}
 

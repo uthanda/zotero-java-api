@@ -21,6 +21,7 @@ import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
+import zotero.api.constants.ZoteroKeys;
 import zotero.api.constants.ZoteroKeys.Attachment;
 import zotero.api.constants.ZoteroKeys.Document;
 import zotero.api.constants.ZoteroKeys.Entity;
@@ -91,82 +92,66 @@ public final class PropertiesImpl implements Properties
 
 			Property<?> property = null;
 
-			if (value instanceof List)
+			// Deal with known properties
+			switch (e.getKey())
 			{
-				List<?> listValue = (List<?>) value;
-
-				switch (e.getKey())
+				case Document.CREATORS:
 				{
-					case Document.CREATORS:
-					{
-						// Convert to a list of Creators
-						property = new PropertyListImpl<>(Document.CREATORS, Creator.class, CreatorsImpl.fromRest(listValue));
-						break;
-					}
-					case Item.TAGS:
-					{
-						List<Map<String, Object>> jsonTags = (List<Map<String, Object>>) value;
+					// Convert to a list of Creators
+					property = new PropertyListImpl<>(Document.CREATORS, Creator.class, CreatorsImpl.fromRest(value));
+					break;
+				}
+				case Item.TAGS:
+				{
+					Tags tags = TagsImpl.fromRest(value);
 
-						Tags tags = TagsImpl.from(jsonTags);
+					property = new PropertyListImpl<>(Item.TAGS, String.class, tags);
+					break;
+				}
+				case Item.COLLECTIONS:
+				{
+					CollectionsImpl collections = CollectionsImpl.fromRest(library, (List<String>) value);
+					property = new PropertyObjectImpl<>(Item.COLLECTIONS, CollectionsImpl.class, collections);
+					break;
+				}
+				case Item.RELATIONS:
+				{
+					RelationshipsImpl relationships = RelationshipsImpl.fromMap((Map<String, Object>) value);
+					property = new PropertyObjectImpl<>(Item.RELATIONS, RelationshipsImpl.class, relationships);
+					break;
+				}
+				default:
+				{
+					if (value instanceof String && schema.getDateKeys().contains(name))
+					{
+						logger.debug("Attempting to deserialize '{}' as date", value);
 
-						property = new PropertyListImpl<>(Item.TAGS, String.class, tags);
-						break;
+						Date dateValue = ((String) value).isEmpty() ? null : DatatypeConverter.parseDateTime((String) value).getTime();
+
+						property = new PropertyDateImpl(name, dateValue);
 					}
-					case Item.COLLECTIONS:
+					else if (Item.ITEM_TYPE.equals(e.getKey()))
 					{
-						Collections collections = CollectionsImpl.fromRest(library, (List<String>) listValue);
-						property = new PropertyObjectImpl<>(Item.COLLECTIONS, Collections.class, collections);
-						break;
+						property = new PropertyEnumImpl<>(e.getKey(), ItemType.class, ItemType.fromZoteroType((String) e.getValue()));
 					}
-					default:
+					else if (Attachment.LINK_MODE.equals(e.getKey()))
 					{
-						logger.error("Unknown List key {} for value {}", e.getKey(), e.getValue());
+						property = new PropertyEnumImpl<>(e.getKey(), LinkMode.class, LinkMode.fromZoteroType((String) e.getValue()));
+					}
+					else if (value instanceof Double)
+					{
+						property = new PropertyIntegerImpl(name, ((Double) value).intValue());
+					}
+					else if (value instanceof Boolean)
+					{
+						// Need to think about whether this could happen
+						property = new PropertyStringImpl(name, null);
+					}
+					else
+					{
+						property = new PropertyStringImpl(name, (String) value);
 					}
 				}
-			}
-			else if (value instanceof Map)
-			{
-				switch (e.getKey())
-				{
-					case Item.RELATIONS:
-					{
-						Relationships relationships = RelationshipsImpl.fromMap((Map<String, Object>) value);
-						property = new PropertyObjectImpl<>(Item.RELATIONS, Relationships.class, relationships);
-						break;
-					}
-					default:
-					{
-						logger.error("Unknown Map key {} for value {}", e.getKey(), e.getValue());
-					}
-				}
-			}
-			else if (value instanceof String && schema.getDateKeys().contains(name))
-			{
-				logger.debug("Attempting to deserialize '{}' as date", value);
-
-				Date dateValue = ((String) value).isEmpty() ? null : DatatypeConverter.parseDateTime((String) value).getTime();
-
-				property = new PropertyDateImpl(name, dateValue);
-			}
-			else if (Item.ITEM_TYPE.equals(e.getKey()))
-			{
-				property = new PropertyEnumImpl<>(e.getKey(), ItemType.class, ItemType.fromZoteroType((String) e.getValue()));
-			}
-			else if (Attachment.LINK_MODE.equals(e.getKey()))
-			{
-				property = new PropertyEnumImpl<>(e.getKey(), LinkMode.class, LinkMode.fromZoteroType((String) e.getValue()));
-			}
-			else if (value instanceof Double)
-			{
-				property = new PropertyIntegerImpl(name, ((Double) value).intValue());
-			}
-			else if (value instanceof Boolean)
-			{
-				property = new PropertyBooleanImpl(name, (Boolean) value);
-			}
-			else
-			{
-				property = new PropertyStringImpl(name, (String) value);
 			}
 
 			properties.properties.put(name, property);
@@ -192,11 +177,18 @@ public final class PropertiesImpl implements Properties
 				continue;
 			}
 
+			if (prop.getValue() == null)
+			{
+				// TODO Do we need to handle special values such as creators or
+				// tags in a special way?
+				data.put(key, false);
+			}
+
 			switch (key)
 			{
 				case Document.CREATORS:
 				{
-					Creators creators = ((PropertyList<Creator, Creators>) prop).getValue();
+					Creators creators = ((PropertyObject<Creators>) prop).getValue();
 					data.put(Document.CREATORS, CreatorsImpl.toRest(creators));
 					break;
 				}
@@ -208,8 +200,8 @@ public final class PropertiesImpl implements Properties
 				}
 				case Item.COLLECTIONS:
 				{
-					List<String> collections = ((PropertyList<String, List<String>>) prop).getValue();
-					data.put(Item.COLLECTIONS, collections);
+					CollectionsImpl collections = (CollectionsImpl) ((PropertyObject<Collections>) prop).getValue();
+					data.put(Item.COLLECTIONS, CollectionsImpl.toRest(collections));
 					break;
 				}
 				case Item.RELATIONS:
@@ -220,7 +212,7 @@ public final class PropertiesImpl implements Properties
 				}
 				default:
 				{
-					data.put(key, prop != null ? prop.getValue() : null);
+					data.put(key, prop.getValue());
 				}
 			}
 		}
@@ -228,15 +220,15 @@ public final class PropertiesImpl implements Properties
 
 	public static void initializeCollectionProperties(PropertiesImpl properties)
 	{
-		// TODO
+		properties.addProperty(new PropertyStringImpl(ZoteroKeys.Collection.NAME, null));
+		properties.addProperty(new PropertyStringImpl(ZoteroKeys.Collection.PARENT_COLLECTION, null));
 	}
 
 	public static void initializeDocumentProperties(ItemType type, PropertiesImpl properties, PropertiesImpl current)
 	{
 		if (type == ItemType.ATTACHMENT)
 		{
-			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.UNSUPPORTED_ENUM_VALUE,
-					"Cannot initalize an attachment using initalize document properties");
+			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.UNSUPPORTED_ENUM_VALUE, "Cannot initalize an attachment using initalize document properties");
 		}
 
 		initializeItemProperties(type, properties, current);
@@ -277,15 +269,9 @@ public final class PropertiesImpl implements Properties
 		}
 	}
 
-	public static void initializeAttachmentProperties(ItemType type, LinkMode mode, PropertiesImpl properties)
+	public static void initializeAttachmentProperties(LinkMode mode, PropertiesImpl properties)
 	{
-		if (type != ItemType.ATTACHMENT)
-		{
-			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.UNSUPPORTED_ENUM_VALUE,
-					"Cannot initalize an document using initalize attachment properties");
-		}
-
-		initializeItemProperties(type, properties, null);
+		initializeItemProperties(ItemType.ATTACHMENT, properties, null);
 
 		switch (mode)
 		{
@@ -317,8 +303,7 @@ public final class PropertiesImpl implements Properties
 			}
 			default:
 			{
-				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.UNSUPPORTED_ENUM_VALUE,
-						"Cannot initalize an attachment of mode " + mode + ".  Mode not implemented.");
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.UNSUPPORTED_ENUM_VALUE, "Cannot initalize an attachment of mode " + mode + ".  Mode not implemented.");
 			}
 
 		}
@@ -356,5 +341,11 @@ public final class PropertiesImpl implements Properties
 		{
 			db.addProperty(prop);
 		}
+	}
+
+	@Override
+	public String toString()
+	{
+		return String.format("[Properties props:%s]", properties.toString());
 	}
 }

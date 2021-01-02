@@ -20,10 +20,10 @@ public class PropertiesItemImpl implements PropertiesItem
 		this.properties = PropertiesImpl.fromRest(library, item);
 	}
 
-	PropertiesItemImpl(ItemType type, LinkMode mode)
+	PropertiesItemImpl(LinkMode mode)
 	{
 		this.properties = new PropertiesImpl();
-		PropertiesImpl.initializeAttachmentProperties(type, mode, this.properties);
+		PropertiesImpl.initializeAttachmentProperties(mode, this.properties);
 	}
 	
 	PropertiesItemImpl(ItemType type)

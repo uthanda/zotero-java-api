@@ -48,12 +48,32 @@ public class PropertyImpl<T> implements Property<T>
 	@Override
 	public void setValue(T value)
 	{
+		checkReadOnly();
+
+		this.dirty = true;
+		this.value = value;
+	}
+
+	protected void checkReadOnly() throws ZoteroRuntimeException
+	{
 		if (readOnly)
 		{
 			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.PROPERTY_READ_ONLY, "Property " + key + " is read only");
 		}
+	}
+
+	@Override
+	public void clearValue()
+	{
+		checkReadOnly();
 
 		this.dirty = true;
-		this.value = value;
+		this.value = null;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return String.format("[%s key=%s, dirty=%b, value=%s]", this.getClass().getSimpleName(), key, dirty, value);
 	}
 }
