@@ -9,6 +9,8 @@ public enum RelationshipType implements ZoteroEnum
 	/**
 	 * 
 	 */
+	OWL_SAMEAS("owl:sameAs"),
+	DC_RELATION("dc:relation"),
 	DC_REPLACES("dc:replaces");
 
 	private final String zoteroName;
