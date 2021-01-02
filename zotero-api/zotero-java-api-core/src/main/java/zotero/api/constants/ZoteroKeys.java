@@ -58,7 +58,6 @@ public class ZoteroKeys
 	public static class Entity
 	{
 		public static final String URL = "url";
-		public static final String VERSION_NUMBER = "versionNumber";
 		public static final String VERSION = "version";
 
 		private Entity() {}
