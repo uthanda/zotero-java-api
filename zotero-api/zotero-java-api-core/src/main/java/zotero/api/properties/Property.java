@@ -11,4 +11,6 @@ public interface Property<T>
 	T getValue();
 	
 	void setValue(T value);
+	
+	void clearValue();
 }
