@@ -187,19 +187,19 @@ public class ZoteroSchema
 			javaFieldName = javaFieldName.replace(".", "");
 
 			writer.println();
-			writer.println("	private " + field.getValue().type.getSimpleName() + " " + field.getValue().name + ";");
+			writer.println("\tprivate " + field.getValue().type.getSimpleName() + " " + field.getValue().name + ";");
 
 			writer.println();
-			writer.println("	public final " + field.getValue().type.getSimpleName() + " get" + javaFieldName + "()");
-			writer.println("	{");
-			writer.println("		return " + field.getKey() + ";");
-			writer.println("	}");
+			writer.println("\tpublic final " + field.getValue().type.getSimpleName() + " get" + javaFieldName + "()");
+			writer.println("\t{");
+			writer.println("\t\treturn " + field.getKey() + ";");
+			writer.println("\t}");
 
 			writer.println();
-			writer.println("	public final void set" + javaFieldName + "(" + field.getValue().type.getSimpleName() + " value)");
-			writer.println("	{");
-			writer.println("		" + field.getKey() + " =  value;");
-			writer.println("	}");
+			writer.println("\tpublic final void set" + javaFieldName + "(" + field.getValue().type.getSimpleName() + " value)");
+			writer.println("\t{");
+			writer.println("\t\t" + field.getKey() + " =  value;");
+			writer.println("\t}");
 		}
 
 		writer.println("}");

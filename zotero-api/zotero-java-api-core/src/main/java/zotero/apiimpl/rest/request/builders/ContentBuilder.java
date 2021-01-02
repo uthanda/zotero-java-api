@@ -21,8 +21,7 @@ public abstract class ContentBuilder<T,B extends BaseBuilder<T,B,R>,R extends Re
 	public StringEntity serializeJson()
 	{
 		String json = new Gson().toJson(jsonObject);
-		StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
-		return entity;
+		return new StringEntity(json, ContentType.APPLICATION_JSON);
 	}
 
 	public Object getJsonObject()

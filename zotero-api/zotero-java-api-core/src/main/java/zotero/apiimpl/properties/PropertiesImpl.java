@@ -75,7 +75,7 @@ public final class PropertiesImpl implements Properties
 		return properties.get(key);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked","squid:S1199"})
 	public static PropertiesImpl fromRest(LibraryImpl library, ZoteroRestItem item)
 	{
 		PropertiesImpl properties = new PropertiesImpl();
@@ -122,35 +122,7 @@ public final class PropertiesImpl implements Properties
 				}
 				default:
 				{
-					if (value instanceof String && schema.getDateKeys().contains(name))
-					{
-						logger.debug("Attempting to deserialize '{}' as date", value);
-
-						Date dateValue = ((String) value).isEmpty() ? null : DatatypeConverter.parseDateTime((String) value).getTime();
-
-						property = new PropertyDateImpl(name, dateValue);
-					}
-					else if (Item.ITEM_TYPE.equals(e.getKey()))
-					{
-						property = new PropertyEnumImpl<>(e.getKey(), ItemType.class, ItemType.fromZoteroType((String) e.getValue()));
-					}
-					else if (Attachment.LINK_MODE.equals(e.getKey()))
-					{
-						property = new PropertyEnumImpl<>(e.getKey(), LinkMode.class, LinkMode.fromZoteroType((String) e.getValue()));
-					}
-					else if (value instanceof Double)
-					{
-						property = new PropertyIntegerImpl(name, ((Double) value).intValue());
-					}
-					else if (value instanceof Boolean)
-					{
-						// Need to think about whether this could happen
-						property = new PropertyStringImpl(name, null);
-					}
-					else
-					{
-						property = new PropertyStringImpl(name, (String) value);
-					}
+					property = createSimpleProperty(schema, e, name, value);
 				}
 			}
 
@@ -161,7 +133,43 @@ public final class PropertiesImpl implements Properties
 
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("squid:S1452")
+	protected static Property<?> createSimpleProperty(ZoteroSchema schema, Map.Entry<String, Object> e, String name, Object value)
+	{
+		Property<?> property;
+		if (value instanceof String && schema.getDateKeys().contains(name))
+		{
+			logger.debug("Attempting to deserialize '{}' as date", value);
+
+			Date dateValue = ((String) value).isEmpty() ? null : DatatypeConverter.parseDateTime((String) value).getTime();
+
+			property = new PropertyDateImpl(name, dateValue);
+		}
+		else if (Item.ITEM_TYPE.equals(e.getKey()))
+		{
+			property = new PropertyEnumImpl<>(e.getKey(), ItemType.class, ItemType.fromZoteroType((String) e.getValue()));
+		}
+		else if (Attachment.LINK_MODE.equals(e.getKey()))
+		{
+			property = new PropertyEnumImpl<>(e.getKey(), LinkMode.class, LinkMode.fromZoteroType((String) e.getValue()));
+		}
+		else if (value instanceof Double)
+		{
+			property = new PropertyIntegerImpl(name, ((Double) value).intValue());
+		}
+		else if (value instanceof Boolean)
+		{
+			// Need to think about whether this could happen
+			property = new PropertyStringImpl(name, null);
+		}
+		else
+		{
+			property = new PropertyStringImpl(name, (String) value);
+		}
+		return property;
+	}
+
+	@SuppressWarnings({"unchecked","squid:S1199"})
 	public static void toRest(ZoteroRestData data, Properties properties, boolean deltaMode)
 	{
 		PropertiesImpl props = (PropertiesImpl) properties;
@@ -269,6 +277,7 @@ public final class PropertiesImpl implements Properties
 		}
 	}
 
+	@SuppressWarnings({"squid:S1199"})
 	public static void initializeAttachmentProperties(LinkMode mode, PropertiesImpl properties)
 	{
 		initializeItemProperties(ItemType.ATTACHMENT, properties, null);

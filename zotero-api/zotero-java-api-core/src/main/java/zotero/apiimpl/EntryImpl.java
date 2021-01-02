@@ -146,7 +146,7 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 		}
 
 		builder.lastVersion(version);
-		
+
 		library.performRequest(builder);
 
 		this.deleted = true;
@@ -163,7 +163,7 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 		this.links = LinksImpl.from(item.getLinks());
 		this.key = item.getKey();
 		this.version = item.getVersion();
-		super.refresh((LibraryImpl) library, item);
+		super.refresh(library, item);
 	}
 
 	protected ZoteroRestItem executeCreate(String url, ZoteroRestItem item) throws ZoteroRuntimeException
@@ -195,15 +195,16 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 		{
 			throw new ZoteroRuntimeException(ZoteroExceptionType.IO, ZoteroExceptionCodes.IO.API_ERROR, "Version must be provided");
 		}
-		
+
 		if (key == null)
 		{
 			throw new ZoteroRuntimeException(ZoteroExceptionType.IO, ZoteroExceptionCodes.IO.API_ERROR, "Key must be provided");
 		}
 
 		builder.jsonObject(item).url(url).urlParam(param, key);
-		
-		// The request should return a true response which we can ignore.  IF there are errors
+
+		// The request should return a true response which we can ignore. IF
+		// there are errors
 		// the performRequest call will throw it as an exception
 		this.version = library.performRequest(builder).getLastModifyVersion();
 	}

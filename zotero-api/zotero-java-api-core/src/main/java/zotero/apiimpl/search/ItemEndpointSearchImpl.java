@@ -23,7 +23,7 @@ public abstract class ItemEndpointSearchImpl<S,T> extends SearchImpl<ItemEndpoin
 	private QuickSearchMode mode;
 	private Set<String> itemTypes = new LinkedHashSet<>();
 	
-	public ItemEndpointSearchImpl(LibraryImpl library, String url)
+	protected ItemEndpointSearchImpl(LibraryImpl library, String url)
 	{
 		this.library = library;
 		this.url = url;
@@ -57,8 +57,7 @@ public abstract class ItemEndpointSearchImpl<S,T> extends SearchImpl<ItemEndpoin
 		
 		builder.url(url);
 		
-		RestResponse<ZoteroRestItem[]> response = library.performRequest(builder);
-		return response;
+		return library.performRequest(builder);
 	}
 
 	@SuppressWarnings("unchecked")

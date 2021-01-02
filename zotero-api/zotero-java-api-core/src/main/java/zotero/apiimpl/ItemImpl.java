@@ -137,11 +137,6 @@ public class ItemImpl extends EntryImpl implements Item
 		this.refresh(item);
 	}
 
-	protected void refresh(ZoteroRestItem refresh)
-	{
-		super.refresh(refresh);
-	}
-
 	public void validate()
 	{
 		// Content and property validation goes here

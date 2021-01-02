@@ -132,6 +132,7 @@ public final class CollectionImpl extends EntryImpl implements Collection
 		return numItems;
 	}
 
+	@SuppressWarnings({"squid:S1168"})
 	@Override
 	public Collection fetchParentCollection()
 	{
