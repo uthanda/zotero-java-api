@@ -110,7 +110,7 @@ public final class ZoteroRest
 		 * Tags of all types matching a specific name<br/>
 		 * Endpoint: <code>/tags/&lt;url+encoded+tag&gt; </code>
 		 */
-		public static final String SPECIFIC = ALL + "/{" + URLParameter.KEY + "}";
+		public static final String SPECIFIC = ALL + "/{" + URLParameter.TAG_NAME.getZoteroName() + "}";
 
 		/**
 		 * Tags associated with a specific item<br/>
@@ -208,6 +208,7 @@ public final class ZoteroRest
 		ITEM_KEY("itemKey"),
 		SEARCH_KEY("searchKey"),
 		COLLECTION_KEY("collectionKey"),
+		TAG_NAME("tagName"),
 		USERID("userId");
 
 		private final String zoteroName;

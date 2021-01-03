@@ -17,8 +17,8 @@ public final class CreatorImpl extends PropertiesItemImpl implements Creator, Ch
 	public CreatorImpl()
 	{
 		PropertyEnumImpl<CreatorType> creatorTypeProperty = new PropertyEnumImpl<>(ZoteroKeys.Creator.CREATOR_TYPE, CreatorType.class, null);
-		getProperties().putValue(ZoteroKeys.Creator.LAST_NAME, null);
-		getProperties().putValue(ZoteroKeys.Creator.FIRST_NAME, null);
+		((PropertiesImpl)getProperties()).addProperty(new PropertyStringImpl(ZoteroKeys.Creator.LAST_NAME, null));
+		((PropertiesImpl)getProperties()).addProperty(new PropertyStringImpl(ZoteroKeys.Creator.FIRST_NAME, null));
 		((PropertiesImpl) getProperties()).addProperty(creatorTypeProperty);
 	}
 

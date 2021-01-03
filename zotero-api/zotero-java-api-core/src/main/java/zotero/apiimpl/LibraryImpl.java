@@ -6,7 +6,7 @@ import zotero.api.Document;
 import zotero.api.Item;
 import zotero.api.Library;
 import zotero.api.Tag;
-import zotero.api.ZoteroAPIKey;
+import zotero.api.ZoteroAuth;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
@@ -14,10 +14,13 @@ import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
+import zotero.api.iterators.TagIterator;
 import zotero.api.search.CollectionSearch;
 import zotero.api.search.ItemSearch;
 import zotero.apiimpl.iterators.CollectionIteratorImpl;
+import zotero.apiimpl.iterators.TagIteratorImpl;
 import zotero.apiimpl.iterators.ZoteroItemIteratorImpl;
+import zotero.apiimpl.rest.ZoteroRest;
 import zotero.apiimpl.rest.ZoteroRest.Collections;
 import zotero.apiimpl.rest.ZoteroRest.Items;
 import zotero.apiimpl.rest.ZoteroRest.URLParameter;
@@ -32,17 +35,17 @@ import zotero.apiimpl.search.ItemSearchImpl;
 
 public final class LibraryImpl extends Library
 {
-	private final ZoteroAPIKey apiKey;
+	private final ZoteroAuth auth;
 	private final String id;
 
-	public static final Library create(String userId, ZoteroAPIKey apiKey)
+	public static final Library create(String userId, ZoteroAuth auth)
 	{
-		return new LibraryImpl(apiKey, userId);
+		return new LibraryImpl(auth, userId);
 	}
 
-	LibraryImpl(ZoteroAPIKey apiKey, String id)
+	LibraryImpl(ZoteroAuth auth, String id)
 	{
-		this.apiKey = apiKey;
+		this.auth = auth;
 		this.id = id;
 	}
 
@@ -177,7 +180,7 @@ public final class LibraryImpl extends Library
 
 	public <T,B extends BaseBuilder<T,B,R>,R extends ResponseBuilder<T>> RestResponse<T> performRequest(BaseBuilder<T,B,R> builder)
 	{
-		RestResponse<T> resp = builder.apiKey(apiKey).id(id).setUsers().build().execute();
+		RestResponse<T> resp = builder.auth(auth).id(id).setUsers().build().execute();
 
 		if (resp.wasSuccessful())
 		{
@@ -214,6 +217,33 @@ public final class LibraryImpl extends Library
 	@Override
 	public Tag createTag(String tag)
 	{
-		return new TagImpl(tag);
+		return new TagImpl(tag, this);
+	}
+
+	@Override
+	public TagIterator fetchTagsAll()
+	{
+		return fetchTags(ZoteroRest.Tags.ALL, null, null);
+	}
+	
+	@Override
+	public TagIterator fetchTag(String name)
+	{
+		return fetchTags(ZoteroRest.Tags.SPECIFIC, URLParameter.TAG_NAME, name);
+	}
+
+	private TagIterator fetchTags(String url, URLParameter parameter, String key)
+	{
+		GetBuilder<ZoteroRestItem[],?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class));
+		builder.url(url);
+
+		if (key != null)
+		{
+			builder.urlParam(parameter, key);
+		}
+
+		RestResponse<ZoteroRestItem[]> response = performRequest(builder);
+
+		return new TagIteratorImpl(response, this);
 	}
 }

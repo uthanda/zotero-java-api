@@ -2,6 +2,7 @@ package zotero.api;
 
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
+import zotero.api.iterators.TagIterator;
 
 /**
  * A collection is a folder within the Zotero interface that can be used to 
@@ -64,4 +65,12 @@ public interface Collection extends Entry
 	 * @return Parent collection
 	 */
 	Collection fetchParentCollection();
+
+	/**
+	 * Fetches the tags for all items contained in this collection.
+	 * 
+	 * @param top True means return on the top tags
+	 * @return Tag iterator
+	 */
+	TagIterator fetchTags(boolean top);
 }

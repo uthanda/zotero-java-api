@@ -1,5 +1,9 @@
 package zotero.api;
 
+import org.apache.http.HttpRequest;
+
+import zotero.apiimpl.rest.ZoteroRest;
+
 /**
  * A Zotero API key is a wrapper around the API key that is generated via the
  * web interface. It currently provides the only authentication mechanism for
@@ -8,7 +12,7 @@ package zotero.api;
  * @author Michael Oland
  * @since 1.0
  */
-public class ZoteroAPIKey
+public class ZoteroAPIKey implements ZoteroAuth
 {
 	private final String apiKey;
 
@@ -30,5 +34,11 @@ public class ZoteroAPIKey
 	public final String getApiKey()
 	{
 		return apiKey;
+	}
+
+	@Override
+	public void applyHeaders(HttpRequest request)
+	{
+		request.addHeader(ZoteroRest.Headers.ZOTERO_API_KEY, apiKey);
 	}
 }

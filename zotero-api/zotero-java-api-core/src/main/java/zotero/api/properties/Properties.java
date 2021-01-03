@@ -16,5 +16,7 @@ public interface Properties
 	@SuppressWarnings("squid:S1452")
 	Property<?> getProperty(String key);
 
-	void putValue(String key, String name);
+	void putValue(String key, String value);
+
+	void putValue(String key, Integer value);
 }

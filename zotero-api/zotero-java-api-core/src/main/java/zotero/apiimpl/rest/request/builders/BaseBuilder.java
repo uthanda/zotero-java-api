@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import zotero.api.ZoteroAPIKey;
+import zotero.api.ZoteroAuth;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.exceptions.ZoteroRuntimeException;
@@ -19,7 +20,7 @@ import zotero.apiimpl.rest.response.ResponseBuilder;
 public abstract class BaseBuilder<T, B extends BaseBuilder<T, B, R>, R extends ResponseBuilder<T>>
 {
 	private boolean isUser;
-	private ZoteroAPIKey apiKey;
+	private ZoteroAuth auth;
 	private String apiUrl;
 	private Map<URLParameter, String> urlParams;
 	private String id;
@@ -50,9 +51,9 @@ public abstract class BaseBuilder<T, B extends BaseBuilder<T, B, R>, R extends R
 		return (B) this;
 	}
 
-	public B apiKey(ZoteroAPIKey key)
+	public B auth(ZoteroAuth auth)
 	{
-		this.apiKey = key;
+		this.auth = auth;
 		return (B) this;
 	}
 
@@ -86,7 +87,7 @@ public abstract class BaseBuilder<T, B extends BaseBuilder<T, B, R>, R extends R
 			throw new ZoteroRuntimeException(ZoteroExceptionType.IO, ZoteroExceptionCodes.IO.API_ERROR, ex.getLocalizedMessage(), ex);
 		}
 
-		req.setApiKey(apiKey.getApiKey());
+		req.setAuth(auth);
 		req.setUser(isUser);
 		req.setId(id);
 		req.setUrlParams(urlParams);

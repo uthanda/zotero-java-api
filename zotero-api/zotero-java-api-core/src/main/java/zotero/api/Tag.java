@@ -9,4 +9,6 @@ public interface Tag extends Linked
 	TagType getType();
 	
 	int getNumberItems();
+
+	void refresh();
 }

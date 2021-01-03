@@ -73,6 +73,11 @@ public final class PropertiesImpl implements Properties
 	@Override
 	public Property<?> getProperty(String key)
 	{
+		if (!properties.containsKey(key))
+		{
+			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.INVALID_PROPERTY, "Property " + key + " invalid because it's not in the collection");
+		}
+		
 		return properties.get(key);
 	}
 
@@ -89,7 +94,7 @@ public final class PropertiesImpl implements Properties
 			String name = e.getKey();
 			Object value = e.getValue();
 
-			logger.debug("Processing {} of type {} and value {}", name, value.getClass().getCanonicalName(), value);
+			logger.debug("Processing {} of type {} and value {}", name, value != null ? value.getClass().getCanonicalName() : "?", value);
 
 			Property<?> property = null;
 
@@ -104,7 +109,7 @@ public final class PropertiesImpl implements Properties
 				}
 				case Item.TAGS:
 				{
-					Tags tags = TagsImpl.fromRest(value);
+					Tags tags = TagsImpl.fromRest(library, value);
 
 					property = new PropertyListImpl<>(Item.TAGS, Tag.class, tags);
 					break;
@@ -243,13 +248,14 @@ public final class PropertiesImpl implements Properties
 		initializeItemProperties(type, properties, current);
 
 		properties.properties.put(Document.CREATORS, new PropertyListImpl<>(Document.CREATORS, Creator.class, new CreatorsImpl()));
-		properties.properties.put(Item.ITEM_TYPE, new PropertyEnumImpl<>(Item.ITEM_TYPE, ItemType.class, type));
 	}
 
 	static void initializeItemProperties(ItemType type, PropertiesImpl properties, PropertiesImpl current)
 	{
 		ZoteroSchema schema = ZoteroSchema.getCurrentSchema();
 		ZoteroType zoteroType = null;
+
+		properties.properties.put(Item.ITEM_TYPE, new PropertyEnumImpl<>(Item.ITEM_TYPE, ItemType.class, type));
 
 		for (ZoteroType itemType : schema.getTypes())
 		{
@@ -282,6 +288,8 @@ public final class PropertiesImpl implements Properties
 	public static void initializeAttachmentProperties(LinkMode mode, PropertiesImpl properties)
 	{
 		initializeItemProperties(ItemType.ATTACHMENT, properties, null);
+		
+		properties.addProperty(new PropertyEnumImpl<>(Attachment.LINK_MODE, LinkMode.class, mode));
 
 		switch (mode)
 		{
@@ -290,7 +298,6 @@ public final class PropertiesImpl implements Properties
 				properties.properties.put(Attachment.FILENAME, new PropertyStringImpl(Attachment.FILENAME, null));
 				properties.properties.put(Attachment.MD5, new PropertyStringImpl(Attachment.MD5, null));
 				properties.properties.put(Attachment.MTIME, new PropertyStringImpl(Attachment.MTIME, null));
-				properties.properties.put(Attachment.FILE_SIZE, new PropertyIntegerImpl(Attachment.FILE_SIZE, null));
 				break;
 			}
 			case IMPORTED_URL:
@@ -335,14 +342,13 @@ public final class PropertiesImpl implements Properties
 	@Override
 	public void putValue(String key, String value)
 	{
-		if (!properties.containsKey(key))
-		{
-			properties.put(key, new PropertyStringImpl(key, value));
-		}
-		else
-		{
-			((PropertyString) properties.get(key)).setValue(value);
-		}
+		((PropertyString) getProperty(key)).setValue(value);
+	}
+
+	@Override
+	public void putValue(String key, Integer value)
+	{
+		((PropertyInteger) getProperty(key)).setValue(value);
 	}
 
 	public void addToBuilder(DataBuilder db)

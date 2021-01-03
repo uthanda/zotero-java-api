@@ -67,4 +67,6 @@ public interface Attachment extends Item
 	 * @return Input stream for accessing the content.
 	 */
 	InputStream retrieveContent();
+
+	void provideContent(InputStream is, Integer fileSize);
 }

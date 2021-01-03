@@ -191,17 +191,12 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 	{
 		PatchBuilder<Void, ?> builder = PatchBuilder.createBuilder(new SuccessResponseBuilder());
 
-		if (item.getVersion() == null)
-		{
-			throw new ZoteroRuntimeException(ZoteroExceptionType.IO, ZoteroExceptionCodes.IO.API_ERROR, "Version must be provided");
-		}
-
 		if (key == null)
 		{
 			throw new ZoteroRuntimeException(ZoteroExceptionType.IO, ZoteroExceptionCodes.IO.API_ERROR, "Key must be provided");
 		}
 
-		builder.jsonObject(item).url(url).urlParam(param, key);
+		builder.jsonObject(item).url(url).urlParam(param, key).lastVersion(version);
 
 		// The request should return a true response which we can ignore. IF
 		// there are errors

@@ -124,6 +124,7 @@ public class ItemImpl extends EntryImpl implements Item
 	private void updateItem()
 	{
 		ZoteroRestItem item = buildRestItem(true);
+		item.setVersion(getVersion());
 		
 		super.executeUpdate(ZoteroRest.Items.SPECIFIC, URLParameter.ITEM_KEY, this.getKey(), item);
 	}

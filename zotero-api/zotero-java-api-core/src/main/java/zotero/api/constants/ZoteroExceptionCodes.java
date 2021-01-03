@@ -48,5 +48,8 @@ public final class ZoteroExceptionCodes
 		public static final int PROPERTY_READ_ONLY = 0x3;
 		public static final int ATTACHMENT_PENDING = 0x4;
 		public static final int ATTACHMENT_NO_CONTENT = 0x5;
+		public static final int INVALID_TAG_RESPONSE = 0x6;
+		public static final int ATTACHMENT_MISSING_PARAM = 0x7;
+		public static final int INVALID_PROPERTY = 0x8;
 	}
 }

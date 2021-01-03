@@ -4,6 +4,7 @@ import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
+import zotero.api.iterators.TagIterator;
 import zotero.api.search.CollectionSearch;
 import zotero.api.search.ItemSearch;
 import zotero.apiimpl.LibraryImpl;
@@ -168,6 +169,10 @@ public abstract class Library
 	public abstract Attachment createAttachment(Item parent, LinkMode mode);
 	
 	public abstract Tag createTag(String tag);
+	
+	public abstract TagIterator fetchTagsAll();
+	
+	public abstract TagIterator fetchTag(String name);
 
 	/**
 	 * Creates a new library with the provided API key and user
@@ -176,8 +181,8 @@ public abstract class Library
 	 * @param apiKey API key to use when authenticating.
 	 * @return
 	 */
-	public static final Library createLibrary(String userId, ZoteroAPIKey apiKey)
+	public static final Library createLibrary(String userId, ZoteroAuth auth)
 	{
-		return LibraryImpl.create(userId, apiKey);
+		return LibraryImpl.create(userId, auth);
 	}
 }

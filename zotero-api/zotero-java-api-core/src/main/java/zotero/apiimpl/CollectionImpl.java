@@ -4,11 +4,16 @@ import zotero.api.Collection;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
+import zotero.api.iterators.TagIterator;
+import zotero.apiimpl.iterators.TagIteratorImpl;
 import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.rest.ZoteroRest;
 import zotero.apiimpl.rest.ZoteroRest.URLParameter;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
+import zotero.apiimpl.rest.request.builders.GetBuilder;
+import zotero.apiimpl.rest.response.JSONRestResponseBuilder;
+import zotero.apiimpl.rest.response.RestResponse;
 
 public final class CollectionImpl extends EntryImpl implements Collection
 {
@@ -38,8 +43,14 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	public static CollectionImpl create(LibraryImpl library, Collection parent)
 	{
 		CollectionImpl collection = new CollectionImpl(library);
+
 		PropertiesImpl.initializeCollectionProperties((PropertiesImpl) collection.getProperties());
-		collection.getProperties().putValue(ZoteroKeys.Collection.PARENT_COLLECTION, parent.getKey());
+
+		if (parent != null)
+		{
+			collection.getProperties().putValue(ZoteroKeys.Collection.PARENT_COLLECTION, parent.getKey());
+		}
+
 		return collection;
 	}
 
@@ -132,7 +143,7 @@ public final class CollectionImpl extends EntryImpl implements Collection
 		return numItems;
 	}
 
-	@SuppressWarnings({"squid:S1168"})
+	@SuppressWarnings({ "squid:S1168" })
 	@Override
 	public Collection fetchParentCollection()
 	{
@@ -144,5 +155,19 @@ public final class CollectionImpl extends EntryImpl implements Collection
 		}
 
 		return ((LibraryImpl) getLibrary()).fetchCollection(parentCollectionKey);
+	}
+
+	@Override
+	public TagIterator fetchTags(boolean top)
+	{
+		LibraryImpl library = (LibraryImpl) getLibrary();
+
+		GetBuilder<ZoteroRestItem[], ?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class));
+		builder.url(ZoteroRest.Tags.COLLECTION_TAGS);
+		builder.urlParam(URLParameter.COLLECTION_KEY, this.getKey());
+
+		RestResponse<ZoteroRestItem[]> response = library.performRequest(builder);
+
+		return new TagIteratorImpl(response, library);
 	}
 }

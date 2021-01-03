@@ -55,8 +55,11 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 		return ((ObservableList<T>) getValue()).dirty;
 	}
 
+	@SuppressWarnings("squid:S2160") // Disabled because it doesn't change the core behavior
 	public static class ObservableList<T> extends ArrayList<T>
 	{
+		// TODO Should this actually implement Set instead of List?
+		
 		/**
 		 * 
 		 */

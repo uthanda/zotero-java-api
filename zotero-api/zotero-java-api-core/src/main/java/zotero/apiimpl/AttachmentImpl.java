@@ -19,12 +19,14 @@ import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.request.builders.GetBuilder;
 import zotero.apiimpl.rest.request.builders.PostBuilder;
 import zotero.apiimpl.rest.response.JSONRestResponseBuilder;
+import zotero.apiimpl.rest.response.RestResponse;
 import zotero.apiimpl.rest.response.StreamResponseBuilder;
 
 public class AttachmentImpl extends ItemImpl implements Attachment
 {
 	private boolean pending = false;
 	private InputStream is;
+	private Integer fileSize;
 
 	public AttachmentImpl(ZoteroRestItem jsonItem, LibraryImpl library)
 	{
@@ -33,7 +35,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 
 	public AttachmentImpl(LinkMode mode, LibraryImpl library)
 	{
-		super(mode, library);
+		this(mode, library, null);
 	}
 
 	/**
@@ -65,8 +67,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	{
 		if (pending)
 		{
-			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_PENDING,
-					"Property access is disallowed because the attachment is pending upload");
+			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_PENDING, "Property access is disallowed because the attachment is pending upload");
 		}
 	}
 
@@ -119,8 +120,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 
 		if (getLinkMode() != LinkMode.IMPORTED_FILE)
 		{
-			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.INVALID_ATTACHMENT_TYPE,
-					"Attachment must be of type IMPORTED_FILE to support retrieveContent()");
+			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.INVALID_ATTACHMENT_TYPE, "Attachment must be of type IMPORTED_FILE to support retrieveContent()");
 		}
 
 		GetBuilder<InputStream, ?> builder = GetBuilder.createBuilder(new StreamResponseBuilder());
@@ -132,18 +132,67 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	@Override
 	public void validate()
 	{
-		// If we're pending and have not set content then we throw and exception
-		if (pending && is == null && getProperties().getProperty(ZoteroKeys.Attachment.LINK_MODE).getValue() == LinkMode.IMPORTED_FILE)
+		Properties props = getProperties();
+
+		switch ((LinkMode)props.getProperty(ZoteroKeys.Attachment.LINK_MODE).getValue())
 		{
-			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_NO_CONTENT,
-					"Attempted to save an attachment with no content");
+			case IMPORTED_FILE:
+			{
+				String md5 = props.getString(ZoteroKeys.Attachment.MD5);
+				String mtime = props.getString(ZoteroKeys.Attachment.MTIME);
+				String filename = props.getString(ZoteroKeys.Attachment.FILENAME);
+
+				if (md5 == null)
+				{
+					throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_MISSING_PARAM, "No md5 provided for attachment");
+				}
+
+				if (fileSize == null)
+				{
+					throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_MISSING_PARAM, "No fileSize provided for attachment");
+				}
+
+				if (mtime == null)
+				{
+					throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_MISSING_PARAM, "No mtime provided for attachment");
+				}
+
+				if (filename == null)
+				{
+					throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_MISSING_PARAM, "No filename provided for attachment");
+				}
+
+				if (is == null)
+				{
+					throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_NO_CONTENT, "Attempted to save an attachment with no content");
+				}
+
+				break;
+			}
+			case IMPORTED_URL:
+			{
+				if (props.getString(ZoteroKeys.Entity.URL) == null)
+				{
+					throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_MISSING_PARAM, "No url provided for attachment");
+				}
+
+				break;
+			}
+			case LINKED_FILE:
+				break;
+			case LINKED_URL:
+				break;
+			default:
+				break;
+
 		}
 	}
 
-	public void provideContent(InputStream is)
+	@Override
+	public void provideContent(InputStream is, Integer fileSize)
 	{
-
 		this.is = is;
+		this.fileSize = fileSize;
 	}
 
 	@Override
@@ -152,8 +201,9 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		// First we create/update the attachment
 		super.save();
 
-		// Then we bail if there is no need to manage the attachment
-		if (!pending)
+		this.pending = false;
+
+		if (this.getLinkMode() != LinkMode.IMPORTED_FILE)
 		{
 			return;
 		}
@@ -169,14 +219,42 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		Properties props = getProperties();
 
 		String md5 = props.getString(ZoteroKeys.Attachment.MD5);
-		Integer fileSize = props.getInteger(ZoteroKeys.Attachment.FILE_SIZE);
 		String mtime = props.getString(ZoteroKeys.Attachment.MTIME);
+		String filename = props.getString(ZoteroKeys.Attachment.FILENAME);
 
-		builder.url(FILE).url(this.getKey()).formParam(ZoteroKeys.Attachment.MD5, md5)
-				.formParam(ZoteroKeys.Attachment.FILENAME, props.getString(ZoteroKeys.Attachment.FILENAME)).formParam(ZoteroKeys.Attachment.FILE_SIZE, Integer.toString(fileSize))
-				.formParam(ZoteroKeys.Attachment.MTIME, mtime).build().execute();
+		if (md5 == null)
+		{
+			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_MISSING_PARAM, "No MD5 sum provided for attachment");
+		}
+
+		if (fileSize == null)
+		{
+			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_MISSING_PARAM, "No fileSize sum provided for attachment");
+		}
+
+		if (mtime == null)
+		{
+			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_MISSING_PARAM, "No mtime sum provided for attachment");
+		}
+
+		if (filename == null)
+		{
+			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_MISSING_PARAM, "No filename sum provided for attachment");
+		}
+
+		//@formatter:off
+		builder.url(FILE)
+			.urlParam(URLParameter.ITEM_KEY, this.getKey())
+			.formParam(ZoteroKeys.Attachment.MD5, md5)
+			.formParam(ZoteroKeys.Attachment.FILENAME, filename)
+			.formParam(ZoteroKeys.Attachment.FILE_SIZE, Integer.toString(fileSize))
+			.formParam(ZoteroKeys.Attachment.MTIME, mtime);
+		//@formatter:on
+		
+		LibraryImpl library = (LibraryImpl)getLibrary();
+		RestResponse<?> response = library.performRequest(builder);
 	}
-
+	
 	@Override
 	public void changeLinkMode(LinkMode mode)
 	{

@@ -43,6 +43,7 @@ public class ZoteroKeys
 		public static final String PARSED_DATE = "parsedDate";
 		public static final String NUM_COLLECTIONS = "numCollections";
 		public static final String NUM_ITEMS = "numItems";
+		public static final String TYPE = "type";
 
 		private Meta() {}
 	}
