@@ -62,7 +62,7 @@ public class ItemsTest
 		service.initialize();
 		service.setGet(MockRestService.fakeGet);
 
-		library = Library.createLibrary(MockRestService.API_ID, new ZoteroAPIKey(MockRestService.API_KEY));
+		library = Library.createLibrary(MockRestService.API_ID.toString(), new ZoteroAPIKey(MockRestService.API_KEY));
 		item = (Document) library.fetchItem(TEST_ITEM_B4ERDVS4);
 	}
 
@@ -157,7 +157,7 @@ public class ItemsTest
 	{
 		Tags tags = item.getTags();
 		assertEquals(1, tags.size());
-		assertEquals("followrefs", tags.get(0));
+		assertEquals("followrefs", tags.get(0).getTag());
 	}
 
 	@Test
@@ -183,8 +183,8 @@ public class ItemsTest
 	{
 		Relationships relationships = item.getRelationships();
 		List<String> relationUris = relationships.getRelatedKeys(RelationshipType.DC_REPLACES);
-		assertEquals("http://zotero.org/users/5787467/items/GX8ZD6D9", relationUris.get(0));
-		assertEquals("http://zotero.org/users/5787467/items/NYA3Z5B9", relationUris.get(1));
+		assertEquals("http://zotero.org/users/12345678/items/GX8ZD6D9", relationUris.get(0));
+		assertEquals("http://zotero.org/users/12345678/items/NYA3Z5B9", relationUris.get(1));
 	}
 
 	@Test
@@ -314,7 +314,7 @@ public class ItemsTest
 		service.setDelete(delete -> {
 
 			// Check the request info.  Should be the right URL and have the If-Unmodified-Since-Version header set
-			assertEquals("/users/apiId/items/B4ERDVS4", delete.getURI().getPath());
+			assertEquals("/users/12345678/items/B4ERDVS4", delete.getURI().getPath());
 			assertNotNull(delete.getFirstHeader(ZoteroRest.Headers.IF_UNMODIFIED_SINCE_VERSION));
 			assertEquals("2906", delete.getFirstHeader(ZoteroRest.Headers.IF_UNMODIFIED_SINCE_VERSION).getValue());
 			

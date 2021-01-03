@@ -1,1364 +1,1417 @@
 {
-  "/users/apiId/items" : {
-    "GET" : {
-      "itemType=artwork&itemType=book&includeTrashed=0" : {
-        "headers" : {
-          "Total-Results" : 1
-        },
-        "item" : [
-          {
-            "key" : "KZT65H5M",
-            "version" : 2902,
-            "library" : {
-              "type" : "user",
-              "id" : 5787467,
-              "name" : "uthanda",
-              "links" : {
-                "alternate" : {
-                  "href" : "https://www.zotero.org/uthanda",
-                  "type" : "text/html"
-                }
-              }
-            },
-            "links" : {
-              "self" : {
-                "href" : "https://api.zotero.org/users/5787467/items/KZT65H5M",
-                "type" : "application/json"
-              },
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda/items/KZT65H5M",
-                "type" : "text/html"
-              },
-              "up" : {
-                "href" : "https://api.zotero.org/users/5787467/items/B4ERDVS4",
-                "type" : "application/json"
-              }
-            },
-            "meta" : {},
-            "data" : {
-              "key" : "KZT65H5M",
-              "version" : 2902,
-              "parentItem" : "B4ERDVS4",
-              "itemType" : "attachment",
-              "linkMode" : "linked_file",
-              "title" : "2019 Toward a methodology for case modeling.pdf",
-              "accessDate" : "",
-              "url" : "",
-              "note" : "",
-              "contentType" : "application/pdf",
-              "charset" : "",
-              "path" : "attachments:2019/2019 Toward a methodology for case modeling2.pdf",
-              "tags" : [],
-              "relations" : {},
-              "dateAdded" : "2020-12-10T06:27:05Z",
-              "dateModified" : "2020-12-10T06:27:07Z"
+	"/users/12345678/items": {
+		"GET": {
+			"itemType=artwork&itemType=book&includeTrashed=0": {
+				"headers": {
+					"Total-Results": 1
+				},
+				"item": [{
+					"key": "KZT65H5M",
+					"version": 2902,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/items/KZT65H5M",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/items/KZT65H5M",
+							"type": "text/html"
+						},
+						"up": {
+							"href": "https://api.zotero.org/users/12345678/items/B4ERDVS4",
+							"type": "application/json"
+						}
+					},
+					"meta": {
+						},
+					"data": {
+						"key": "KZT65H5M",
+						"version": 2902,
+						"parentItem": "B4ERDVS4",
+						"itemType": "attachment",
+						"linkMode": "linked_file",
+						"title": "2019 Toward a methodology for case modeling.pdf",
+						"accessDate": "",
+						"url": "",
+						"note": "",
+						"contentType": "application/pdf",
+						"charset": "",
+						"path": "attachments:2019/2019 Toward a methodology for case modeling2.pdf",
+						"tags": [],
+						"relations": {
+							},
+						"dateAdded": "2020-12-10T06:27:05Z",
+						"dateModified": "2020-12-10T06:27:07Z"
+					}
+				}]
+			}
+		},
+		"POST": {
+			"[{\"data\":{\"itemType\":\"case\",\"creators\":[{\"firstName\":\"John\",\"lastName\":\"Dewey\",\"creatorType\":\"author\"}]}}]": {
+				"headers": {
+					},
+				"item": {
+					"successful": {
+						"0": {
+							"key": "R2E8GCGX",
+							"version": 3646,
+							"library": {
+								"type": "user",
+								"id": 12345678,
+								"name": "uthanda",
+								"links": {
+									"alternate": {
+										"href": "https://www.zotero.org/uthanda",
+										"type": "text/html"
+									}
+								}
+							},
+							"links": {
+								"self": {
+									"href": "https://api.zotero.org/users/12345678/items/R2E8GCGX",
+									"type": "application/json"
+								},
+								"alternate": {
+									"href": "https://www.zotero.org/uthanda/items/R2E8GCGX",
+									"type": "text/html"
+								}
+							},
+							"meta": {
+								"creatorSummary": "Dewey",
+								"numChildren": 0
+							},
+							"data": {
+								"key": "R2E8GCGX",
+								"version": 3646,
+								"itemType": "case",
+								"caseName": "",
+								"creators": [{
+									"creatorType": "author",
+									"firstName": "John",
+									"lastName": "Dewey"
+								}],
+								"abstractNote": "",
+								"court": "",
+								"dateDecided": "",
+								"docketNumber": "",
+								"reporter": "",
+								"reporterVolume": "",
+								"firstPage": "",
+								"history": "",
+								"language": "",
+								"shortTitle": "",
+								"url": "",
+								"accessDate": "",
+								"rights": "",
+								"extra": "",
+								"tags": [],
+								"collections": [],
+								"relations": {
+									},
+								"dateAdded": "2021-01-02T08:22:59Z",
+								"dateModified": "2021-01-02T08:22:59Z"
+							}
+						}
+					},
+					"success": {
+						"0": "R2E8GCGX"
+					},
+					"unchanged": {
+						},
+					"failed": {
+						}
+				}
+			}
+		}
+	},
+	"/users/12345678/items/B4ERDVS4/children": {
+		"GET": {
+			"<empty>": {
+				"headers": {
+					"Total-Results": 2,
+					"Link": "<https://www.zotero.org/users/12345678/items/B4ERDVS4/children?start=1>; rel=\"next\""
+				},
+				"item": [{
+					"key": "KZT65H5M",
+					"version": 2902,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/items/KZT65H5M",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/items/KZT65H5M",
+							"type": "text/html"
+						},
+						"up": {
+							"href": "https://api.zotero.org/users/12345678/items/B4ERDVS4",
+							"type": "application/json"
+						}
+					},
+					"meta": {
+						},
+					"data": {
+						"key": "KZT65H5M",
+						"version": 2902,
+						"parentItem": "B4ERDVS4",
+						"itemType": "attachment",
+						"linkMode": "linked_file",
+						"title": "2019 Toward a methodology for case modeling.pdf",
+						"accessDate": "",
+						"url": "",
+						"note": "",
+						"contentType": "application/pdf",
+						"charset": "",
+						"path": "attachments:2019/2019 Toward a methodology for case modeling2.pdf",
+						"tags": [],
+						"relations": {
+							},
+						"dateAdded": "2020-12-10T06:27:05Z",
+						"dateModified": "2020-12-10T06:27:07Z"
+					}
+				}]
+			},
+			"start=1": {
+				"headers": {
+					"totalResults": 2
+				},
+				"item": [{
+					"key": "BV6GB7ZH",
+					"version": 1773,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/items/BV6GB7ZH",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/items/BV6GB7ZH",
+							"type": "text/html"
+						},
+						"enclosure": {
+							"type": "application/pdf",
+							"href": "https://api.zotero.org/users/12345678/items/BV6GB7ZH/file/view",
+							"title": "6891361.pdf",
+							"length": 4819922
+						}
+					},
+					"meta": {
+						"numChildren": false
+					},
+					"data": {
+						"key": "BV6GB7ZH",
+						"version": 1773,
+						"itemType": "attachment",
+						"linkMode": "imported_file",
+						"parentItem": "B4ERDVS4",
+						"title": "6891361.pdf",
+						"accessDate": "",
+						"url": "",
+						"note": "",
+						"contentType": "application/pdf",
+						"charset": "",
+						"filename": "6891361.pdf",
+						"md5": "046ed92f85028072fdeae68862559212",
+						"mtime": 1593890605000,
+						"tags": [],
+						"collections": ["A6C8YX9M"],
+						"relations": {
+							},
+						"dateAdded": "2020-07-04T19:23:25Z",
+						"dateModified": "2020-07-04T19:23:25Z"
+					}
+				}]
+			}
+		}
+	},
+	"/users/12345678/items/BV6GB7ZH": {
+		"GET": {
+			"<empty>": {
+				"headers": {
+					},
+				"item": {
+					"key": "BV6GB7ZH",
+					"version": 1773,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/items/BV6GB7ZH",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/items/BV6GB7ZH",
+							"type": "text/html"
+						},
+						"enclosure": {
+							"type": "application/pdf",
+							"href": "https://api.zotero.org/users/12345678/items/BV6GB7ZH/file/view",
+							"title": "6891361.pdf",
+							"length": 4819922
+						}
+					},
+					"meta": {
+						"numChildren": false
+					},
+					"data": {
+						"key": "BV6GB7ZH",
+						"version": 1773,
+						"itemType": "attachment",
+						"linkMode": "imported_file",
+						"title": "6891361.pdf",
+						"accessDate": "",
+						"url": "",
+						"note": "",
+						"contentType": "application/pdf",
+						"charset": "",
+						"filename": "6891361.pdf",
+						"md5": "046ed92f85028072fdeae68862559212",
+						"mtime": 1593890605000,
+						"tags": [],
+						"collections": ["A6C8YX9M"],
+						"relations": {
+							},
+						"dateAdded": "2020-07-04T19:23:25Z",
+						"dateModified": "2020-07-04T19:23:25Z"
+					}
+				}
+			}
+		}
+	},
+	"/users/12345678/items/B4ERDVS4": {
+		"GET": {
+			"<empty>": {
+				"headers": {
+					},
+				"item": {
+					"key": "B4ERDVS4",
+					"version": 2906,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/items/B4ERDVS4",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/items/B4ERDVS4",
+							"type": "text/html"
+						}
+					},
+					"meta": {
+						"creatorSummary": "Hewelt et al.",
+						"parsedDate": "2019-11-07",
+						"numChildren": 2
+					},
+					"data": {
+						"key": "B4ERDVS4",
+						"version": 2906,
+						"itemType": "journalArticle",
+						"title": "Toward a methodology for case modeling",
+						"creators": [{
+							"creatorType": "author",
+							"firstName": "Marcin",
+							"lastName": "Hewelt"
+						},
+						{
+							"creatorType": "author",
+							"firstName": "Luise",
+							"lastName": "Pufahl"
+						},
+						{
+							"creatorType": "author",
+							"firstName": "Sankalita",
+							"lastName": "Mandal"
+						},
+						{
+							"creatorType": "author",
+							"firstName": "Felix",
+							"lastName": "Wolff"
+						},
+						{
+							"creatorType": "author",
+							"firstName": "Mathias",
+							"lastName": "Weske"
+						}],
+						"abstractNote": "abstractNoteContent",
+						"publicationTitle": "Software and Systems Modeling",
+						"volume": "vol1",
+						"issue": "issue1",
+						"pages": "1-2",
+						"date": "2019-11-7",
+						"series": "s1",
+						"seriesTitle": "SeriesTitle",
+						"seriesText": "SeriesText",
+						"journalAbbreviation": "Softw Syst Model",
+						"language": "en",
+						"DOI": "10.1007/s10270-019-00766-5",
+						"ISSN": "1619-1366, 1619-1374",
+						"shortTitle": "TAMFCM",
+						"url": "http://link.springer.com/10.1007/s10270-019-00766-5",
+						"accessDate": "2020-07-04T19:06:47Z",
+						"archive": "anArchive",
+						"archiveLocation": "theArchive",
+						"libraryCatalog": "DOI.org (Crossref)",
+						"callNumber": "42",
+						"rights": "rightsContent",
+						"extra": "tex.ids: hewelt_toward_2019, hewelt_towards_nodate",
+						"tags": [{
+							"tag": "followrefs"
+						}],
+						"collections": ["A6C8YX9M",
+						"FJ3SUIFZ"],
+						"relations": {
+							"dc:replaces": ["http://zotero.org/users/12345678/items/GX8ZD6D9",
+							"http://zotero.org/users/12345678/items/NYA3Z5B9"]
+						},
+						"dateAdded": "2020-07-03T10:31:52Z",
+						"dateModified": "2020-12-10T06:28:27Z"
+					}
+				}
+			}
+		},
+		"PATCH": {
+			"{\"key\":\"B4ERDVS4\",\"version\":2906,\"data\":{\"creators\":[{\"firstName\":\"Marcin\",\"lastName\":\"Hewelt\",\"creatorType\":\"author\"},{\"firstName\":\"Luise\",\"lastName\":\"Pufahl\",\"creatorType\":\"author\"},{\"firstName\":\"Sankalita\",\"lastName\":\"Mandal\",\"creatorType\":\"author\"},{\"firstName\":\"Felix\",\"lastName\":\"Wolff\",\"creatorType\":\"author\"},{\"firstName\":\"Mathias\",\"lastName\":\"Weske\",\"creatorType\":\"author\"},{\"firstName\":\"John\",\"lastName\":\"Dewey\",\"creatorType\":\"cartographer\"}],\"title\":\"Changed title\"}}": {
+				"headers": {
+					"Last-Modified-Version": 2907
+				},
+				"item": {
+					}
+			}
+		}
+	},
+	"/users/12345678/items/BV6GB7ZH/file": {
+		"GET": {
+			"<empty>": {
+				"headers": {
+					},
+				"item": "ZoteroTestContent"
+			}
+		}
+	},
+	"/users/12345678/collections/A6C8YX9M": {
+		"GET": {
+			"<empty>": {
+				"headers": {
+					},
+				"item": {
+					"key": "A6C8YX9M",
+					"version": 1263,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/collections/A6C8YX9M",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/collections/A6C8YX9M",
+							"type": "text/html"
+						}
+					},
+					"meta": {
+						"numCollections": 0,
+						"numItems": 138
+					},
+					"data": {
+						"key": "A6C8YX9M",
+						"version": 1263,
+						"name": "To Be Read",
+						"parentCollection": false,
+						"relations": {
+							}
+					}
+				}
+			}
+		}
+	},
+	"/users/12345678/collections/Y82V25U2": {
+		"PATCH": {
+			"{\"version\":44,\"data\":{\"name\":\"Changed name\"}}": {
+				"headers": {
+					"Last-Modified-Version": 3649
+				},
+				"item": {
+					}
+			}
+		},
+		"GET": {
+			"<empty>": {
+				"headers": {
+					},
+				"item": {
+					"key": "Y82V25U2",
+					"version": 44,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/collections/Y82V25U2",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/collections/Y82V25U2",
+							"type": "text/html"
+						}
+					},
+					"meta": {
+						"numCollections": 4,
+						"numItems": 50
+					},
+					"data": {
+						"key": "Y82V25U2",
+						"version": 44,
+						"name": "ACM",
+						"parentCollection": false,
+						"relations": {
+							}
+					}
+				}
+			}
+		}
+	},
+	"/users/12345678/collections/FJ3SUIFZ": {
+		"GET": {
+			"<empty>": {
+				"headers": {
+					"lastModifyVersion": 2885
+				},
+				"item": {
+					"key": "FJ3SUIFZ",
+					"version": 2885,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/collections/FJ3SUIFZ",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/collections/FJ3SUIFZ",
+							"type": "text/html"
+						},
+						"up": {
+							"href": "https://api.zotero.org/users/12345678/collections/9DXQSYMF",
+							"type": "application/json"
+						}
+					},
+					"meta": {
+						"numCollections": 0,
+						"numItems": 3
+					},
+					"data": {
+						"key": "FJ3SUIFZ",
+						"version": 2885,
+						"name": "Useful",
+						"parentCollection": "9DXQSYMF",
+						"relations": {
+							}
+					}
+				}
+			}
+		}
+	},
+	"/users/12345678/collections/9DXQSYMF": {
+		"GET": {
+			"<empty>": {
+				"headers": {
+					},
+				"item": {
+					"key": "9DXQSYMF",
+					"version": 837,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/collections/9DXQSYMF",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/collections/9DXQSYMF",
+							"type": "text/html"
+						}
+					},
+					"meta": {
+						"numCollections": 5,
+						"numItems": 240
+					},
+					"data": {
+						"key": "9DXQSYMF",
+						"version": 837,
+						"name": "_Lit Review",
+						"parentCollection": false,
+						"relations": {
+							}
+					}
+				}
+			}
+		}
+	},
+	"/users/12345678/collections/FJ3SUIFZ/items": {
+		"GET": {
+			"<empty>": {
+				"headers": {
+					"Total-Results": 7
+				},
+				"item": [{
+					"key": "B4ERDVS4",
+					"version": 2906,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/items/B4ERDVS4",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/items/B4ERDVS4",
+							"type": "text/html"
+						}
+					},
+					"meta": {
+						"creatorSummary": "Hewelt et al.",
+						"parsedDate": "2019-11-07",
+						"numChildren": 2
+					},
+					"data": {
+						"key": "B4ERDVS4",
+						"version": 2906,
+						"itemType": "journalArticle",
+						"title": "Toward a methodology for case modeling",
+						"creators": [{
+							"creatorType": "author",
+							"firstName": "Marcin",
+							"lastName": "Hewelt"
+						},
+						{
+							"creatorType": "author",
+							"firstName": "Luise",
+							"lastName": "Pufahl"
+						},
+						{
+							"creatorType": "author",
+							"firstName": "Sankalita",
+							"lastName": "Mandal"
+						},
+						{
+							"creatorType": "author",
+							"firstName": "Felix",
+							"lastName": "Wolff"
+						},
+						{
+							"creatorType": "author",
+							"firstName": "Mathias",
+							"lastName": "Weske"
+						}],
+						"abstractNote": "",
+						"publicationTitle": "Software and Systems Modeling",
+						"volume": "",
+						"issue": "",
+						"pages": "",
+						"date": "2019-11-7",
+						"series": "",
+						"seriesTitle": "",
+						"seriesText": "",
+						"journalAbbreviation": "Softw Syst Model",
+						"language": "en",
+						"DOI": "10.1007/s10270-019-00766-5",
+						"ISSN": "1619-1366, 1619-1374",
+						"shortTitle": "",
+						"url": "http://link.springer.com/10.1007/s10270-019-00766-5",
+						"accessDate": "2020-07-04T19:06:47Z",
+						"archive": "",
+						"archiveLocation": "",
+						"libraryCatalog": "DOI.org (Crossref)",
+						"callNumber": "",
+						"rights": "",
+						"extra": "tex.ids: hewelt_toward_2019, hewelt_towards_nodate",
+						"tags": [{
+							"tag": "followrefs"
+						}],
+						"collections": ["A6C8YX9M",
+						"FJ3SUIFZ"],
+						"relations": {
+							"dc:replaces": ["http://zotero.org/users/12345678/items/GX8ZD6D9",
+							"http://zotero.org/users/12345678/items/NYA3Z5B9"]
+						},
+						"dateAdded": "2020-07-03T10:31:52Z",
+						"dateModified": "2020-12-10T06:28:27Z"
+					}
+				},
+				{
+					"key": "KZT65H5M",
+					"version": 2902,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/items/KZT65H5M",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/items/KZT65H5M",
+							"type": "text/html"
+						},
+						"up": {
+							"href": "https://api.zotero.org/users/12345678/items/B4ERDVS4",
+							"type": "application/json"
+						}
+					},
+					"meta": {
+						},
+					"data": {
+						"key": "KZT65H5M",
+						"version": 2902,
+						"parentItem": "B4ERDVS4",
+						"itemType": "attachment",
+						"linkMode": "linked_file",
+						"title": "2019 Toward a methodology for case modeling.pdf",
+						"accessDate": "",
+						"url": "",
+						"note": "",
+						"contentType": "application/pdf",
+						"charset": "",
+						"path": "attachments:2019/2019 Toward a methodology for case modeling2.pdf",
+						"tags": [],
+						"relations": {
+							},
+						"dateAdded": "2020-12-10T06:27:05Z",
+						"dateModified": "2020-12-10T06:27:07Z"
+					}
+				},
+				{
+					"key": "BH8JHCNI",
+					"version": 2886,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/items/BH8JHCNI",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/items/BH8JHCNI",
+							"type": "text/html"
+						}
+					},
+					"meta": {
+						"creatorSummary": "Zelt et al.",
+						"parsedDate": "2019-09",
+						"numChildren": 1
+					},
+					"data": {
+						"key": "BH8JHCNI",
+						"version": 2886,
+						"itemType": "journalArticle",
+						"title": "A theory of contingent business process management",
+						"creators": [{
+							"creatorType": "author",
+							"firstName": "Sarah",
+							"lastName": "Zelt"
+						},
+						{
+							"creatorType": "author",
+							"firstName": "Jan",
+							"lastName": "Recker"
+						},
+						{
+							"creatorType": "author",
+							"firstName": "Theresa",
+							"lastName": "Schmiedel"
+						},
+						{
+							"creatorType": "author",
+							"firstName": "Jan vom",
+							"lastName": "Brocke"
+						}],
+						"abstractNote": "",
+						"publicationTitle": "Business Process Management Journal",
+						"volume": "25",
+						"issue": "6",
+						"pages": "1291–1316",
+						"date": "2019-09",
+						"series": "",
+						"seriesTitle": "",
+						"seriesText": "",
+						"journalAbbreviation": "",
+						"language": "",
+						"DOI": "10.1108/bpmj-05-2018-0129",
+						"ISSN": "",
+						"shortTitle": "",
+						"url": "https://doi.org/10.1108%2Fbpmj-05-2018-0129",
+						"accessDate": "",
+						"archive": "",
+						"archiveLocation": "",
+						"libraryCatalog": "",
+						"callNumber": "",
+						"rights": "",
+						"extra": "Citation Key: Zelt_2019\nPublisher: Emerald",
+						"tags": [{
+							"tag": "goodcites"
+						}],
+						"collections": ["FJ3SUIFZ"],
+						"relations": {
+							},
+						"dateAdded": "2020-12-06T12:14:56Z",
+						"dateModified": "2020-12-09T06:51:30Z"
+					}
+				},
+				{
+					"key": "RSWMDDEA",
+					"version": 2886,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/items/RSWMDDEA",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/items/RSWMDDEA",
+							"type": "text/html"
+						}
+					},
+					"meta": {
+						"creatorSummary": "Sari et al.",
+						"parsedDate": "2019-07",
+						"numChildren": 1
+					},
+					"data": {
+						"key": "RSWMDDEA",
+						"version": 2886,
+						"itemType": "journalArticle",
+						"title": "Analysis and design information system development of IT care application in astra credit company",
+						"creators": [{
+							"creatorType": "author",
+							"firstName": "Y",
+							"lastName": "Sari"
+						},
+						{
+							"creatorType": "author",
+							"firstName": "A E",
+							"lastName": "Egeten"
+						},
+						{
+							"creatorType": "author",
+							"firstName": "R E",
+							"lastName": "Suherman"
+						},
+						{
+							"creatorType": "author",
+							"firstName": "H R",
+							"lastName": "Fakhri"
+						}],
+						"abstractNote": "",
+						"publicationTitle": "Journal of Physics: Conference Series",
+						"volume": "1230",
+						"issue": "",
+						"pages": "012064",
+						"date": "2019-07",
+						"series": "",
+						"seriesTitle": "",
+						"seriesText": "",
+						"journalAbbreviation": "",
+						"language": "",
+						"DOI": "10.1088/1742-6596/1230/1/012064",
+						"ISSN": "",
+						"shortTitle": "",
+						"url": "https://doi.org/10.1088%2F1742-6596%2F1230%2F1%2F012064",
+						"accessDate": "",
+						"archive": "",
+						"archiveLocation": "",
+						"libraryCatalog": "",
+						"callNumber": "",
+						"rights": "",
+						"extra": "Citation Key: Sari_2019\nPublisher: IOP Publishing",
+						"tags": [],
+						"collections": ["FJ3SUIFZ"],
+						"relations": {
+							},
+						"dateAdded": "2020-12-06T12:14:55Z",
+						"dateModified": "2020-12-09T06:50:19Z"
+					}
+				},
+				{
+					"key": "SY4RPB76",
+					"version": 2884,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/items/SY4RPB76",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/items/SY4RPB76",
+							"type": "text/html"
+						},
+						"up": {
+							"href": "https://api.zotero.org/users/12345678/items/RSWMDDEA",
+							"type": "application/json"
+						}
+					},
+					"meta": {
+						},
+					"data": {
+						"key": "SY4RPB76",
+						"version": 2884,
+						"parentItem": "RSWMDDEA",
+						"itemType": "attachment",
+						"linkMode": "linked_file",
+						"title": "2019 Analysis and design information system development of IT care application in.pdf",
+						"accessDate": "",
+						"url": "",
+						"note": "",
+						"contentType": "application/pdf",
+						"charset": "",
+						"path": "attachments:2019/2019 Analysis and design information system development of IT care application in.pdf",
+						"tags": [],
+						"relations": {
+							},
+						"dateAdded": "2020-12-06T12:44:33Z",
+						"dateModified": "2020-12-09T06:50:19Z"
+					}
+				},
+				{
+					"key": "526R6IWN",
+					"version": 2883,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/items/526R6IWN",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/items/526R6IWN",
+							"type": "text/html"
+						},
+						"up": {
+							"href": "https://api.zotero.org/users/12345678/items/BH8JHCNI",
+							"type": "application/json"
+						}
+					},
+					"meta": {
+						},
+					"data": {
+						"key": "526R6IWN",
+						"version": 2883,
+						"parentItem": "BH8JHCNI",
+						"itemType": "attachment",
+						"linkMode": "linked_file",
+						"title": "2019 A theory of contingent business process management.pdf",
+						"accessDate": "",
+						"url": "",
+						"note": "",
+						"contentType": "application/pdf",
+						"charset": "",
+						"path": "attachments:2019/2019 A theory of contingent business process management.pdf",
+						"tags": [],
+						"relations": {
+							},
+						"dateAdded": "2020-12-06T12:46:29Z",
+						"dateModified": "2020-12-09T06:49:21Z"
+					}
+				},
+				{
+					"key": "QFV7K969",
+					"version": 1907,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/items/QFV7K969",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/items/QFV7K969",
+							"type": "text/html"
+						},
+						"up": {
+							"href": "https://api.zotero.org/users/12345678/items/B4ERDVS4",
+							"type": "application/json"
+						}
+					},
+					"meta": {
+						},
+					"data": {
+						"key": "QFV7K969",
+						"version": 1907,
+						"parentItem": "B4ERDVS4",
+						"itemType": "attachment",
+						"linkMode": "linked_file",
+						"title": "2019 Toward a methodology for case modeling.pdf",
+						"accessDate": "",
+						"url": "",
+						"note": "<p xmlns=\"http://www.w3.org/1999/xhtml\" id=\"title\"><strong>Contents</strong></p><ul xmlns=\"http://www.w3.org/1999/xhtml\" style=\"list-style-type: none; padding-left:0px\" id=\"toc\"><li><a href=\"zotero://open-pdf/0_QFV7K969/1\">Abstract</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/1\">1 Introduction</a></li><li style=\"padding-top:8px\"><a href=\"zotero://open-pdf/0_QFV7K969/2\">2 Related work</a><ul style=\"list-style-type: none; padding-left:12px\"><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/2\">2.1 State of the art in case modeling</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/2\">2.2 Methods and techniques of process modeling</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/3\">2.3 Cognitive aspects of process modeling</a></li></ul></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/4\">3 Fragment-based case management</a></li><li style=\"padding-top:8px\"><a href=\"zotero://open-pdf/0_QFV7K969/5\">4 Methods for case modeling</a><ul style=\"list-style-type: none; padding-left:12px\"><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/5\">4.1 Process-first case modeling method</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/7\">4.2 Object lifecycle-first case modeling method</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/8\">4.3 Goals-first case modeling method</a></li></ul></li><li style=\"padding-top:8px\"><a href=\"zotero://open-pdf/0_QFV7K969/10\">5 Evaluation</a><ul style=\"list-style-type: none; padding-left:12px\"><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/11\">5.1 Experiment design</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/12\">5.2 Measurement design</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/13\">5.3 Limitations to validity</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/13\">5.4 Results: Process-first Method</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/16\">5.5 OLC-first method</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/19\">5.6 Goals-first method</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/24\">5.7 Discussion</a></li></ul></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/25\">6 Conclusion and future work</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/25\">References</a></li></ul>",
+						"contentType": "application/pdf",
+						"charset": "",
+						"path": "attachments:2019/2019 Toward a methodology for case modeling.pdf",
+						"tags": [],
+						"relations": {
+							},
+						"dateAdded": "2020-07-04T19:08:48Z",
+						"dateModified": "2020-07-06T04:54:59Z"
+					}
+				}]
+			}
+		}
+	},
+	"/users/12345678/collections/Y82V25U2/collections": {
+		"GET": {
+			"start=2": {
+				"headers": {
+					"Total-Results": 4
+				},
+				"item": [{
+					"key": "M2F2X5CZ",
+					"version": 133,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/collections/M2F2X5CZ",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/collections/M2F2X5CZ",
+							"type": "text/html"
+						},
+						"up": {
+							"href": "https://api.zotero.org/users/12345678/collections/Y82V25U2",
+							"type": "application/json"
+						}
+					},
+					"meta": {
+						"numCollections": 0,
+						"numItems": 1
+					},
+					"data": {
+						"key": "M2F2X5CZ",
+						"version": 133,
+						"name": "Medical Case Management",
+						"parentCollection": "Y82V25U2",
+						"relations": {
+							}
+					}
+				},
+				{
+					"key": "NTN3S2WV",
+					"version": 46,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/collections/NTN3S2WV",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/collections/NTN3S2WV",
+							"type": "text/html"
+						},
+						"up": {
+							"href": "https://api.zotero.org/users/12345678/collections/Y82V25U2",
+							"type": "application/json"
+						}
+					},
+					"meta": {
+						"numCollections": 2,
+						"numItems": 6
+					},
+					"data": {
+						"key": "NTN3S2WV",
+						"version": 46,
+						"name": "Case Types",
+						"parentCollection": "Y82V25U2",
+						"relations": {
+							}
+					}
+				}]
+			},
+			"<empty>": {
+				"headers": {
+					"Total-Results": 4,
+					"Link": "<https://api.zotero.org/users/12345678/collections/Y82V25U2/collections?start=2>; rel=\"next\""
+				},
+				"item": [{
+					"key": "NYJCQ4NZ",
+					"version": 1279,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/collections/NYJCQ4NZ",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/collections/NYJCQ4NZ",
+							"type": "text/html"
+						},
+						"up": {
+							"href": "https://api.zotero.org/users/12345678/collections/Y82V25U2",
+							"type": "application/json"
+						}
+					},
+					"meta": {
+						"numCollections": 0,
+						"numItems": 1
+					},
+					"data": {
+						"key": "NYJCQ4NZ",
+						"version": 1279,
+						"name": "CMMN",
+						"parentCollection": "Y82V25U2",
+						"relations": {
+							}
+					}
+				},
+				{
+					"key": "6LB4NBH4",
+					"version": 138,
+					"library": {
+						"type": "user",
+						"id": 12345678,
+						"name": "uthanda",
+						"links": {
+							"alternate": {
+								"href": "https://www.zotero.org/uthanda",
+								"type": "text/html"
+							}
+						}
+					},
+					"links": {
+						"self": {
+							"href": "https://api.zotero.org/users/12345678/collections/6LB4NBH4",
+							"type": "application/json"
+						},
+						"alternate": {
+							"href": "https://www.zotero.org/uthanda/collections/6LB4NBH4",
+							"type": "text/html"
+						},
+						"up": {
+							"href": "https://api.zotero.org/users/12345678/collections/Y82V25U2",
+							"type": "application/json"
+						}
+					},
+					"meta": {
+						"numCollections": 0,
+						"numItems": 4
+					},
+					"data": {
+						"key": "6LB4NBH4",
+						"version": 138,
+						"name": "Data Processing",
+						"parentCollection": "Y82V25U2",
+						"relations": {
+							}
+					}
+				}]
+			}
+		}
+	},
+	"/users/12345678/collections/FJ3SUIFZ/collections": {
+		"GET": {
+			"<empty>": {
+				"headers": {
+					"Total-Results": 0
+				},
+				"item": []
+			}
+		}
+	},
+	"/users/12345678/collections": {
+		"POST": {
+			"[{\"data\":{\"name\":\"New collection\",\"parentCollection\":\"FJ3SUIFZ\"}}]": {
+				"headers": {
+					"Last-Modified-Version": 3643
+				},
+				"item": {
+					"successful": {
+						"0": {
+							"key": "QP52ERNW",
+							"version": 3643,
+							"library": {
+								"type": "user",
+								"id": 12345678,
+								"name": "uthanda",
+								"links": {
+									"alternate": {
+										"href": "https://www.zotero.org/uthanda",
+										"type": "text/html"
+									}
+								}
+							},
+							"links": {
+								"self": {
+									"href": "https://api.zotero.org/users/12345678/collections/QP52ERNW",
+									"type": "application/json"
+								},
+								"alternate": {
+									"href": "https://www.zotero.org/uthanda/collections/QP52ERNW",
+									"type": "text/html"
+								},
+								"up": {
+									"href": "https://api.zotero.org/users/12345678/collections/FJ3SUIFZ",
+									"type": "application/json"
+								}
+							},
+							"meta": {
+								"numCollections": 0,
+								"numItems": 0
+							},
+							"data": {
+								"key": "QP52ERNW",
+								"version": 3643,
+								"name": "New collection",
+								"parentCollection": "FJ3SUIFZ",
+								"relations": {
+									}
+							}
+						}
+					},
+					"success": {
+						"0": "QP52ERNW"
+					},
+					"unchanged": {
+						},
+					"failed": {
+						}
+				}
+			}
+		}
+	}
+}
+
+
+{
+    "key": "BV6GB7ZH",
+    "version": 1773,
+    "library": {
+        "type": "user",
+        "id": 5787467,
+        "name": "uthanda",
+        "links": {
+            "alternate": {
+                "href": "https://www.zotero.org/uthanda",
+                "type": "text/html"
             }
-          }
-        ]
-      }
+        }
     },
-    "POST" : {
-      "[{\"data\":{\"itemType\":\"case\",\"creators\":[{\"firstName\":\"John\",\"lastName\":\"Dewey\",\"creatorType\":\"author\"}]}}]" : {
-        "headers" : {},
-        "item" : {
-          "successful" : {
-            "0" : {
-              "key" : "R2E8GCGX",
-              "version" : 3646,
-              "library" : {
-                "type" : "user",
-                "id" : 5787467,
-                "name" : "uthanda",
-                "links" : {
-                  "alternate" : {
-                    "href" : "https://www.zotero.org/uthanda",
-                    "type" : "text/html"
-                  }
-                }
-              },
-              "links" : {
-                "self" : {
-                  "href" : "https://api.zotero.org/users/5787467/items/R2E8GCGX",
-                  "type" : "application/json"
-                },
-                "alternate" : {
-                  "href" : "https://www.zotero.org/uthanda/items/R2E8GCGX",
-                  "type" : "text/html"
-                }
-              },
-              "meta" : {
-                "creatorSummary" : "Dewey",
-                "numChildren" : 0
-              },
-              "data" : {
-                "key" : "R2E8GCGX",
-                "version" : 3646,
-                "itemType" : "case",
-                "caseName" : "",
-                "creators" : [
-                  {
-                    "creatorType" : "author",
-                    "firstName" : "John",
-                    "lastName" : "Dewey"
-                  }
-                ],
-                "abstractNote" : "",
-                "court" : "",
-                "dateDecided" : "",
-                "docketNumber" : "",
-                "reporter" : "",
-                "reporterVolume" : "",
-                "firstPage" : "",
-                "history" : "",
-                "language" : "",
-                "shortTitle" : "",
-                "url" : "",
-                "accessDate" : "",
-                "rights" : "",
-                "extra" : "",
-                "tags" : [],
-                "collections" : [],
-                "relations" : {},
-                "dateAdded" : "2021-01-02T08:22:59Z",
-                "dateModified" : "2021-01-02T08:22:59Z"
-              }
-            }
-          },
-          "success" : {
-            "0" : "R2E8GCGX"
-          },
-          "unchanged" : {},
-          "failed" : {}
-        }
-      }
-    }
-  },
-  "/users/apiId/items/B4ERDVS4/children" : {
-    "GET" : {
-      "<empty>" : {
-        "headers" : {
-          "Total-Results" : 2,
-          "Link" : "<https://www.zotero.org/users/apiId/items/B4ERDVS4/children?start=1>; rel=\"next\""
+    "links": {
+        "self": {
+            "href": "https://api.zotero.org/users/5787467/items/BV6GB7ZH",
+            "type": "application/json"
         },
-        "item" : [
-          {
-            "key" : "KZT65H5M",
-            "version" : 2902,
-            "library" : {
-              "type" : "user",
-              "id" : 5787467,
-              "name" : "uthanda",
-              "links" : {
-                "alternate" : {
-                  "href" : "https://www.zotero.org/uthanda",
-                  "type" : "text/html"
-                }
-              }
-            },
-            "links" : {
-              "self" : {
-                "href" : "https://api.zotero.org/users/5787467/items/KZT65H5M",
-                "type" : "application/json"
-              },
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda/items/KZT65H5M",
-                "type" : "text/html"
-              },
-              "up" : {
-                "href" : "https://api.zotero.org/users/5787467/items/B4ERDVS4",
-                "type" : "application/json"
-              }
-            },
-            "meta" : {},
-            "data" : {
-              "key" : "KZT65H5M",
-              "version" : 2902,
-              "parentItem" : "B4ERDVS4",
-              "itemType" : "attachment",
-              "linkMode" : "linked_file",
-              "title" : "2019 Toward a methodology for case modeling.pdf",
-              "accessDate" : "",
-              "url" : "",
-              "note" : "",
-              "contentType" : "application/pdf",
-              "charset" : "",
-              "path" : "attachments:2019/2019 Toward a methodology for case modeling2.pdf",
-              "tags" : [],
-              "relations" : {},
-              "dateAdded" : "2020-12-10T06:27:05Z",
-              "dateModified" : "2020-12-10T06:27:07Z"
-            }
-          }
-        ]
-      },
-      "start=1" : {
-        "headers" : {
-          "totalResults" : 2
+        "alternate": {
+            "href": "https://www.zotero.org/uthanda/items/BV6GB7ZH",
+            "type": "text/html"
         },
-        "item" : [
-          {
-            "key" : "BV6GB7ZH",
-            "version" : 1773,
-            "library" : {
-              "type" : "user",
-              "id" : 5787467,
-              "name" : "uthanda",
-              "links" : {
-                "alternate" : {
-                  "href" : "https://www.zotero.org/uthanda",
-                  "type" : "text/html"
-                }
-              }
-            },
-            "links" : {
-              "self" : {
-                "href" : "https://api.zotero.org/users/5787467/items/BV6GB7ZH",
-                "type" : "application/json"
-              },
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda/items/BV6GB7ZH",
-                "type" : "text/html"
-              },
-              "enclosure" : {
-                "type" : "application/pdf",
-                "href" : "https://api.zotero.org/users/5787467/items/BV6GB7ZH/file/view",
-                "title" : "6891361.pdf",
-                "length" : 4819922
-              }
-            },
-            "meta" : {
-              "numChildren" : false
-            },
-            "data" : {
-              "key" : "BV6GB7ZH",
-              "version" : 1773,
-              "itemType" : "attachment",
-              "linkMode" : "imported_file",
-              "parentItem" : "B4ERDVS4",
-              "title" : "6891361.pdf",
-              "accessDate" : "",
-              "url" : "",
-              "note" : "",
-              "contentType" : "application/pdf",
-              "charset" : "",
-              "filename" : "6891361.pdf",
-              "md5" : "046ed92f85028072fdeae68862559212",
-              "mtime" : 1593890605000,
-              "tags" : [],
-              "collections" : [
-                "A6C8YX9M"
-              ],
-              "relations" : {},
-              "dateAdded" : "2020-07-04T19:23:25Z",
-              "dateModified" : "2020-07-04T19:23:25Z"
-            }
-          }
-        ]
-      }
-    }
-  },
-  "/users/apiId/items/BV6GB7ZH" : {
-    "GET" : {
-      "<empty>" : {
-        "headers" : {},
-        "item" : {
-          "key" : "BV6GB7ZH",
-          "version" : 1773,
-          "library" : {
-            "type" : "user",
-            "id" : 5787467,
-            "name" : "uthanda",
-            "links" : {
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda",
-                "type" : "text/html"
-              }
-            }
-          },
-          "links" : {
-            "self" : {
-              "href" : "https://api.zotero.org/users/5787467/items/BV6GB7ZH",
-              "type" : "application/json"
-            },
-            "alternate" : {
-              "href" : "https://www.zotero.org/uthanda/items/BV6GB7ZH",
-              "type" : "text/html"
-            },
-            "enclosure" : {
-              "type" : "application/pdf",
-              "href" : "https://api.zotero.org/users/5787467/items/BV6GB7ZH/file/view",
-              "title" : "6891361.pdf",
-              "length" : 4819922
-            }
-          },
-          "meta" : {
-            "numChildren" : false
-          },
-          "data" : {
-            "key" : "BV6GB7ZH",
-            "version" : 1773,
-            "itemType" : "attachment",
-            "linkMode" : "imported_file",
-            "title" : "6891361.pdf",
-            "accessDate" : "",
-            "url" : "",
-            "note" : "",
-            "contentType" : "application/pdf",
-            "charset" : "",
-            "filename" : "6891361.pdf",
-            "md5" : "046ed92f85028072fdeae68862559212",
-            "mtime" : 1593890605000,
-            "tags" : [],
-            "collections" : [
-              "A6C8YX9M"
-            ],
-            "relations" : {},
-            "dateAdded" : "2020-07-04T19:23:25Z",
-            "dateModified" : "2020-07-04T19:23:25Z"
-          }
+        "enclosure": {
+            "type": "application/pdf",
+            "href": "https://api.zotero.org/users/5787467/items/BV6GB7ZH/file/view",
+            "title": "6891361.pdf",
+            "length": 4819922
         }
-      }
-    }
-  },
-  "/users/apiId/items/B4ERDVS4" : {
-    "GET" : {
-      "<empty>" : {
-        "headers" : {},
-        "item" : {
-          "key" : "B4ERDVS4",
-          "version" : 2906,
-          "library" : {
-            "type" : "user",
-            "id" : 5787467,
-            "name" : "uthanda",
-            "links" : {
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda",
-                "type" : "text/html"
-              }
-            }
-          },
-          "links" : {
-            "self" : {
-              "href" : "https://api.zotero.org/users/5787467/items/B4ERDVS4",
-              "type" : "application/json"
-            },
-            "alternate" : {
-              "href" : "https://www.zotero.org/uthanda/items/B4ERDVS4",
-              "type" : "text/html"
-            }
-          },
-          "meta" : {
-            "creatorSummary" : "Hewelt et al.",
-            "parsedDate" : "2019-11-07",
-            "numChildren" : 2
-          },
-          "data" : {
-            "key" : "B4ERDVS4",
-            "version" : 2906,
-            "itemType" : "journalArticle",
-            "title" : "Toward a methodology for case modeling",
-            "creators" : [
-              {
-                "creatorType" : "author",
-                "firstName" : "Marcin",
-                "lastName" : "Hewelt"
-              },
-              {
-                "creatorType" : "author",
-                "firstName" : "Luise",
-                "lastName" : "Pufahl"
-              },
-              {
-                "creatorType" : "author",
-                "firstName" : "Sankalita",
-                "lastName" : "Mandal"
-              },
-              {
-                "creatorType" : "author",
-                "firstName" : "Felix",
-                "lastName" : "Wolff"
-              },
-              {
-                "creatorType" : "author",
-                "firstName" : "Mathias",
-                "lastName" : "Weske"
-              }
-            ],
-            "abstractNote" : "abstractNoteContent",
-            "publicationTitle" : "Software and Systems Modeling",
-            "volume" : "vol1",
-            "issue" : "issue1",
-            "pages" : "1-2",
-            "date" : "2019-11-7",
-            "series" : "s1",
-            "seriesTitle" : "SeriesTitle",
-            "seriesText" : "SeriesText",
-            "journalAbbreviation" : "Softw Syst Model",
-            "language" : "en",
-            "DOI" : "10.1007/s10270-019-00766-5",
-            "ISSN" : "1619-1366, 1619-1374",
-            "shortTitle" : "TAMFCM",
-            "url" : "http://link.springer.com/10.1007/s10270-019-00766-5",
-            "accessDate" : "2020-07-04T19:06:47Z",
-            "archive" : "anArchive",
-            "archiveLocation" : "theArchive",
-            "libraryCatalog" : "DOI.org (Crossref)",
-            "callNumber" : "42",
-            "rights" : "rightsContent",
-            "extra" : "tex.ids: hewelt_toward_2019, hewelt_towards_nodate",
-            "tags" : [
-              {
-                "tag" : "followrefs"
-              }
-            ],
-            "collections" : [
-              "A6C8YX9M",
-              "FJ3SUIFZ"
-            ],
-            "relations" : {
-              "dc:replaces" : [
-                "http://zotero.org/users/5787467/items/GX8ZD6D9",
-                "http://zotero.org/users/5787467/items/NYA3Z5B9"
-              ]
-            },
-            "dateAdded" : "2020-07-03T10:31:52Z",
-            "dateModified" : "2020-12-10T06:28:27Z"
-          }
-        }
-      }
     },
-    "PATCH" : {
-      "{\"key\":\"B4ERDVS4\",\"version\":2906,\"data\":{\"creators\":[{\"firstName\":\"Marcin\",\"lastName\":\"Hewelt\",\"creatorType\":\"author\"},{\"firstName\":\"Luise\",\"lastName\":\"Pufahl\",\"creatorType\":\"author\"},{\"firstName\":\"Sankalita\",\"lastName\":\"Mandal\",\"creatorType\":\"author\"},{\"firstName\":\"Felix\",\"lastName\":\"Wolff\",\"creatorType\":\"author\"},{\"firstName\":\"Mathias\",\"lastName\":\"Weske\",\"creatorType\":\"author\"},{\"firstName\":\"John\",\"lastName\":\"Dewey\",\"creatorType\":\"cartographer\"}],\"title\":\"Changed title\"}}" : {
-        "headers" : {
-          "Last-Modified-Version" : 2907
-        },
-        "item" : {}
-      }
-    }
-  },
-  "/users/apiId/items/BV6GB7ZH/file" : {
-    "GET" : {
-      "<empty>" : {
-        "headers" : {},
-        "item" : "ZoteroTestContent"
-      }
-    }
-  },
-  "/users/apiId/collections/A6C8YX9M" : {
-    "GET" : {
-      "<empty>" : {
-        "headers" : {},
-        "item" : {
-          "key" : "A6C8YX9M",
-          "version" : 1263,
-          "library" : {
-            "type" : "user",
-            "id" : 5787467,
-            "name" : "uthanda",
-            "links" : {
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda",
-                "type" : "text/html"
-              }
-            }
-          },
-          "links" : {
-            "self" : {
-              "href" : "https://api.zotero.org/users/5787467/collections/A6C8YX9M",
-              "type" : "application/json"
-            },
-            "alternate" : {
-              "href" : "https://www.zotero.org/uthanda/collections/A6C8YX9M",
-              "type" : "text/html"
-            }
-          },
-          "meta" : {
-            "numCollections" : 0,
-            "numItems" : 138
-          },
-          "data" : {
-            "key" : "A6C8YX9M",
-            "version" : 1263,
-            "name" : "To Be Read",
-            "parentCollection" : false,
-            "relations" : {}
-          }
-        }
-      }
-    }
-  },
-  "/users/apiId/collections/Y82V25U2" : {
-    "PATCH" : {
-      "{\"version\":44,\"data\":{\"name\":\"Changed name\"}}" : {
-        "headers" : {
-          "Last-Modified-Version" : 3649
-        },
-        "item" : {}
-      }
+    "meta": {
+        "numChildren": false
     },
-    "GET" : {
-      "<empty>" : {
-        "headers" : {},
-        "item" : {
-          "key" : "Y82V25U2",
-          "version" : 44,
-          "library" : {
-            "type" : "user",
-            "id" : 5787467,
-            "name" : "uthanda",
-            "links" : {
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda",
-                "type" : "text/html"
-              }
-            }
-          },
-          "links" : {
-            "self" : {
-              "href" : "https://api.zotero.org/users/5787467/collections/Y82V25U2",
-              "type" : "application/json"
-            },
-            "alternate" : {
-              "href" : "https://www.zotero.org/uthanda/collections/Y82V25U2",
-              "type" : "text/html"
-            }
-          },
-          "meta" : {
-            "numCollections" : 4,
-            "numItems" : 50
-          },
-          "data" : {
-            "key" : "Y82V25U2",
-            "version" : 44,
-            "name" : "ACM",
-            "parentCollection" : false,
-            "relations" : {}
-          }
-        }
-      }
+    "data": {
+        "key": "BV6GB7ZH",
+        "version": 1773,
+        "itemType": "attachment",
+        "linkMode": "imported_file",
+        "title": "6891361.pdf",
+        "accessDate": "",
+        "url": "",
+        "note": "",
+        "contentType": "application/pdf",
+        "charset": "",
+        "filename": "6891361.pdf",
+        "md5": "046ed92f85028072fdeae68862559212",
+        "mtime": 1593890605000,
+        "tags": [],
+        "collections": [
+            "A6C8YX9M"
+        ],
+        "relations": {},
+        "dateAdded": "2020-07-04T19:23:25Z",
+        "dateModified": "2020-07-04T19:23:25Z"
     }
-  },
-  "/users/apiId/collections/FJ3SUIFZ" : {
-    "GET" : {
-      "<empty>" : {
-        "headers" : {
-          "lastModifyVersion" : 2885
-        },
-        "item" : {
-          "key" : "FJ3SUIFZ",
-          "version" : 2885,
-          "library" : {
-            "type" : "user",
-            "id" : 5787467,
-            "name" : "uthanda",
-            "links" : {
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda",
-                "type" : "text/html"
-              }
-            }
-          },
-          "links" : {
-            "self" : {
-              "href" : "https://api.zotero.org/users/5787467/collections/FJ3SUIFZ",
-              "type" : "application/json"
-            },
-            "alternate" : {
-              "href" : "https://www.zotero.org/uthanda/collections/FJ3SUIFZ",
-              "type" : "text/html"
-            },
-            "up" : {
-              "href" : "https://api.zotero.org/users/5787467/collections/9DXQSYMF",
-              "type" : "application/json"
-            }
-          },
-          "meta" : {
-            "numCollections" : 0,
-            "numItems" : 3
-          },
-          "data" : {
-            "key" : "FJ3SUIFZ",
-            "version" : 2885,
-            "name" : "Useful",
-            "parentCollection" : "9DXQSYMF",
-            "relations" : {}
-          }
-        }
-      }
-    }
-  },
-  "/users/apiId/collections/9DXQSYMF" : {
-    "GET" : {
-      "<empty>" : {
-        "headers" : {},
-        "item" : {
-          "key" : "9DXQSYMF",
-          "version" : 837,
-          "library" : {
-            "type" : "user",
-            "id" : 5787467,
-            "name" : "uthanda",
-            "links" : {
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda",
-                "type" : "text/html"
-              }
-            }
-          },
-          "links" : {
-            "self" : {
-              "href" : "https://api.zotero.org/users/5787467/collections/9DXQSYMF",
-              "type" : "application/json"
-            },
-            "alternate" : {
-              "href" : "https://www.zotero.org/uthanda/collections/9DXQSYMF",
-              "type" : "text/html"
-            }
-          },
-          "meta" : {
-            "numCollections" : 5,
-            "numItems" : 240
-          },
-          "data" : {
-            "key" : "9DXQSYMF",
-            "version" : 837,
-            "name" : "_Lit Review",
-            "parentCollection" : false,
-            "relations" : {}
-          }
-        }
-      }
-    }
-  },
-  "/users/apiId/collections/FJ3SUIFZ/items" : {
-    "GET" : {
-      "<empty>" : {
-        "headers" : {
-          "Total-Results" : 7
-        },
-        "item" : [
-          {
-            "key" : "B4ERDVS4",
-            "version" : 2906,
-            "library" : {
-              "type" : "user",
-              "id" : 5787467,
-              "name" : "uthanda",
-              "links" : {
-                "alternate" : {
-                  "href" : "https://www.zotero.org/uthanda",
-                  "type" : "text/html"
-                }
-              }
-            },
-            "links" : {
-              "self" : {
-                "href" : "https://api.zotero.org/users/5787467/items/B4ERDVS4",
-                "type" : "application/json"
-              },
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda/items/B4ERDVS4",
-                "type" : "text/html"
-              }
-            },
-            "meta" : {
-              "creatorSummary" : "Hewelt et al.",
-              "parsedDate" : "2019-11-07",
-              "numChildren" : 2
-            },
-            "data" : {
-              "key" : "B4ERDVS4",
-              "version" : 2906,
-              "itemType" : "journalArticle",
-              "title" : "Toward a methodology for case modeling",
-              "creators" : [
-                {
-                  "creatorType" : "author",
-                  "firstName" : "Marcin",
-                  "lastName" : "Hewelt"
-                },
-                {
-                  "creatorType" : "author",
-                  "firstName" : "Luise",
-                  "lastName" : "Pufahl"
-                },
-                {
-                  "creatorType" : "author",
-                  "firstName" : "Sankalita",
-                  "lastName" : "Mandal"
-                },
-                {
-                  "creatorType" : "author",
-                  "firstName" : "Felix",
-                  "lastName" : "Wolff"
-                },
-                {
-                  "creatorType" : "author",
-                  "firstName" : "Mathias",
-                  "lastName" : "Weske"
-                }
-              ],
-              "abstractNote" : "",
-              "publicationTitle" : "Software and Systems Modeling",
-              "volume" : "",
-              "issue" : "",
-              "pages" : "",
-              "date" : "2019-11-7",
-              "series" : "",
-              "seriesTitle" : "",
-              "seriesText" : "",
-              "journalAbbreviation" : "Softw Syst Model",
-              "language" : "en",
-              "DOI" : "10.1007/s10270-019-00766-5",
-              "ISSN" : "1619-1366, 1619-1374",
-              "shortTitle" : "",
-              "url" : "http://link.springer.com/10.1007/s10270-019-00766-5",
-              "accessDate" : "2020-07-04T19:06:47Z",
-              "archive" : "",
-              "archiveLocation" : "",
-              "libraryCatalog" : "DOI.org (Crossref)",
-              "callNumber" : "",
-              "rights" : "",
-              "extra" : "tex.ids: hewelt_toward_2019, hewelt_towards_nodate",
-              "tags" : [
-                {
-                  "tag" : "followrefs"
-                }
-              ],
-              "collections" : [
-                "A6C8YX9M",
-                "FJ3SUIFZ"
-              ],
-              "relations" : {
-                "dc:replaces" : [
-                  "http://zotero.org/users/5787467/items/GX8ZD6D9",
-                  "http://zotero.org/users/5787467/items/NYA3Z5B9"
-                ]
-              },
-              "dateAdded" : "2020-07-03T10:31:52Z",
-              "dateModified" : "2020-12-10T06:28:27Z"
-            }
-          },
-          {
-            "key" : "KZT65H5M",
-            "version" : 2902,
-            "library" : {
-              "type" : "user",
-              "id" : 5787467,
-              "name" : "uthanda",
-              "links" : {
-                "alternate" : {
-                  "href" : "https://www.zotero.org/uthanda",
-                  "type" : "text/html"
-                }
-              }
-            },
-            "links" : {
-              "self" : {
-                "href" : "https://api.zotero.org/users/5787467/items/KZT65H5M",
-                "type" : "application/json"
-              },
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda/items/KZT65H5M",
-                "type" : "text/html"
-              },
-              "up" : {
-                "href" : "https://api.zotero.org/users/5787467/items/B4ERDVS4",
-                "type" : "application/json"
-              }
-            },
-            "meta" : {},
-            "data" : {
-              "key" : "KZT65H5M",
-              "version" : 2902,
-              "parentItem" : "B4ERDVS4",
-              "itemType" : "attachment",
-              "linkMode" : "linked_file",
-              "title" : "2019 Toward a methodology for case modeling.pdf",
-              "accessDate" : "",
-              "url" : "",
-              "note" : "",
-              "contentType" : "application/pdf",
-              "charset" : "",
-              "path" : "attachments:2019/2019 Toward a methodology for case modeling2.pdf",
-              "tags" : [],
-              "relations" : {},
-              "dateAdded" : "2020-12-10T06:27:05Z",
-              "dateModified" : "2020-12-10T06:27:07Z"
-            }
-          },
-          {
-            "key" : "BH8JHCNI",
-            "version" : 2886,
-            "library" : {
-              "type" : "user",
-              "id" : 5787467,
-              "name" : "uthanda",
-              "links" : {
-                "alternate" : {
-                  "href" : "https://www.zotero.org/uthanda",
-                  "type" : "text/html"
-                }
-              }
-            },
-            "links" : {
-              "self" : {
-                "href" : "https://api.zotero.org/users/5787467/items/BH8JHCNI",
-                "type" : "application/json"
-              },
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda/items/BH8JHCNI",
-                "type" : "text/html"
-              }
-            },
-            "meta" : {
-              "creatorSummary" : "Zelt et al.",
-              "parsedDate" : "2019-09",
-              "numChildren" : 1
-            },
-            "data" : {
-              "key" : "BH8JHCNI",
-              "version" : 2886,
-              "itemType" : "journalArticle",
-              "title" : "A theory of contingent business process management",
-              "creators" : [
-                {
-                  "creatorType" : "author",
-                  "firstName" : "Sarah",
-                  "lastName" : "Zelt"
-                },
-                {
-                  "creatorType" : "author",
-                  "firstName" : "Jan",
-                  "lastName" : "Recker"
-                },
-                {
-                  "creatorType" : "author",
-                  "firstName" : "Theresa",
-                  "lastName" : "Schmiedel"
-                },
-                {
-                  "creatorType" : "author",
-                  "firstName" : "Jan vom",
-                  "lastName" : "Brocke"
-                }
-              ],
-              "abstractNote" : "",
-              "publicationTitle" : "Business Process Management Journal",
-              "volume" : "25",
-              "issue" : "6",
-              "pages" : "1291–1316",
-              "date" : "2019-09",
-              "series" : "",
-              "seriesTitle" : "",
-              "seriesText" : "",
-              "journalAbbreviation" : "",
-              "language" : "",
-              "DOI" : "10.1108/bpmj-05-2018-0129",
-              "ISSN" : "",
-              "shortTitle" : "",
-              "url" : "https://doi.org/10.1108%2Fbpmj-05-2018-0129",
-              "accessDate" : "",
-              "archive" : "",
-              "archiveLocation" : "",
-              "libraryCatalog" : "",
-              "callNumber" : "",
-              "rights" : "",
-              "extra" : "Citation Key: Zelt_2019\nPublisher: Emerald",
-              "tags" : [
-                {
-                  "tag" : "goodcites"
-                }
-              ],
-              "collections" : [
-                "FJ3SUIFZ"
-              ],
-              "relations" : {},
-              "dateAdded" : "2020-12-06T12:14:56Z",
-              "dateModified" : "2020-12-09T06:51:30Z"
-            }
-          },
-          {
-            "key" : "RSWMDDEA",
-            "version" : 2886,
-            "library" : {
-              "type" : "user",
-              "id" : 5787467,
-              "name" : "uthanda",
-              "links" : {
-                "alternate" : {
-                  "href" : "https://www.zotero.org/uthanda",
-                  "type" : "text/html"
-                }
-              }
-            },
-            "links" : {
-              "self" : {
-                "href" : "https://api.zotero.org/users/5787467/items/RSWMDDEA",
-                "type" : "application/json"
-              },
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda/items/RSWMDDEA",
-                "type" : "text/html"
-              }
-            },
-            "meta" : {
-              "creatorSummary" : "Sari et al.",
-              "parsedDate" : "2019-07",
-              "numChildren" : 1
-            },
-            "data" : {
-              "key" : "RSWMDDEA",
-              "version" : 2886,
-              "itemType" : "journalArticle",
-              "title" : "Analysis and design information system development of IT care application in astra credit company",
-              "creators" : [
-                {
-                  "creatorType" : "author",
-                  "firstName" : "Y",
-                  "lastName" : "Sari"
-                },
-                {
-                  "creatorType" : "author",
-                  "firstName" : "A E",
-                  "lastName" : "Egeten"
-                },
-                {
-                  "creatorType" : "author",
-                  "firstName" : "R E",
-                  "lastName" : "Suherman"
-                },
-                {
-                  "creatorType" : "author",
-                  "firstName" : "H R",
-                  "lastName" : "Fakhri"
-                }
-              ],
-              "abstractNote" : "",
-              "publicationTitle" : "Journal of Physics: Conference Series",
-              "volume" : "1230",
-              "issue" : "",
-              "pages" : "012064",
-              "date" : "2019-07",
-              "series" : "",
-              "seriesTitle" : "",
-              "seriesText" : "",
-              "journalAbbreviation" : "",
-              "language" : "",
-              "DOI" : "10.1088/1742-6596/1230/1/012064",
-              "ISSN" : "",
-              "shortTitle" : "",
-              "url" : "https://doi.org/10.1088%2F1742-6596%2F1230%2F1%2F012064",
-              "accessDate" : "",
-              "archive" : "",
-              "archiveLocation" : "",
-              "libraryCatalog" : "",
-              "callNumber" : "",
-              "rights" : "",
-              "extra" : "Citation Key: Sari_2019\nPublisher: IOP Publishing",
-              "tags" : [],
-              "collections" : [
-                "FJ3SUIFZ"
-              ],
-              "relations" : {},
-              "dateAdded" : "2020-12-06T12:14:55Z",
-              "dateModified" : "2020-12-09T06:50:19Z"
-            }
-          },
-          {
-            "key" : "SY4RPB76",
-            "version" : 2884,
-            "library" : {
-              "type" : "user",
-              "id" : 5787467,
-              "name" : "uthanda",
-              "links" : {
-                "alternate" : {
-                  "href" : "https://www.zotero.org/uthanda",
-                  "type" : "text/html"
-                }
-              }
-            },
-            "links" : {
-              "self" : {
-                "href" : "https://api.zotero.org/users/5787467/items/SY4RPB76",
-                "type" : "application/json"
-              },
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda/items/SY4RPB76",
-                "type" : "text/html"
-              },
-              "up" : {
-                "href" : "https://api.zotero.org/users/5787467/items/RSWMDDEA",
-                "type" : "application/json"
-              }
-            },
-            "meta" : {},
-            "data" : {
-              "key" : "SY4RPB76",
-              "version" : 2884,
-              "parentItem" : "RSWMDDEA",
-              "itemType" : "attachment",
-              "linkMode" : "linked_file",
-              "title" : "2019 Analysis and design information system development of IT care application in.pdf",
-              "accessDate" : "",
-              "url" : "",
-              "note" : "",
-              "contentType" : "application/pdf",
-              "charset" : "",
-              "path" : "attachments:2019/2019 Analysis and design information system development of IT care application in.pdf",
-              "tags" : [],
-              "relations" : {},
-              "dateAdded" : "2020-12-06T12:44:33Z",
-              "dateModified" : "2020-12-09T06:50:19Z"
-            }
-          },
-          {
-            "key" : "526R6IWN",
-            "version" : 2883,
-            "library" : {
-              "type" : "user",
-              "id" : 5787467,
-              "name" : "uthanda",
-              "links" : {
-                "alternate" : {
-                  "href" : "https://www.zotero.org/uthanda",
-                  "type" : "text/html"
-                }
-              }
-            },
-            "links" : {
-              "self" : {
-                "href" : "https://api.zotero.org/users/5787467/items/526R6IWN",
-                "type" : "application/json"
-              },
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda/items/526R6IWN",
-                "type" : "text/html"
-              },
-              "up" : {
-                "href" : "https://api.zotero.org/users/5787467/items/BH8JHCNI",
-                "type" : "application/json"
-              }
-            },
-            "meta" : {},
-            "data" : {
-              "key" : "526R6IWN",
-              "version" : 2883,
-              "parentItem" : "BH8JHCNI",
-              "itemType" : "attachment",
-              "linkMode" : "linked_file",
-              "title" : "2019 A theory of contingent business process management.pdf",
-              "accessDate" : "",
-              "url" : "",
-              "note" : "",
-              "contentType" : "application/pdf",
-              "charset" : "",
-              "path" : "attachments:2019/2019 A theory of contingent business process management.pdf",
-              "tags" : [],
-              "relations" : {},
-              "dateAdded" : "2020-12-06T12:46:29Z",
-              "dateModified" : "2020-12-09T06:49:21Z"
-            }
-          },
-          {
-            "key" : "QFV7K969",
-            "version" : 1907,
-            "library" : {
-              "type" : "user",
-              "id" : 5787467,
-              "name" : "uthanda",
-              "links" : {
-                "alternate" : {
-                  "href" : "https://www.zotero.org/uthanda",
-                  "type" : "text/html"
-                }
-              }
-            },
-            "links" : {
-              "self" : {
-                "href" : "https://api.zotero.org/users/5787467/items/QFV7K969",
-                "type" : "application/json"
-              },
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda/items/QFV7K969",
-                "type" : "text/html"
-              },
-              "up" : {
-                "href" : "https://api.zotero.org/users/5787467/items/B4ERDVS4",
-                "type" : "application/json"
-              }
-            },
-            "meta" : {},
-            "data" : {
-              "key" : "QFV7K969",
-              "version" : 1907,
-              "parentItem" : "B4ERDVS4",
-              "itemType" : "attachment",
-              "linkMode" : "linked_file",
-              "title" : "2019 Toward a methodology for case modeling.pdf",
-              "accessDate" : "",
-              "url" : "",
-              "note" : "<p xmlns=\"http://www.w3.org/1999/xhtml\" id=\"title\"><strong>Contents</strong></p><ul xmlns=\"http://www.w3.org/1999/xhtml\" style=\"list-style-type: none; padding-left:0px\" id=\"toc\"><li><a href=\"zotero://open-pdf/0_QFV7K969/1\">Abstract</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/1\">1 Introduction</a></li><li style=\"padding-top:8px\"><a href=\"zotero://open-pdf/0_QFV7K969/2\">2 Related work</a><ul style=\"list-style-type: none; padding-left:12px\"><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/2\">2.1 State of the art in case modeling</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/2\">2.2 Methods and techniques of process modeling</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/3\">2.3 Cognitive aspects of process modeling</a></li></ul></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/4\">3 Fragment-based case management</a></li><li style=\"padding-top:8px\"><a href=\"zotero://open-pdf/0_QFV7K969/5\">4 Methods for case modeling</a><ul style=\"list-style-type: none; padding-left:12px\"><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/5\">4.1 Process-first case modeling method</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/7\">4.2 Object lifecycle-first case modeling method</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/8\">4.3 Goals-first case modeling method</a></li></ul></li><li style=\"padding-top:8px\"><a href=\"zotero://open-pdf/0_QFV7K969/10\">5 Evaluation</a><ul style=\"list-style-type: none; padding-left:12px\"><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/11\">5.1 Experiment design</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/12\">5.2 Measurement design</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/13\">5.3 Limitations to validity</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/13\">5.4 Results: Process-first Method</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/16\">5.5 OLC-first method</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/19\">5.6 Goals-first method</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/24\">5.7 Discussion</a></li></ul></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/25\">6 Conclusion and future work</a></li><li style=\"padding-top:4px\"><a href=\"zotero://open-pdf/0_QFV7K969/25\">References</a></li></ul>",
-              "contentType" : "application/pdf",
-              "charset" : "",
-              "path" : "attachments:2019/2019 Toward a methodology for case modeling.pdf",
-              "tags" : [],
-              "relations" : {},
-              "dateAdded" : "2020-07-04T19:08:48Z",
-              "dateModified" : "2020-07-06T04:54:59Z"
-            }
-          }
-        ]
-      }
-    }
-  },
-  "/users/apiId/collections/Y82V25U2/collections" : {
-    "GET" : {
-      "start=2" : {
-        "headers" : {
-          "Total-Results" : 4
-        },
-        "item" : [
-          {
-            "key" : "M2F2X5CZ",
-            "version" : 133,
-            "library" : {
-              "type" : "user",
-              "id" : 5787467,
-              "name" : "uthanda",
-              "links" : {
-                "alternate" : {
-                  "href" : "https://www.zotero.org/uthanda",
-                  "type" : "text/html"
-                }
-              }
-            },
-            "links" : {
-              "self" : {
-                "href" : "https://api.zotero.org/users/5787467/collections/M2F2X5CZ",
-                "type" : "application/json"
-              },
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda/collections/M2F2X5CZ",
-                "type" : "text/html"
-              },
-              "up" : {
-                "href" : "https://api.zotero.org/users/5787467/collections/Y82V25U2",
-                "type" : "application/json"
-              }
-            },
-            "meta" : {
-              "numCollections" : 0,
-              "numItems" : 1
-            },
-            "data" : {
-              "key" : "M2F2X5CZ",
-              "version" : 133,
-              "name" : "Medical Case Management",
-              "parentCollection" : "Y82V25U2",
-              "relations" : {}
-            }
-          },
-          {
-            "key" : "NTN3S2WV",
-            "version" : 46,
-            "library" : {
-              "type" : "user",
-              "id" : 5787467,
-              "name" : "uthanda",
-              "links" : {
-                "alternate" : {
-                  "href" : "https://www.zotero.org/uthanda",
-                  "type" : "text/html"
-                }
-              }
-            },
-            "links" : {
-              "self" : {
-                "href" : "https://api.zotero.org/users/5787467/collections/NTN3S2WV",
-                "type" : "application/json"
-              },
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda/collections/NTN3S2WV",
-                "type" : "text/html"
-              },
-              "up" : {
-                "href" : "https://api.zotero.org/users/5787467/collections/Y82V25U2",
-                "type" : "application/json"
-              }
-            },
-            "meta" : {
-              "numCollections" : 2,
-              "numItems" : 6
-            },
-            "data" : {
-              "key" : "NTN3S2WV",
-              "version" : 46,
-              "name" : "Case Types",
-              "parentCollection" : "Y82V25U2",
-              "relations" : {}
-            }
-          }
-        ]
-      },
-      "<empty>" : {
-        "headers" : {
-          "Total-Results" : 4,
-          "Link" : "<https://api.zotero.org/users/apiId/collections/Y82V25U2/collections?start=2>; rel=\"next\""
-        },
-        "item" : [
-          {
-            "key" : "NYJCQ4NZ",
-            "version" : 1279,
-            "library" : {
-              "type" : "user",
-              "id" : 5787467,
-              "name" : "uthanda",
-              "links" : {
-                "alternate" : {
-                  "href" : "https://www.zotero.org/uthanda",
-                  "type" : "text/html"
-                }
-              }
-            },
-            "links" : {
-              "self" : {
-                "href" : "https://api.zotero.org/users/5787467/collections/NYJCQ4NZ",
-                "type" : "application/json"
-              },
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda/collections/NYJCQ4NZ",
-                "type" : "text/html"
-              },
-              "up" : {
-                "href" : "https://api.zotero.org/users/5787467/collections/Y82V25U2",
-                "type" : "application/json"
-              }
-            },
-            "meta" : {
-              "numCollections" : 0,
-              "numItems" : 1
-            },
-            "data" : {
-              "key" : "NYJCQ4NZ",
-              "version" : 1279,
-              "name" : "CMMN",
-              "parentCollection" : "Y82V25U2",
-              "relations" : {}
-            }
-          },
-          {
-            "key" : "6LB4NBH4",
-            "version" : 138,
-            "library" : {
-              "type" : "user",
-              "id" : 5787467,
-              "name" : "uthanda",
-              "links" : {
-                "alternate" : {
-                  "href" : "https://www.zotero.org/uthanda",
-                  "type" : "text/html"
-                }
-              }
-            },
-            "links" : {
-              "self" : {
-                "href" : "https://api.zotero.org/users/5787467/collections/6LB4NBH4",
-                "type" : "application/json"
-              },
-              "alternate" : {
-                "href" : "https://www.zotero.org/uthanda/collections/6LB4NBH4",
-                "type" : "text/html"
-              },
-              "up" : {
-                "href" : "https://api.zotero.org/users/5787467/collections/Y82V25U2",
-                "type" : "application/json"
-              }
-            },
-            "meta" : {
-              "numCollections" : 0,
-              "numItems" : 4
-            },
-            "data" : {
-              "key" : "6LB4NBH4",
-              "version" : 138,
-              "name" : "Data Processing",
-              "parentCollection" : "Y82V25U2",
-              "relations" : {}
-            }
-          }
-        ]
-      }
-    }
-  },
-  "/users/apiId/collections/FJ3SUIFZ/collections" : {
-    "GET" : {
-      "<empty>" : {
-        "headers" : {
-          "Total-Results" : 0
-        },
-        "item" : []
-      }
-    }
-  },
-  "/users/apiId/collections" : {
-    "POST" : {
-      "[{\"data\":{\"name\":\"New collection\",\"parentCollection\":\"FJ3SUIFZ\"}}]" : {
-        "headers" : {
-          "Last-Modified-Version" : 3643
-        },
-        "item" : {
-          "successful" : {
-            "0" : {
-              "key" : "QP52ERNW",
-              "version" : 3643,
-              "library" : {
-                "type" : "user",
-                "id" : 5787467,
-                "name" : "uthanda",
-                "links" : {
-                  "alternate" : {
-                    "href" : "https://www.zotero.org/uthanda",
-                    "type" : "text/html"
-                  }
-                }
-              },
-              "links" : {
-                "self" : {
-                  "href" : "https://api.zotero.org/users/5787467/collections/QP52ERNW",
-                  "type" : "application/json"
-                },
-                "alternate" : {
-                  "href" : "https://www.zotero.org/uthanda/collections/QP52ERNW",
-                  "type" : "text/html"
-                },
-                "up" : {
-                  "href" : "https://api.zotero.org/users/5787467/collections/FJ3SUIFZ",
-                  "type" : "application/json"
-                }
-              },
-              "meta" : {
-                "numCollections" : 0,
-                "numItems" : 0
-              },
-              "data" : {
-                "key" : "QP52ERNW",
-                "version" : 3643,
-                "name" : "New collection",
-                "parentCollection" : "FJ3SUIFZ",
-                "relations" : {}
-              }
-            }
-          },
-          "success" : {
-            "0" : "QP52ERNW"
-          },
-          "unchanged" : {},
-          "failed" : {}
-        }
-      }
-    }
-  }
 }

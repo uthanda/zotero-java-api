@@ -38,7 +38,7 @@ public class ItemSearchImplTest
 	{
 		// Initialize the mock service for the static setup
 		service.initialize();
-		library = Library.createLibrary(MockRestService.API_ID, new ZoteroAPIKey(MockRestService.API_KEY));
+		library = Library.createLibrary(MockRestService.API_ID.toString(), new ZoteroAPIKey(MockRestService.API_KEY));
 	}
 
 	@Before

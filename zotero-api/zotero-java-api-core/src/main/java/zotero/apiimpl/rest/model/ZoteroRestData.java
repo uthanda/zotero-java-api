@@ -5,10 +5,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
-import javax.swing.text.html.HTML.Tag;
 import javax.xml.bind.DatatypeConverter;
 
 import zotero.api.Creator;
+import zotero.api.Tag;
 import zotero.api.collections.Creators;
 import zotero.api.collections.Tags;
 import zotero.api.constants.ZoteroEnum;
@@ -98,7 +98,7 @@ public class ZoteroRestData extends HashMap<String, Object>
 					else if (type == Tag.class)
 					{
 						@SuppressWarnings("unchecked")
-						Tags list = ((PropertyList<String,Tags>)property).getValue();
+						Tags list = ((PropertyList<Tag,Tags>)property).getValue();
 						data.put(Item.TAGS, TagsImpl.toRest(list));
 					}
 

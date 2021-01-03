@@ -53,7 +53,7 @@ public class CollectionsTest
 	{
 		// Initialize the mock service for the static setup
 		service.initialize();
-		library = Library.createLibrary(MockRestService.API_ID, new ZoteroAPIKey(MockRestService.API_KEY));
+		library = Library.createLibrary(MockRestService.API_ID.toString(), new ZoteroAPIKey(MockRestService.API_KEY));
 		collectionNoSubCollections = library.fetchCollection(KEY_NO_SUBS);
 		collectionSubCollections = library.fetchCollection(KEY_SUBS);
 	}
@@ -70,13 +70,13 @@ public class CollectionsTest
 	{
 		assertEquals(KEY_NO_SUBS, collectionNoSubCollections.getKey());
 		assertTrue(collectionNoSubCollections.getLinks().has(LinkType.SELF));
-		assertEquals("https://api.zotero.org/users/5787467/collections/FJ3SUIFZ", collectionNoSubCollections.getLinks().get(LinkType.SELF).getHref());
+		assertEquals("https://api.zotero.org/users/12345678/collections/FJ3SUIFZ", collectionNoSubCollections.getLinks().get(LinkType.SELF).getHref());
 		assertEquals("application/json", collectionNoSubCollections.getLinks().get(LinkType.SELF).getType());
 		assertTrue(collectionNoSubCollections.getLinks().has(LinkType.ALTERNATE));
 		assertEquals("https://www.zotero.org/uthanda/collections/FJ3SUIFZ", collectionNoSubCollections.getLinks().get(LinkType.ALTERNATE).getHref());
 		assertEquals("text/html", collectionNoSubCollections.getLinks().get(LinkType.ALTERNATE).getType());
 		assertTrue(collectionNoSubCollections.getLinks().has(LinkType.UP));
-		assertEquals("https://api.zotero.org/users/5787467/collections/9DXQSYMF", collectionNoSubCollections.getLinks().get(LinkType.UP).getHref());
+		assertEquals("https://api.zotero.org/users/12345678/collections/9DXQSYMF", collectionNoSubCollections.getLinks().get(LinkType.UP).getHref());
 		assertEquals("application/json", collectionNoSubCollections.getLinks().get(LinkType.UP).getType());
 		assertEquals(0, collectionNoSubCollections.getNumberOfCollections());
 		assertEquals(3, collectionNoSubCollections.getNumberOfItems());
@@ -198,7 +198,7 @@ public class CollectionsTest
 		
 		// Test the link data
 		assertTrue(child.getLinks().has(LinkType.SELF));
-		assertEquals("https://api.zotero.org/users/5787467/collections/QP52ERNW", child.getLinks().get(LinkType.SELF).getHref());
+		assertEquals("https://api.zotero.org/users/12345678/collections/QP52ERNW", child.getLinks().get(LinkType.SELF).getHref());
 		assertEquals("application/json", child.getLinks().get(LinkType.SELF).getType());
 
 		assertTrue(child.getLinks().has(LinkType.ALTERNATE));
@@ -206,7 +206,7 @@ public class CollectionsTest
 		assertEquals("text/html", child.getLinks().get(LinkType.ALTERNATE).getType());
 
 		assertTrue(child.getLinks().has(LinkType.UP));
-		assertEquals("https://api.zotero.org/users/5787467/collections/FJ3SUIFZ", child.getLinks().get(LinkType.UP).getHref());
+		assertEquals("https://api.zotero.org/users/12345678/collections/FJ3SUIFZ", child.getLinks().get(LinkType.UP).getHref());
 		assertEquals("application/json", child.getLinks().get(LinkType.UP).getType());
 	}
 
@@ -279,7 +279,7 @@ public class CollectionsTest
 			ai.incrementAndGet();
 			
 			// Check the request info.  Should be the right URL and have the If-Unmodified-Since-Version header set
-			assertEquals("/users/apiId/collections/" + KEY_SUBS, delete.getURI().getPath());
+			assertEquals("/users/12345678/collections/" + KEY_SUBS, delete.getURI().getPath());
 			assertNotNull(delete.getFirstHeader(ZoteroRest.Headers.IF_UNMODIFIED_SINCE_VERSION));
 			assertEquals("44", delete.getFirstHeader(ZoteroRest.Headers.IF_UNMODIFIED_SINCE_VERSION).getValue());
 			

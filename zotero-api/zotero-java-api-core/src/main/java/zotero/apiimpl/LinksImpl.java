@@ -39,7 +39,7 @@ final class LinksImpl implements Links
 		return link;
 	}
 
-	public static Links from(ZoteroRestLinks links)
+	public static Links fromRest(ZoteroRestLinks links)
 	{
 		LinksImpl zl = new LinksImpl();
 

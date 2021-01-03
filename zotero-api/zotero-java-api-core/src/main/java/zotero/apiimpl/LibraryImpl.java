@@ -5,6 +5,7 @@ import zotero.api.Collection;
 import zotero.api.Document;
 import zotero.api.Item;
 import zotero.api.Library;
+import zotero.api.Tag;
 import zotero.api.ZoteroAPIKey;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
@@ -208,5 +209,11 @@ public final class LibraryImpl extends Library
 	public Attachment createAttachment(Item parent, LinkMode mode)
 	{
 		return new AttachmentImpl(mode, this, parent.getKey());
+	}
+
+	@Override
+	public Tag createTag(String tag)
+	{
+		return new TagImpl(tag);
 	}
 }

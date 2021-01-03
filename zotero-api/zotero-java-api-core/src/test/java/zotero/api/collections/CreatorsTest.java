@@ -28,7 +28,7 @@ public class CreatorsTest
 	public static void setup()
 	{
 		data = (JsonObject) JsonParser.parseReader(new InputStreamReader(CreatorsTest.class.getResourceAsStream("/zotero/testData.json")));
-		JsonArray array = data.get("/users/apiId/items/B4ERDVS4").getAsJsonObject()
+		JsonArray array = data.get("/users/12345678/items/B4ERDVS4").getAsJsonObject()
 				.get("GET").getAsJsonObject()
 				.get("<empty>").getAsJsonObject()
 				.get("item").getAsJsonObject()

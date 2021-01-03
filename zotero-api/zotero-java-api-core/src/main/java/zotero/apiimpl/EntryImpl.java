@@ -60,7 +60,7 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 		this.key = item.getKey();
 		this.version = item.getVersion();
 		this.library = library;
-		this.links = LinksImpl.from(item.getLinks());
+		this.links = LinksImpl.fromRest(item.getLinks());
 	}
 
 	@Override
@@ -154,13 +154,13 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 
 	public static void loadLinks(EntryImpl entry, ZoteroRestLinks links)
 	{
-		entry.links = LinksImpl.from(links);
+		entry.links = LinksImpl.fromRest(links);
 	}
 
 	protected void refresh(ZoteroRestItem item)
 	{
 		// Refresh the links
-		this.links = LinksImpl.from(item.getLinks());
+		this.links = LinksImpl.fromRest(item.getLinks());
 		this.key = item.getKey();
 		this.version = item.getVersion();
 		super.refresh(library, item);

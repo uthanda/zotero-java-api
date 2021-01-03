@@ -1,17 +1,18 @@
 package zotero.apiimpl.collections;
 
-import static zotero.api.constants.ZoteroKeys.Item.TAGS;
-import static zotero.api.constants.ZoteroKeys.Tag.TAG;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import zotero.api.Tag;
 import zotero.api.collections.Tags;
+import zotero.api.constants.ZoteroKeys;
+import zotero.apiimpl.TagImpl;
 import zotero.apiimpl.properties.PropertyListImpl;
 
-public final class TagsImpl extends PropertyListImpl.ObservableList<String> implements Tags
+public final class TagsImpl extends PropertyListImpl.ObservableList<Tag> implements Tags
 {
 	/**
 	 * 
@@ -20,12 +21,12 @@ public final class TagsImpl extends PropertyListImpl.ObservableList<String> impl
 
 	public TagsImpl()
 	{
-		super(TAGS, null, false);
+		super(ZoteroKeys.Item.TAGS, null, false);
 	}
 
-	public TagsImpl(List<String> values)
+	public TagsImpl(List<Tag> values)
 	{
-		super(TAGS, values, false);
+		super(ZoteroKeys.Item.TAGS, values, false);
 	}
 
 	public static List<Map<String, String>> toRest(Tags tags)
@@ -36,7 +37,7 @@ public final class TagsImpl extends PropertyListImpl.ObservableList<String> impl
 
 		t.forEach(e -> {
 			Map<String, String> map = new HashMap<>();
-			map.put(TAG, e);
+			map.put(ZoteroKeys.Tag.TAG, e.getTag());
 			zrt.add(map);
 		});
 
@@ -51,9 +52,9 @@ public final class TagsImpl extends PropertyListImpl.ObservableList<String> impl
 			return new TagsImpl();
 		}
 
-		List<String> values = new ArrayList<>();
+		List<Tag> values = new ArrayList<>();
 
-		((List<Map<String, Object>>) value).forEach(e -> values.add((String) e.get(TAG)));
+		((List<Map<String, Object>>) value).forEach(e -> values.add((new TagImpl((String) e.get(ZoteroKeys.Tag.TAG)))));
 
 		return new TagsImpl(values);
 	}

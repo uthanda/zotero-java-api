@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 
 import zotero.api.Collection;
 import zotero.api.Library;
+import zotero.api.Tag;
 import zotero.api.ZoteroAPIKey;
 import zotero.api.collections.Collections;
 import zotero.api.collections.Creators;
@@ -36,9 +37,9 @@ import zotero.api.constants.RelationshipType;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.util.MockRestService;
 import zotero.apiimpl.LibraryImpl;
-import zotero.apiimpl.RelationshipsImpl;
 import zotero.apiimpl.collections.CollectionsImpl;
 import zotero.apiimpl.collections.CreatorsImpl;
+import zotero.apiimpl.collections.RelationshipsImpl;
 import zotero.apiimpl.collections.TagsImpl;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
@@ -58,7 +59,7 @@ public class PropertiesTest
 	{
 		// Initialize the mock service for the static setup
 		service.initialize();
-		library = (LibraryImpl) Library.createLibrary(MockRestService.API_ID, new ZoteroAPIKey(MockRestService.API_KEY));
+		library = (LibraryImpl) Library.createLibrary(MockRestService.API_ID.toString(), new ZoteroAPIKey(MockRestService.API_KEY));
 		
 		Map<String,Object> creator = new HashMap<>();
 		creator.put(ZoteroKeys.Creator.CREATOR_TYPE, "author");
@@ -138,8 +139,10 @@ public class PropertiesTest
 		CreatorsImpl creators = new CreatorsImpl();
 		creators.add(CreatorType.ARTIST, "Vincent", "Van Gogh");
 		
+		Tag tag = library.createTag("Painter");
+		
 		TagsImpl tags = new TagsImpl();
-		tags.add("Painter");
+		tags.add(tag);
 		
 		RelationshipsImpl relationships = new RelationshipsImpl();
 		relationships.getRelatedKeys(RelationshipType.DC_REPLACES).add("KEY123");
@@ -151,7 +154,7 @@ public class PropertiesTest
 		collections.addToCollection(collection);
 		
 		properties.addProperty(new PropertyStringImpl(ZoteroKeys.Item.TITLE, "A title"));
-		properties.addProperty(new PropertyListImpl<>(ZoteroKeys.Item.TAGS, String.class, tags));
+		properties.addProperty(new PropertyListImpl<>(ZoteroKeys.Item.TAGS, Tag.class, tags));
 		properties.addProperty(new PropertyObjectImpl<>(ZoteroKeys.Document.CREATORS, CreatorsImpl.class, creators));
 		properties.addProperty(new PropertyObjectImpl<>(ZoteroKeys.Item.RELATIONS, RelationshipsImpl.class, relationships));
 		properties.addProperty(new PropertyObjectImpl<>(ZoteroKeys.Item.COLLECTIONS, CollectionsImpl.class, collections));
@@ -184,8 +187,8 @@ public class PropertiesTest
 		CreatorsImpl creators = CreatorsImpl.fromRest(new Gson().fromJson("[{'creatorType':'author','firstName':'Vincent','lastName':'Van Gogh'}]", List.class));
 		creators.add(CreatorType.ARTIST, "Steve", "Taylor");
 		
-		TagsImpl tags = new TagsImpl(Arrays.asList("Painter"));
-		tags.add("Singer");
+		TagsImpl tags = new TagsImpl(Arrays.asList(library.createTag("Painter")));
+		tags.add(library.createTag("Singer"));
 		
 		RelationshipsImpl relationships = RelationshipsImpl.fromMap(new Gson().fromJson("{'dc:replaces':['KEY123']}", Map.class));
 		relationships.getRelatedKeys(RelationshipType.OWL_SAMEAS).add("KEY2345");
@@ -196,7 +199,7 @@ public class PropertiesTest
 		collections.addToCollection(collection);
 		
 		properties.addProperty(new PropertyStringImpl(ZoteroKeys.Item.TITLE, "A title"));
-		properties.addProperty(new PropertyListImpl<>(ZoteroKeys.Item.TAGS, String.class, tags));
+		properties.addProperty(new PropertyListImpl<>(ZoteroKeys.Item.TAGS, Tag.class, tags));
 		properties.addProperty(new PropertyObjectImpl<>(ZoteroKeys.Document.CREATORS, CreatorsImpl.class, creators));
 		properties.addProperty(new PropertyObjectImpl<>(ZoteroKeys.Item.RELATIONS, RelationshipsImpl.class, relationships));
 		properties.addProperty(new PropertyObjectImpl<>(ZoteroKeys.Item.COLLECTIONS, CollectionsImpl.class, collections));

@@ -1,12 +1,10 @@
 package zotero.apiimpl.rest.model;
 
-import java.math.BigDecimal;
-
 public class ZoteroRestLibrary
 {
 	private ZoteroRestType type = null;
 
-	private BigDecimal id = null;
+	private Integer id = null;
 
 	private String name = null;
 
@@ -22,12 +20,12 @@ public class ZoteroRestLibrary
 		this.type = type;
 	}
 
-	public BigDecimal getId()
+	public Integer getId()
 	{
 		return id;
 	}
 
-	public void setId(BigDecimal id)
+	public void setId(Integer id)
 	{
 		this.id = id;
 	}

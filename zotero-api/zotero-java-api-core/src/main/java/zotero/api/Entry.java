@@ -9,7 +9,7 @@ package zotero.api;
  * @author Michael Oland
  * @since 1.0
  */
-public interface Entry extends PropertiesItem
+public interface Entry extends PropertiesItem, Linked
 {
 	/**
 	 * Gets the Zotero item key (unique identifier)
@@ -31,13 +31,6 @@ public interface Entry extends PropertiesItem
 	 * @return Library
 	 */
 	Library getLibrary();
-
-	/**
-	 * Gets the item's links
-	 * 
-	 * @return Item links
-	 */
-	Links getLinks();
 
 	/**
 	 * Refreshes the metadata for this object.

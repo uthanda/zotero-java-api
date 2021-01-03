@@ -37,7 +37,7 @@ public class JSONRestResponseBuilder<T> extends ResponseBuilder<T>
 
 			String json = new String(bos.toByteArray());
 
-			logger.debug("Read JSON {}", json);
+			logger.debug("Read {} as JSON {}", type.getSimpleName(), json);
 
 			response.response = new Gson().fromJson(json, type);
 			

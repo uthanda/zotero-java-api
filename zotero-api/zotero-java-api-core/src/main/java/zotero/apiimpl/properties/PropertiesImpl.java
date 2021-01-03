@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import zotero.api.Creator;
+import zotero.api.Tag;
 import zotero.api.collections.Collections;
 import zotero.api.collections.Creators;
 import zotero.api.collections.Relationships;
@@ -35,9 +36,9 @@ import zotero.api.properties.PropertyList;
 import zotero.api.properties.PropertyObject;
 import zotero.api.properties.PropertyString;
 import zotero.apiimpl.LibraryImpl;
-import zotero.apiimpl.RelationshipsImpl;
 import zotero.apiimpl.collections.CollectionsImpl;
 import zotero.apiimpl.collections.CreatorsImpl;
+import zotero.apiimpl.collections.RelationshipsImpl;
 import zotero.apiimpl.collections.TagsImpl;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestData.DataBuilder;
@@ -105,7 +106,7 @@ public final class PropertiesImpl implements Properties
 				{
 					Tags tags = TagsImpl.fromRest(value);
 
-					property = new PropertyListImpl<>(Item.TAGS, String.class, tags);
+					property = new PropertyListImpl<>(Item.TAGS, Tag.class, tags);
 					break;
 				}
 				case Item.COLLECTIONS:
@@ -202,7 +203,7 @@ public final class PropertiesImpl implements Properties
 				}
 				case Item.TAGS:
 				{
-					Tags tags = ((PropertyList<String, Tags>) prop).getValue();
+					Tags tags = ((PropertyList<Tag, Tags>) prop).getValue();
 					data.put(Item.TAGS, TagsImpl.toRest(tags));
 					break;
 				}

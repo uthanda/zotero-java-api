@@ -1,4 +1,4 @@
-package zotero.apiimpl;
+package zotero.apiimpl.collections;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -8,6 +8,7 @@ import java.util.Set;
 
 import zotero.api.collections.Relationships;
 import zotero.api.constants.RelationshipType;
+import zotero.apiimpl.ChangeTracker;
 import zotero.apiimpl.properties.PropertyListImpl.ObservableList;
 
 public final class RelationshipsImpl implements Relationships, ChangeTracker

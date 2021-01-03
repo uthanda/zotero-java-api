@@ -19,13 +19,13 @@ public class ZoteroRestItemTest
 	public void testDeserializeCollectionItems() throws IOException
 	{
 		InputStream is = ZoteroRestItemTest.class.getResourceAsStream("/zotero/api/user_collection_key_items.json");
-	
+
 		Gson gson = new Gson();
-	
+
 		ZoteroRestItem[] items = gson.fromJson(new InputStreamReader(is), ZoteroRestItem[].class);
-	
+
 		is.close();
-	
+
 		assertEquals(7, items.length);
 	}
 
@@ -33,15 +33,15 @@ public class ZoteroRestItemTest
 	public void testDeserializeItemsItemKey() throws IOException
 	{
 		InputStream is = ZoteroRestItemTest.class.getResourceAsStream("/zotero/api/user_items_itemKey.json");
-	
+
 		Gson gson = new Gson();
-	
+
 		ZoteroRestItem item = gson.fromJson(new InputStreamReader(is), ZoteroRestItem.class);
-	
+
 		is.close();
-	
+
 		assertNotNull(item);
-	
+
 		assertEquals("B4ERDVS4", item.getKey());
 	}
 
@@ -49,13 +49,13 @@ public class ZoteroRestItemTest
 	public void testDeserializeTop() throws IOException
 	{
 		InputStream is = ZoteroRestItemTest.class.getResourceAsStream("/zotero/api/users_collection_top.json");
-		
+
 		Gson gson = new Gson();
-		
+
 		ZoteroRestItem[] items = gson.fromJson(new InputStreamReader(is), ZoteroRestItem[].class);
-		
+
 		is.close();
-		
+
 		assertEquals(20, items.length);
 	}
 
@@ -63,15 +63,15 @@ public class ZoteroRestItemTest
 	public void testDeserialize() throws IOException
 	{
 		InputStream is = ZoteroRestItemTest.class.getResourceAsStream("/zotero/api/users_collections.json");
-		
+
 		Gson gson = new Gson();
-		
+
 		ZoteroRestItem[] items = gson.fromJson(new InputStreamReader(is), ZoteroRestItem[].class);
-		
+
 		is.close();
-		
+
 		assertEquals(25, items.length);
-		
+
 		assertEquals("FJ3SUIFZ", items[0].getKey());
 		assertEquals(2885, items[0].getVersion().intValue());
 		assertEquals(3, items[0].getLinks().size());

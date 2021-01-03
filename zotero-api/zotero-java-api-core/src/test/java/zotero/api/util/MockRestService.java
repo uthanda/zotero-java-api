@@ -37,7 +37,7 @@ import com.google.gson.JsonParser;
 
 public class MockRestService
 {
-	public static final String API_ID = "apiId";
+	public static final Integer API_ID = 12345678;
 	public static final String API_KEY = "apiKey";
 
 	private static JsonObject data;

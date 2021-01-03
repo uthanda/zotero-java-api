@@ -166,6 +166,8 @@ public abstract class Library
 	 * @return Created attachment
 	 */
 	public abstract Attachment createAttachment(Item parent, LinkMode mode);
+	
+	public abstract Tag createTag(String tag);
 
 	/**
 	 * Creates a new library with the provided API key and user

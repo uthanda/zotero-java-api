@@ -53,6 +53,8 @@ public class ZoteroRestItem
 	}
 
 	private String key = null;
+	
+	private String tag = null;
 
 	private Integer version = null;
 
@@ -72,6 +74,16 @@ public class ZoteroRestItem
 	public void setKey(String key)
 	{
 		this.key = key;
+	}
+
+	public String getTag()
+	{
+		return tag;
+	}
+
+	public void setTag(String tag)
+	{
+		this.tag = tag;
 	}
 
 	public Integer getVersion()
