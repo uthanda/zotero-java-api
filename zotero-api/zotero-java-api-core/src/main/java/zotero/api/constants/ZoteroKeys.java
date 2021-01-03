@@ -102,7 +102,7 @@ public class ZoteroKeys
 		public static final String PROGRAMMING_LANGUAGE = "programmingLanguage";
 		public static final String REPORT_NUMBER = "reportNumber";
 		/**
-		 * The abstract for a document or item.<br/><br/>
+		 * The abstract for a document or item.<br><br>
 		 * REST API Property: <code>&quot;abstractNote&quot;</code>
 		 */
 		public static final String ABSTRACT = "abstractNote";

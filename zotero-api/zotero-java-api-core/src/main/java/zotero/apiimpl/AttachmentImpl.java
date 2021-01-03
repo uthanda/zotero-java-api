@@ -322,7 +322,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 
 		if (isNew)
 		{
-//			builder.header(ZoteroRest.Headers.IF_NONE_MATCH, "*");
+			// builder.header(ZoteroRest.Headers.IF_NONE_MATCH, "*");
 			builder.header(ZoteroRest.Headers.IF_MATCH, md5);
 		}
 		else

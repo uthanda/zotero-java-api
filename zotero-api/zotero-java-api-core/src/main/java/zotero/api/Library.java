@@ -178,7 +178,7 @@ public abstract class Library
 	 * Creates a new library with the provided API key and user
 	 * 
 	 * @param userId User Id of the library to access
-	 * @param apiKey API key to use when authenticating.
+	 * @param auth Authentication object to use when authenticating.
 	 * @return
 	 */
 	public static final Library createLibrary(String userId, ZoteroAuth auth)

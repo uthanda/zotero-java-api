@@ -15,23 +15,23 @@ public final class ZoteroRest
 		}
 
 		/**
-		 * Collections in the library<br/>
+		 * Collections in the library<br>
 		 * Endpoint: <code>&lt;userOrGroupPrefix&gt;/collections</code>
 		 */
 		public static final String ALL = "/collections";
 		/**
-		 * Top-level collections in the library<br/>
+		 * Top-level collections in the library<br>
 		 * Endpoint: <code>&lt;userOrGroupPrefix&gt;/collections/top</code>
 		 */
 		public static final String TOP = ALL + "/top";
 		/**
-		 * A specific collection in the library<br/>
+		 * A specific collection in the library<br>
 		 * Endpoint:
 		 * <code>&lt;userOrGroupPrefix&gt;/collections/&lt;collectionKey&gt;</code>
 		 */
 		public static final String SPECIFIC = ALL + "/{" + URLParameter.COLLECTION_KEY.getZoteroName() + "}";
 		/**
-		 * Subcollections within a specific collection in the library<br/>
+		 * Subcollections within a specific collection in the library<br>
 		 * Endpoint:
 		 * <code>&lt;userOrGroupPrefix&gt;/collections/&lt;collectionKey&gt;/collections</code>
 		 */
@@ -46,45 +46,45 @@ public final class ZoteroRest
 		}
 
 		/**
-		 * All items in the library, excluding trashed items<br/>
+		 * All items in the library, excluding trashed items<br>
 		 * Endpoint: <code>&lt;userOrGroupPrefix&gt;/items</code>
 		 */
 		public static final String ALL = "/items";
 		/**
-		 * Top-level items in the library, excluding trashed items<br/>
+		 * Top-level items in the library, excluding trashed items<br>
 		 * Endpoint: <code>&lt;userOrGroupPrefix&gt;/items/top</code>
 		 */
 		public static final String TOP = ALL + "/top";
 		/**
-		 * Items in the trash<br/>
+		 * Items in the trash<br>
 		 * Endpoint: <code>&lt;userOrGroupPrefix&gt;/items/trash</code>
 		 */
 		public static final String TRASH = ALL + "/trash";
 		/**
-		 * A specific item in the library<br/>
+		 * A specific item in the library<br>
 		 * Endpoint:
 		 * <code>&lt;userOrGroupPrefix&gt;/items/&lt;itemKey&gt;</code>
 		 */
 		public static final String SPECIFIC = ALL + "/{" + URLParameter.ITEM_KEY.getZoteroName() + "}";
 		/**
-		 * Child items under a specific item<br/>
+		 * Child items under a specific item<br>
 		 * Endpoint:
 		 * <code>&lt;userOrGroupPrefix&gt;/items/&lt;itemKey&gt;/children</code>
 		 */
 		public static final String CHILDREN = SPECIFIC + "/children";
 		/**
-		 * Child items under a specific item<br/>
+		 * Child items under a specific item<br>
 		 * Endpoint: <code>&lt;userOrGroupPrefix&gt;/publications/items</code>
 		 */
 		public static final String MY_PUBLICATIONS = "/publications/items";
 		/**
-		 * Items within a specific collection in the library<br/>
+		 * Items within a specific collection in the library<br>
 		 * Endpoint:
 		 * <code>&lt;userOrGroupPrefix&gt;/collections/&lt;collectionKey&gt;/items</code>
 		 */
 		public static final String COLLECTION_ITEMS = Collections.SPECIFIC + "/items";
 		/**
-		 * Top-level items within a specific collection in the library<br/>
+		 * Top-level items within a specific collection in the library<br>
 		 * Endpoint:
 		 * <code>&lt;userOrGroupPrefix&gt;/collections/&lt;collectionKey&gt;/items/top</code>
 		 */
@@ -101,62 +101,62 @@ public final class ZoteroRest
 		}
 
 		/**
-		 * All tags in the library<br/>
+		 * All tags in the library<br>
 		 * Endpoint: <code>/tags</code>
 		 */
 		public static final String ALL = "/tags";
 
 		/**
-		 * Tags of all types matching a specific name<br/>
+		 * Tags of all types matching a specific name<br>
 		 * Endpoint: <code>/tags/&lt;url+encoded+tag&gt; </code>
 		 */
 		public static final String SPECIFIC = ALL + "/{" + URLParameter.TAG_NAME.getZoteroName() + "}";
 
 		/**
-		 * Tags associated with a specific item<br/>
+		 * Tags associated with a specific item<br>
 		 * Endpoint: <code>/items/&lt;itemKey&gt;/tags </code>
 		 */
 		public static final String ITEMS = Items.SPECIFIC + "/tags";
 
 		/**
-		 * Tags within a specific collection in the library<br/>
-		 * Endpoint: <code>/collections/<collectionKey>/tags </code>
+		 * Tags within a specific collection in the library<br>
+		 * Endpoint: <code>/collections/&lt;collectionKey&gt;/tags </code>
 		 */
 		public static final String COLLECTIONS = Collections.SPECIFIC + "/tags";
 
 		/**
 		 * All tags in the library, with the ability to filter based on the
-		 * items <br/>
+		 * items <br>
 		 * Endpoint: <code>/items/tags </code>
 		 */
 		public static final String ITEMS_ALL = Items.ALL + "/tags";
 
 		/**
-		 * Tags assigned to top-level items<br/>
+		 * Tags assigned to top-level items<br>
 		 * Endpoint: <code>/items/top/tags </code>
 		 */
 		public static final String ITEMS_TOP = Items.SPECIFIC + "/tags/top";
 
 		/**
-		 * Tags assigned to items in the trash <br/>
+		 * Tags assigned to items in the trash <br>
 		 * Endpoint: <code>/items/trash/tags </code>
 		 */
 		public static final String ITEMS_TRASH = Items.SPECIFIC + "/tags/trash";
 
 		/**
-		 * Tags assigned to items in a given collection<br/>
-		 * Endpoint: <code>/items/<collectionKey>/items/tags</code>
+		 * Tags assigned to items in a given collection<br>
+		 * Endpoint: <code>/items/&lt;collectionKey&gt;/items/tags</code>
 		 */
 		public static final String COLLECTION_TAGS = Items.SPECIFIC + "/tags";
 
 		/**
-		 * Tags assigned to top-level items in a given collection<br/>
-		 * Endpoint: <code>/items/<collectionKey>/items/top/tags </code>
+		 * Tags assigned to top-level items in a given collection<br>
+		 * Endpoint: <code>/items/&lt;collectionKey&gt;/items/top/tags </code>
 		 */
 		public static final String COLLECTION_TAGS_TOP = Items.SPECIFIC + "/tags/top";
 
 		/**
-		 * Tags assigned to items in My Publications<br/>
+		 * Tags assigned to items in My Publications<br>
 		 * Endpoint: <code>/publications/items/tags </code>
 		 */
 		public static final String MY_PUBLICATIONS_TAGS = Items.MY_PUBLICATIONS + "/tags/top";
@@ -169,12 +169,12 @@ public final class ZoteroRest
 		}
 
 		/**
-		 * All saved searches in the library<br/>
+		 * All saved searches in the library<br>
 		 * Endpoint: <code>/searches</code>
 		 */
 		public static final String ALL = "/searches";
 		/**
-		 * A specific saved search in the library<br/>
+		 * A specific saved search in the library<br>
 		 * Endpoint: <code>/searches/&lt;searchKey&gt;</code>
 		 */
 		public static final String SPECIFIC = ALL + "/{" + URLParameter.SEARCH_KEY.getZoteroName() + "}";
@@ -188,15 +188,15 @@ public final class ZoteroRest
 		}
 
 		/**
-		 * The user id and privileges of the given API key.<br/>
+		 * The user id and privileges of the given API key.<br>
 		 * Use the DELETE HTTP method to delete the key. This should generally
 		 * be done only by a client that created the key originally using
-		 * OAuth.<br/>
+		 * OAuth.<br>
 		 * Endpoint: <code>/keys/&lt;key&gt;</code>
 		 */
 		public static final String KEYS = "/keys/{" + URLParameter.KEY + "}";
 		/**
-		 * A specific saved search in the library<br/>
+		 * A specific saved search in the library<br>
 		 * Endpoint: <code>/searches/&lt;searchKey&gt;</code>
 		 */
 		public static final String GROUPS = "/users/{" + URLParameter.USERID.getZoteroName() + "}/groups";
