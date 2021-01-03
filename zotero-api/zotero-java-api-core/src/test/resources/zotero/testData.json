@@ -1748,7 +1748,7 @@
   },
   "/users/12345678/items/VBMZJCM7/file" : {
     "POST" : {
-      "md5=a9d008afc51e435b813611042192eb74&filename=zotero.properties&filesize=11&mtime=1609673828440" : {
+      "md5=a9d008afc51e435b813611042192eb74&filename=zotero.properties&filesize=11&mtime=1609673828440&params=1" : {
         "headers" : {},
         "item" : {
           "url" : "https://zoterofilestorage.s3.us-east-1.amazonaws.com/",

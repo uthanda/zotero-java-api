@@ -245,7 +245,7 @@ public class PropertiesTest
 		
 		PropertiesImpl.initializeAttachmentProperties(LinkMode.IMPORTED_FILE, properties);
 		
-		assertEquals(8, properties.getPropertyNames().size());
+		assertEquals(10, properties.getPropertyNames().size());
 		// TODO Need to check the properties here
 	}
 
