@@ -132,7 +132,7 @@ public class MockRestService
 		return getEntityFromData(path, query, methodName);
 	};
 
-	protected static CloseableHttpResponse getEntityFromData(String path, String query, String methodName) throws RuntimeException
+	public static CloseableHttpResponse getEntityFromData(String path, String query, String methodName) throws RuntimeException
 	{
 		String error = String.format("Not found: '%s'.'%s'.'%s'", path, methodName, query);
 
@@ -200,10 +200,8 @@ public class MockRestService
 
 		try
 		{
-			InputStream is = post.getEntity().getContent();
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			IOUtils.copy(is, bos);
-			is.close();
+			post.getEntity().writeTo(bos);
 
 			query = new String(bos.toByteArray());
 		}
@@ -216,8 +214,13 @@ public class MockRestService
 	};
 
 	public static Function<HttpDelete, CloseableHttpResponse> deleteSuccess = delete -> {
-		return new TestResponse(HttpURLConnection.HTTP_OK, createStringEntity(""));
+		return createSimpleResponse(HttpURLConnection.HTTP_OK);
 	};
+
+	public static TestResponse createSimpleResponse(int code)
+	{
+		return new TestResponse(code, createStringEntity(""));
+	}
 
 	public static Function<HttpPatch, CloseableHttpResponse> patchSuccess = patch -> {
 

@@ -1,6 +1,8 @@
 package zotero.apiimpl.rest.request.builders;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import zotero.api.constants.ZoteroExceptionCodes;
@@ -54,8 +56,8 @@ public class DeleteBuilder<T, R extends ResponseBuilder<T>> extends BaseBuilder<
 			throw new ZoteroRuntimeException(ZoteroExceptionType.IO, ZoteroExceptionCodes.IO.API_ERROR, "Last version must be specified for a DELETE request");
 		}
 
-		Map<String, String> headers = new HashMap<>();
-		headers.put(ZoteroRest.Headers.IF_UNMODIFIED_SINCE_VERSION, lastVersion.toString());
+		Map<String, List<String>> headers = new HashMap<>();
+		headers.put(ZoteroRest.Headers.IF_UNMODIFIED_SINCE_VERSION, Arrays.asList(lastVersion.toString()));
 
 		request.setHeaders(headers);
 

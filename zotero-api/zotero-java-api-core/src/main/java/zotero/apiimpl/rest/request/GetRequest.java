@@ -21,7 +21,7 @@ public class GetRequest<T> extends RestRequest<T>
 	}
 	
 	@Override
-	String buildURL() throws URISyntaxException
+	protected String buildURL() throws URISyntaxException
 	{
 		return specialUrl != null ? specialUrl : super.buildURL();
 	}

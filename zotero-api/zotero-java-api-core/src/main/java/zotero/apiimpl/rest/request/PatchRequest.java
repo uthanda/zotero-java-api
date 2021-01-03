@@ -10,8 +10,6 @@ public class PatchRequest<T> extends ContentRequest<T>
 	{
 		HttpPatch patch = new HttpPatch(url);
 		
-		super.addWriteToken(patch);
-		
 		patch.setEntity(getEntity());
 		
 		return patch;

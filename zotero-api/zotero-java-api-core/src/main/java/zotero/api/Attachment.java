@@ -1,5 +1,6 @@
 package zotero.api;
 
+import java.io.File;
 import java.io.InputStream;
 
 import zotero.api.constants.LinkMode;
@@ -68,5 +69,7 @@ public interface Attachment extends Item
 	 */
 	InputStream retrieveContent();
 
-	void provideContent(InputStream is, Integer fileSize);
+	void provideContent(InputStream is, Long l, String md5);
+
+	void provideContent(File file);
 }

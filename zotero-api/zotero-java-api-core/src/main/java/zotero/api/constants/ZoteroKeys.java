@@ -191,6 +191,7 @@ public class ZoteroKeys
 	public static final class Attachment extends Item
 	{
 		public static final String LINK_MODE = "linkMode";
+		public static final String UPLOAD = "upload";
 		private Attachment() {}
 		
 		public static final String MD5 = "md5";

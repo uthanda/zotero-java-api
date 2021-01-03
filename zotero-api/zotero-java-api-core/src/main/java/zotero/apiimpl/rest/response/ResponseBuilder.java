@@ -72,6 +72,7 @@ public abstract class ResponseBuilder<T>
 				break;
 			}
 
+			case HttpURLConnection.HTTP_CREATED:
 			case HttpURLConnection.HTTP_NO_CONTENT:
 			{
 				entity(null);

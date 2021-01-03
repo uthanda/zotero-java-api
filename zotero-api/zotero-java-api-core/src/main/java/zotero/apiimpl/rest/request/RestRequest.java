@@ -31,7 +31,7 @@ public abstract class RestRequest<T>
 
 	private Map<URLParameter, String> urlParams;
 	private Map<String, List<String>> queryParams;
-	private Map<String, String> headers;
+	private Map<String, List<String>> headers;
 
 	private URIBuilder builder = new URIBuilder();
 
@@ -43,7 +43,7 @@ public abstract class RestRequest<T>
 		builder.setHost(API.HOST);
 	}
 
-	public void setHeaders(Map<String, String> headers)
+	public void setHeaders(Map<String, List<String>> headers)
 	{
 		this.headers = headers;
 	}
@@ -106,18 +106,21 @@ public abstract class RestRequest<T>
 
 	private void doExecute() throws URISyntaxException, IOException
 	{
-		HttpRequestBase httpRequest = prepare(buildURL());
+		String url = this.buildURL();
+
+		HttpRequestBase httpRequest = this.prepare(url);
 
 		this.addHeaders(httpRequest);
 
-		CloseableHttpClient client = HttpClients.createDefault();
+		try (CloseableHttpClient client = HttpClients.createDefault())
+		{
+			CloseableHttpResponse httpResponse = client.execute(httpRequest);
 
-		CloseableHttpResponse httpResponse = client.execute(httpRequest);
-
-		this.responseBuilder.response(httpResponse);
+			this.responseBuilder.response(httpResponse);
+		}
 	}
 
-	String buildURL() throws URISyntaxException
+	protected String buildURL() throws URISyntaxException
 	{
 		if (apiUrl == null)
 		{
@@ -177,7 +180,7 @@ public abstract class RestRequest<T>
 		// Add any custom request headers (if available)
 		if (headers != null)
 		{
-			headers.forEach(request::addHeader);
+			headers.forEach((header, values) -> values.forEach(value -> request.addHeader(header, value)));
 		}
 	}
 

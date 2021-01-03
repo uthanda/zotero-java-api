@@ -171,7 +171,7 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 		PostBuilder<ZoteroPostResponse, ?> builder = PostBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroPostResponse.class));
 
 		// New items need to be posted in a JSON array
-		builder.jsonObject(Arrays.asList(item)).url(url);
+		builder.jsonObject(Arrays.asList(item)).url(url).createWriteToken();
 
 		RestResponse<ZoteroPostResponse> resp = library.performRequest((builder));
 

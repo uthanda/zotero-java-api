@@ -13,6 +13,10 @@
 			<artifactId>httpclient</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
 			<scope>test</scope>
@@ -46,6 +50,17 @@
 		<dependency>
 			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- used for testing multipart mime -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>javax.mail-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

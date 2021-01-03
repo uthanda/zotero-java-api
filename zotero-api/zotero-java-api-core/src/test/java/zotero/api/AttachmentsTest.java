@@ -3,27 +3,45 @@ package zotero.api;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.util.Map;
+
+import javax.mail.BodyPart;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClients;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
 import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.util.MockRestService;
+import zotero.api.util.TestResponse;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ HttpClients.class })
@@ -71,7 +89,7 @@ public class AttachmentsTest
 		// JsonEntity("ZoteroTestContent") that's being serialized
 		assertEquals("\"ZoteroTestContent\"", new String(bos.toByteArray()));
 	}
-	
+
 	@Test
 	public void testCreateLinkedFile()
 	{
@@ -79,10 +97,10 @@ public class AttachmentsTest
 		attachment.setTitle("Test Attachment");
 		attachment.getProperties().putValue(ZoteroKeys.Attachment.PATH, "path/to/file");
 		attachment.save();
-		
+
 		assertNotNull(attachment.getKey());
 	}
-	
+
 	@Test
 	public void testCreateLinkedUrl()
 	{
@@ -90,10 +108,10 @@ public class AttachmentsTest
 		attachment.setTitle("Zotero Website");
 		attachment.getProperties().putValue(ZoteroKeys.Attachment.URL, "http://www.zotero.org/");
 		attachment.save();
-		
+
 		assertNotNull(attachment.getKey());
 	}
-	
+
 	@Test
 	public void testCreateImportedUrl()
 	{
@@ -101,21 +119,85 @@ public class AttachmentsTest
 		attachment.setTitle("Zotero Website");
 		attachment.getProperties().putValue(ZoteroKeys.Attachment.URL, "http://www.zotero.org/");
 		attachment.save();
-		
+
 		assertNotNull(attachment.getKey());
 	}
-	
+
 	@Test
 	public void testCreateImportedFile()
 	{
+		service.setPost(post -> {
+			HttpEntity entity = post.getEntity();
+
+			if (entity.getContentType().getValue().startsWith(ContentType.MULTIPART_FORM_DATA.getMimeType()))
+			{
+				validateFormData(post);
+				return MockRestService.createSimpleResponse(HttpURLConnection.HTTP_CREATED);
+			}
+
+			return MockRestService.postSuccess.apply(post);
+
+		});
+
 		Attachment attachment = library.createAttachment(LinkMode.IMPORTED_FILE);
 		attachment.setTitle("Zotero Sample Attachment");
 		attachment.getProperties().putValue(ZoteroKeys.Attachment.FILENAME, "zotero.properties");
-		attachment.getProperties().putValue(ZoteroKeys.Attachment.MD5, "a9d008afc51e435b813611042192eb74");
 		attachment.getProperties().putValue(ZoteroKeys.Attachment.MTIME, "1609673828440");
-		attachment.provideContent(new ByteArrayInputStream("testContent".getBytes()), 11);
+		attachment.getProperties().putValue(ZoteroKeys.Attachment.CONTENT_TYPE, "text/plain");
+		attachment.provideContent(new ByteArrayInputStream("testContent".getBytes()), 11L, "a9d008afc51e435b813611042192eb74");
 		attachment.save();
-		
+
 		assertNotNull(attachment.getKey());
+	}
+
+	private void validateFormData(HttpPost post)
+	{
+		try
+		{
+			performValidation(post);
+		}
+		catch (IOException | RuntimeException | MessagingException e)
+		{
+			fail(e.getMessage());
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void performValidation(HttpPost post) throws RuntimeException, IOException, JsonSyntaxException, MessagingException
+	{
+		// Long way around the horn, but we need to get the response to ensure we're building the post correctly
+		CloseableHttpResponse response = MockRestService.getEntityFromData("/users/12345678/items/VBMZJCM7/file", "md5=a9d008afc51e435b813611042192eb74&filename=zotero.properties&filesize=11&mtime=1609673828440", "POST");
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		response.getEntity().writeTo(bos);
+
+		String json = new String(bos.toByteArray());
+
+		Map<String, Object> body = new Gson().fromJson(json, Map.class);
+		Map<String, String> params = (Map<String, String>) body.get("params");
+
+		assertEquals(body.get("url"), post.getURI().toString());
+
+		HttpEntity entity = post.getEntity();
+
+		bos = new ByteArrayOutputStream();
+
+		entity.writeTo(bos);
+
+		MimeMultipart multipart = new MimeMultipart(new ByteArrayDataSource(bos.toByteArray(), ContentType.MULTIPART_FORM_DATA.getMimeType()));
+
+		for (int i = 0; i < multipart.getCount(); i++)
+		{
+
+			BodyPart part = multipart.getBodyPart(0);
+			assertNotNull(part);
+
+			String name = part.getHeader("Content-Disposition")[0].substring(17).replace("\"", "");
+
+			bos = new ByteArrayOutputStream();
+
+			IOUtils.copy(part.getDataHandler().getDataSource().getInputStream(), bos);
+
+			assertEquals(params.get(name), new String(bos.toByteArray()));
+		}
 	}
 }

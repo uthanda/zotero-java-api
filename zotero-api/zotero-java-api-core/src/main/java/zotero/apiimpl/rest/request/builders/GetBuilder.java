@@ -1,6 +1,8 @@
 package zotero.apiimpl.rest.request.builders;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import zotero.apiimpl.rest.ZoteroRest;
@@ -37,11 +39,11 @@ public class GetBuilder<T, R extends ResponseBuilder<T>> extends BaseBuilder<T, 
 
 		request.setSpecialUrl(specialUrl);
 
-		Map<String, String> headers = new HashMap<>();
+		Map<String, List<String>> headers = new HashMap<>();
 
 		if (lastVersion != null)
 		{
-			headers.put(ZoteroRest.Headers.IF_MODIFIED_SINCE_VERSION, lastVersion.toString());
+			headers.put(ZoteroRest.Headers.IF_MODIFIED_SINCE_VERSION, Arrays.asList(lastVersion.toString()));
 		}
 
 		request.setHeaders(headers);

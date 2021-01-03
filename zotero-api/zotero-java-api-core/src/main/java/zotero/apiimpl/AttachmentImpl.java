@@ -1,32 +1,49 @@
 package zotero.apiimpl;
 
-import zotero.api.constants.ZoteroKeys;
-import static zotero.apiimpl.rest.ZoteroRest.Items.FILE;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+
+import javax.xml.bind.DatatypeConverter;
+
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.InputStreamBody;
+import org.apache.http.entity.mime.content.StringBody;
 
 import zotero.api.Attachment;
 import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
+import zotero.api.constants.ZoteroKeys;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.properties.Properties;
 import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.properties.PropertyStringImpl;
+import zotero.apiimpl.rest.ZoteroRest;
 import zotero.apiimpl.rest.ZoteroRest.URLParameter;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
+import zotero.apiimpl.rest.request.builders.ContentPostBuilder;
 import zotero.apiimpl.rest.request.builders.GetBuilder;
 import zotero.apiimpl.rest.request.builders.PostBuilder;
 import zotero.apiimpl.rest.response.JSONRestResponseBuilder;
 import zotero.apiimpl.rest.response.RestResponse;
 import zotero.apiimpl.rest.response.StreamResponseBuilder;
+import zotero.apiimpl.rest.response.SuccessResponseBuilder;
 
 public class AttachmentImpl extends ItemImpl implements Attachment
 {
 	private boolean pending = false;
 	private InputStream is;
-	private Integer fileSize;
+	private Long fileSize;
 
 	public AttachmentImpl(ZoteroRestItem jsonItem, LibraryImpl library)
 	{
@@ -84,7 +101,6 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	public void setCharset(String charset)
 	{
 		super.checkDeletionStatus();
-		checkPendingStatus();
 
 		getProperties().putValue(ZoteroKeys.Attachment.CHARSET, charset);
 	}
@@ -102,7 +118,6 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	public void setContentType(String type)
 	{
 		super.checkDeletionStatus();
-		checkPendingStatus();
 
 		getProperties().putValue(ZoteroKeys.Attachment.CONTENT_TYPE, type);
 	}
@@ -124,7 +139,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		}
 
 		GetBuilder<InputStream, ?> builder = GetBuilder.createBuilder(new StreamResponseBuilder());
-		builder.url(FILE).urlParam(URLParameter.ITEM_KEY, getKey());
+		builder.url(ZoteroRest.Items.FILE).urlParam(URLParameter.ITEM_KEY, getKey());
 
 		return ((LibraryImpl) getLibrary()).performRequest(builder).getResponse();
 	}
@@ -134,13 +149,19 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	{
 		Properties props = getProperties();
 
-		switch ((LinkMode)props.getProperty(ZoteroKeys.Attachment.LINK_MODE).getValue())
+		switch ((LinkMode) props.getProperty(ZoteroKeys.Attachment.LINK_MODE).getValue())
 		{
 			case IMPORTED_FILE:
 			{
 				String md5 = props.getString(ZoteroKeys.Attachment.MD5);
 				String mtime = props.getString(ZoteroKeys.Attachment.MTIME);
 				String filename = props.getString(ZoteroKeys.Attachment.FILENAME);
+				String contentType = props.getString(ZoteroKeys.Attachment.CONTENT_TYPE);
+
+				if (contentType == null)
+				{
+					throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_MISSING_PARAM, "No contentType provided for attachment");
+				}
 
 				if (md5 == null)
 				{
@@ -189,15 +210,18 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	}
 
 	@Override
-	public void provideContent(InputStream is, Integer fileSize)
+	public void provideContent(InputStream is, Long fileSize, String md5)
 	{
 		this.is = is;
 		this.fileSize = fileSize;
+		getProperties().putValue(ZoteroKeys.Attachment.MD5, md5);
 	}
 
 	@Override
 	public void save()
 	{
+		boolean isNew = this.getKey() == null;
+
 		// First we create/update the attachment
 		super.save();
 
@@ -209,19 +233,112 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		}
 
 		// If we're pending, then we manage the content
-		processContent();
+		processContent(isNew);
 	}
 
-	private void processContent()
+	private void processContent(boolean isNew)
 	{
-		PostBuilder<?, ?> builder = PostBuilder.createBuilder(new JSONRestResponseBuilder<>(Map.class));
-
 		Properties props = getProperties();
 
 		String md5 = props.getString(ZoteroKeys.Attachment.MD5);
 		String mtime = props.getString(ZoteroKeys.Attachment.MTIME);
 		String filename = props.getString(ZoteroKeys.Attachment.FILENAME);
+		String mimeType = props.getString(ZoteroKeys.Attachment.CONTENT_TYPE);
 
+		validateImportedFileProperties(md5, mtime, filename);
+
+		Map<String, Object> body = getAuthorization(md5, mtime, filename, isNew);
+
+		postContent(filename, mimeType, body);
+	}
+
+	private void registerUpload(String uploadKey)
+	{
+		PostBuilder<Void, ?> builder = PostBuilder.createBuilder(new SuccessResponseBuilder());
+
+		//@formatter:off
+		builder
+			.url(ZoteroRest.Items.FILE)
+			.formParam(zotero.api.constants.ZoteroKeys.Attachment.UPLOAD, uploadKey)
+			.urlParam(URLParameter.ITEM_KEY, getKey())
+			.header(ZoteroRest.Headers.IF_MATCH, getProperties().getString(ZoteroKeys.Attachment.MD5));
+		//@formatter:on
+
+		LibraryImpl library = (LibraryImpl) getLibrary();
+
+		library.performRequest(builder);
+	}
+
+	@SuppressWarnings("unchecked")
+	protected void postContent(String filename, String mimeType, Map<String, Object> body)
+	{
+		String uploadKey = (String) body.get("uploadKey");
+		String url = (String) body.get("url");
+
+		Map<String, String> params = (Map<String, String>) body.get("params");
+
+		MultipartEntityBuilder mpb = MultipartEntityBuilder.create();
+
+		if (body.containsKey("exists") && ((Double) body.get("exists")).intValue() == 1)
+		{
+			// Nothing to do if the file already exists so BAIL!
+			return;
+		}
+
+		// Add the provided params
+		params.forEach((key, value) -> {
+			StringBody sb = new StringBody(value, ContentType.MULTIPART_FORM_DATA);
+			mpb.addPart(key, sb);
+		});
+
+		InputStreamBody contentBody = new InputStreamBody(is, ContentType.create(mimeType), filename);
+
+		mpb.addPart("file", contentBody);
+
+		// This will throw an exception if the content POST fails
+		ContentPostBuilder builder = ContentPostBuilder.createBuilder().url(url).entity(mpb.build());
+
+		LibraryImpl library = (LibraryImpl) getLibrary();
+
+		library.performRequest(builder);
+
+		registerUpload(uploadKey);
+	}
+
+	@SuppressWarnings("unchecked")
+	protected Map<String, Object> getAuthorization(String md5, String mtime, String filename, boolean isNew)
+	{
+		PostBuilder<?, ?> builder = PostBuilder.createBuilder(new JSONRestResponseBuilder<>(Map.class));
+
+		//@formatter:off
+		builder.url(ZoteroRest.Items.FILE)
+			.urlParam(URLParameter.ITEM_KEY, this.getKey())
+			.formParam(ZoteroKeys.Attachment.MD5, md5)
+			.formParam(ZoteroKeys.Attachment.FILENAME, filename)
+			.formParam(ZoteroKeys.Attachment.FILE_SIZE, fileSize.toString())
+			.formParam(ZoteroKeys.Attachment.MTIME, mtime)
+			.formParam("params", "1");
+		//@formatter:on
+
+		if (isNew)
+		{
+//			builder.header(ZoteroRest.Headers.IF_NONE_MATCH, "*");
+			builder.header(ZoteroRest.Headers.IF_MATCH, md5);
+		}
+		else
+		{
+			builder.header(ZoteroRest.Headers.IF_MATCH, md5);
+		}
+
+		LibraryImpl library = (LibraryImpl) getLibrary();
+
+		RestResponse<?> response = library.performRequest(builder);
+
+		return (Map<String, Object>) response.getResponse();
+	}
+
+	protected void validateImportedFileProperties(String md5, String mtime, String filename) throws ZoteroRuntimeException
+	{
 		if (md5 == null)
 		{
 			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_MISSING_PARAM, "No MD5 sum provided for attachment");
@@ -241,23 +358,70 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		{
 			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_MISSING_PARAM, "No filename sum provided for attachment");
 		}
-
-		//@formatter:off
-		builder.url(FILE)
-			.urlParam(URLParameter.ITEM_KEY, this.getKey())
-			.formParam(ZoteroKeys.Attachment.MD5, md5)
-			.formParam(ZoteroKeys.Attachment.FILENAME, filename)
-			.formParam(ZoteroKeys.Attachment.FILE_SIZE, Integer.toString(fileSize))
-			.formParam(ZoteroKeys.Attachment.MTIME, mtime);
-		//@formatter:on
-		
-		LibraryImpl library = (LibraryImpl)getLibrary();
-		RestResponse<?> response = library.performRequest(builder);
 	}
-	
+
 	@Override
 	public void changeLinkMode(LinkMode mode)
 	{
 		throw new UnsupportedOperationException("Changing attachment types is not currently supported");
+	}
+
+	@Override
+	public void provideContent(File file)
+	{
+		String mime = URLConnection.guessContentTypeFromName(file.getName());
+
+		if (mime == null)
+		{
+			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.MIME_NOT_RESOLVED, "Unable to resolve mime type for file");
+		}
+
+		String md5 = createMD5(file);
+
+		try (FileInputStream fis = new FileInputStream(file))
+		{
+			this.provideContent(fis, file.length(), md5);
+
+			BasicFileAttributes attr = Files.readAttributes(Paths.get(file.getAbsolutePath()), BasicFileAttributes.class);
+
+			getProperties().putValue(ZoteroKeys.Attachment.FILENAME, file.getName());
+			getProperties().putValue(ZoteroKeys.Attachment.CONTENT_TYPE, mime);
+			getProperties().putValue(ZoteroKeys.Attachment.MTIME, Long.toString(attr.lastModifiedTime().toMillis()));
+		}
+		catch (IOException e)
+		{
+			throw new ZoteroRuntimeException(ZoteroExceptionType.IO, ZoteroExceptionCodes.IO.IO_ERROR, e.getLocalizedMessage(), e);
+		}
+
+	}
+
+	public String createMD5(File file) throws ZoteroRuntimeException
+	{
+		try
+		{
+			// Generate the MD5
+			try (FileInputStream fis = new FileInputStream(file))
+			{
+				MessageDigest md = MessageDigest.getInstance("MD5");
+
+				byte[] buffer = new byte[10240];
+				int length;
+
+				while ((length = fis.read(buffer)) > -1)
+				{
+					md.update(buffer, 0, length);
+				}
+
+				return DatatypeConverter.printHexBinary(md.digest()).toLowerCase();
+			}
+		}
+		catch (IOException e)
+		{
+			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.MD5_ERROR, "Failed to generate MD5 for file");
+		}
+		catch (NoSuchAlgorithmException e)
+		{
+			throw new ZoteroRuntimeException(ZoteroExceptionType.UNKNOWN, ZoteroExceptionCodes.Unknown.INTERNAL_ERROR, e.getLocalizedMessage(), e);
+		}
 	}
 }

@@ -10,8 +10,6 @@ public class PostRequest<T> extends ContentRequest<T>
 	{
 		HttpPost post = new HttpPost(url);
 		
-		super.addWriteToken(post);
-		
 		post.setEntity(getEntity());
 
 		return post;

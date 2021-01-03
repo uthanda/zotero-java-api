@@ -15,7 +15,7 @@ import zotero.apiimpl.rest.request.PostRequest;
 import zotero.apiimpl.rest.request.RestRequest;
 import zotero.apiimpl.rest.response.ResponseBuilder;
 
-public class PostBuilder<T, R extends ResponseBuilder<T>> extends ContentBuilder<T,PostBuilder<T,R>,R>
+public class PostBuilder<T, R extends ResponseBuilder<T>> extends ContentBuilder<T, PostBuilder<T, R>, R>
 {
 	private List<NameValuePair> formParams;
 	private String contentType;
@@ -25,7 +25,7 @@ public class PostBuilder<T, R extends ResponseBuilder<T>> extends ContentBuilder
 	{
 	}
 
-	public PostBuilder<T,R> inputStream(String contentType, InputStream is)
+	public PostBuilder<T, R> inputStream(String contentType, InputStream is)
 	{
 		if (formParams != null || getJsonObject() != null)
 		{
@@ -37,12 +37,12 @@ public class PostBuilder<T, R extends ResponseBuilder<T>> extends ContentBuilder
 		return this;
 	}
 
-	public static <T,R extends ResponseBuilder<T>> PostBuilder<T,R> createBuilder(R builder)
+	public static <T, R extends ResponseBuilder<T>> PostBuilder<T, R> createBuilder(R builder)
 	{
-		return new PostBuilder<T,R>().responseBuilder(builder);
+		return new PostBuilder<T, R>().responseBuilder(builder);
 	}
 
-	public PostBuilder<T,R> formParam(String key, String value)
+	public PostBuilder<T, R> formParam(String key, String value)
 	{
 		if (getJsonObject() != null || is != null)
 		{
@@ -63,21 +63,28 @@ public class PostBuilder<T, R extends ResponseBuilder<T>> extends ContentBuilder
 	public RestRequest<T> createRequest() throws UnsupportedEncodingException
 	{
 		PostRequest<T> post = new PostRequest<>();
-		
+
 		HttpEntity entity;
-		
-		if(getJsonObject() != null) {
+
+		if (getJsonObject() != null)
+		{
 			entity = super.serializeJson();
-		} else if(formParams != null) {
+		}
+		else if (formParams != null)
+		{
 			entity = new UrlEncodedFormEntity(this.formParams);
-		} else if(is != null) {
+		}
+		else if (is != null)
+		{
 			entity = new org.apache.http.entity.InputStreamEntity(is, ContentType.create(contentType));
-		} else {
+		}
+		else
+		{
 			throw new IllegalStateException("FormParams, JSONContent or InputStream must be set");
 		}
-		
+
 		post.setEntity(entity);
-		
+
 		return post;
 	}
 }

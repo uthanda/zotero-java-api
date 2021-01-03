@@ -1,6 +1,6 @@
 package zotero.api.samples.attachments;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
 
 import zotero.api.Attachment;
@@ -27,8 +27,10 @@ public class AttachmentCreate
 		Attachment attachment = library.createAttachment(LinkMode.IMPORTED_FILE);
 		
 		attachment.setTitle(args[1]);
-		attachment.setContentType("application/octet-stream");
-		attachment.provideContent(new FileInputStream(args[2]));
+		
+		File file = new File(args[2]);
+		
+		attachment.provideContent(file);
 		
 		attachment.save();
 	}

@@ -55,19 +55,19 @@ public final class PropertiesImpl implements Properties
 	@Override
 	public String getString(String key)
 	{
-		return ((PropertyString) properties.get(key)).getValue();
+		return ((PropertyString) getProperty(key)).getValue();
 	}
 
 	@Override
 	public Integer getInteger(String key)
 	{
-		return ((PropertyInteger) properties.get(key)).getValue();
+		return ((PropertyInteger) getProperty(key)).getValue();
 	}
 
 	@Override
 	public Date getDate(String key)
 	{
-		return ((PropertyDate) properties.get(key)).getValue();
+		return ((PropertyDate) getProperty(key)).getValue();
 	}
 
 	@Override
@@ -290,6 +290,8 @@ public final class PropertiesImpl implements Properties
 		initializeItemProperties(ItemType.ATTACHMENT, properties, null);
 		
 		properties.addProperty(new PropertyEnumImpl<>(Attachment.LINK_MODE, LinkMode.class, mode));
+		properties.addProperty(new PropertyStringImpl(Attachment.CHARSET, null));
+		properties.addProperty(new PropertyStringImpl(Attachment.CONTENT_TYPE, null));
 
 		switch (mode)
 		{

@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import zotero.api.ZoteroAPIKey;
 import zotero.api.ZoteroAuth;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
@@ -20,11 +19,15 @@ import zotero.apiimpl.rest.response.ResponseBuilder;
 public abstract class BaseBuilder<T, B extends BaseBuilder<T, B, R>, R extends ResponseBuilder<T>>
 {
 	private boolean isUser;
+	
 	private ZoteroAuth auth;
 	private String apiUrl;
-	private Map<URLParameter, String> urlParams;
 	private String id;
+	
+	private Map<URLParameter, String> urlParams;
 	private Map<String, List<String>> queryParams;
+	private Map<String, List<String>> headers;
+	
 	private R responseBuilder;
 
 	public B responseBuilder(R responseBuilder)
@@ -94,6 +97,7 @@ public abstract class BaseBuilder<T, B extends BaseBuilder<T, B, R>, R extends R
 		req.setApiUrl(apiUrl);
 		req.setQueryParams(queryParams);
 		req.setResponseBuilder(responseBuilder);
+		req.setHeaders(headers);
 
 		return req;
 	}
@@ -111,6 +115,20 @@ public abstract class BaseBuilder<T, B extends BaseBuilder<T, B, R>, R extends R
 
 		this.queryParams.get(param).add(value);
 
+		return (B) this;
+	}
+	
+	public B header(String header, String value)
+	{
+		if (this.headers == null)
+		{
+			this.headers = new HashMap<>();
+		}
+		
+		this.headers.computeIfAbsent(header, name -> new ArrayList<>());
+		
+		this.headers.get(header).add(value);
+		
 		return (B) this;
 	}
 }

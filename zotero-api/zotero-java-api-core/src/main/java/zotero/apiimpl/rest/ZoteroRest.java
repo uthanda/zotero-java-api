@@ -237,6 +237,8 @@ public final class ZoteroRest
 		public static final String TOTAL_RESULTS = "Total-Results";
 		public static final String LINK = "Link";
 		public static final String RETRY_AFTER = "Retry-After";
+		public static final String IF_MATCH = "If-Match";
+		public static final String IF_NONE_MATCH = "If-None-Match";
 
 		private Headers()
 		{
