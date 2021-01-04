@@ -35,7 +35,7 @@ public class PropertyIntegerTest
 	@Test
 	public void testSetValue()
 	{
-		PropertyInteger prop = new PropertyIntegerImpl("testProperty", 0);
+		PropertyIntegerImpl prop = new PropertyIntegerImpl("testProperty", 0);
 		prop.setValue(1);
 
 		assertEquals(1, prop.getValue().intValue());
@@ -45,7 +45,7 @@ public class PropertyIntegerTest
 	@Test
 	public void testClearValue()
 	{
-		PropertyInteger prop = new PropertyIntegerImpl("testProperty", 0);
+		PropertyIntegerImpl prop = new PropertyIntegerImpl("testProperty", 0);
 		prop.clearValue();
 		
 		assertNull(prop.getValue());
@@ -55,14 +55,25 @@ public class PropertyIntegerTest
 	@Test(expected = ZoteroRuntimeException.class)
 	public void testClearValueReadOnly()
 	{
-		PropertyInteger prop = new PropertyIntegerImpl("testProperty", 0, true);
+		PropertyIntegerImpl prop = new PropertyIntegerImpl("testProperty", 0, true);
 		prop.clearValue();
 	}
 	
 	@Test(expected = ZoteroRuntimeException.class)
 	public void testSetValueReadOnly()
 	{
-		PropertyInteger prop = new PropertyIntegerImpl("testProperty", 0, true);
+		PropertyIntegerImpl prop = new PropertyIntegerImpl("testProperty", 0, true);
 		prop.setValue(1);
+	}
+	
+	@Test
+	public void testToRest()
+	{
+		PropertyIntegerImpl prop = new PropertyIntegerImpl("testProperty", 0);
+		assertNull(prop.toRestValue());
+		prop.setValue(1);
+		assertEquals(1, prop.toRestValue());
+		prop.clearValue();
+		assertEquals(Boolean.FALSE, prop.toRestValue());
 	}
 }

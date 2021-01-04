@@ -14,6 +14,11 @@ import zotero.apiimpl.rest.model.ZoteroRestLink;
 
 final class LinkImpl extends PropertiesItemImpl implements Link
 {
+	LinkImpl(LibraryImpl library)
+	{
+		super(library);
+	}
+
 	@Override
 	public final String getHref()
 	{
@@ -37,9 +42,9 @@ final class LinkImpl extends PropertiesItemImpl implements Link
 		((PropertyEnumImpl<LinkType>)getProperties().getProperty(TYPE)).setValue(type);
 	}
 
-	public static LinkImpl from(ZoteroRestLink jsonLink)
+	public static LinkImpl from(LibraryImpl library, ZoteroRestLink jsonLink)
 	{
-		LinkImpl link = new LinkImpl();
+		LinkImpl link = new LinkImpl(library);
 
 		PropertiesImpl props = (PropertiesImpl) link.getProperties();
 

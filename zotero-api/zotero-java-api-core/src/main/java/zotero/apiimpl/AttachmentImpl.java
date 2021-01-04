@@ -424,4 +424,20 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 			throw new ZoteroRuntimeException(ZoteroExceptionType.UNKNOWN, ZoteroExceptionCodes.Unknown.INTERNAL_ERROR, e.getLocalizedMessage(), e);
 		}
 	}
+
+	@Override
+	public final String getTitle()
+	{
+		checkDeletionStatus();
+	
+		return super.getProperties().getString(ZoteroKeys.Item.TITLE);
+	}
+
+	@Override
+	public final void setTitle(String title)
+	{
+		checkDeletionStatus();
+	
+		super.getProperties().putValue(ZoteroKeys.Item.TITLE, title);
+	}
 }

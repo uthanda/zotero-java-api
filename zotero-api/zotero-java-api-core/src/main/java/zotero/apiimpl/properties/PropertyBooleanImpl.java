@@ -14,4 +14,11 @@ public class PropertyBooleanImpl extends PropertyImpl<Boolean> implements Proper
 	{
 		super(PropertyType.BOOLEAN, key, value, readOnly);
 	}
+	
+	@Override
+	public void clearValue()
+	{
+		super.clearValue();
+		super.setValue(null);
+	}
 }

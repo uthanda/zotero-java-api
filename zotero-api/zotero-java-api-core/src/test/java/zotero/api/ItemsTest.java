@@ -34,7 +34,7 @@ import zotero.api.collections.Tags;
 import zotero.api.constants.CreatorType;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkType;
-import zotero.api.constants.RelationshipType;
+import zotero.api.constants.TagType;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
@@ -157,7 +157,9 @@ public class ItemsTest
 	{
 		Tags tags = item.getTags();
 		assertEquals(1, tags.size());
-		assertEquals("followrefs", tags.get(0).getTag());
+		Tag tag = tags.iterator().next();
+		assertEquals("followrefs", tag.getTag());
+		assertEquals(TagType.USER, tag.getType());
 	}
 
 	@Test
@@ -182,9 +184,9 @@ public class ItemsTest
 	public void testRelationships()
 	{
 		Relationships relationships = item.getRelationships();
-		List<String> relationUris = relationships.getRelatedKeys(RelationshipType.DC_REPLACES);
-		assertEquals("http://zotero.org/users/12345678/items/GX8ZD6D9", relationUris.get(0));
-		assertEquals("http://zotero.org/users/12345678/items/NYA3Z5B9", relationUris.get(1));
+//		List<String> relationUris = relationships.getRelatedItems(RelationshipType.DC_REPLACES);
+//		assertEquals("http://zotero.org/users/12345678/items/GX8ZD6D9", relationUris.get(0));
+//		assertEquals("http://zotero.org/users/12345678/items/NYA3Z5B9", relationUris.get(1));
 	}
 
 	@Test

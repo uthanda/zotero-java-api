@@ -2,11 +2,6 @@ package zotero.apiimpl.rest.request.builders;
 
 import static zotero.apiimpl.rest.ZoteroRest.URLParameter.KEY;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.http.entity.StringEntity;
 
 import zotero.api.constants.ZoteroExceptionCodes;
@@ -51,10 +46,8 @@ public class PatchBuilder<T, R extends ResponseBuilder<T>> extends ContentBuilde
 			throw new ZoteroRuntimeException(ZoteroExceptionType.IO, ZoteroExceptionCodes.IO.API_ERROR, "Last version must be specified for a PATCH request");
 		}
 
-		Map<String, List<String>> headers = new HashMap<>();
-		headers.put(ZoteroRest.Headers.IF_UNMODIFIED_SINCE_VERSION, Arrays.asList(lastVersion.toString()));
-
-		request.setHeaders(headers);
+		// Add the last version to the headers collection
+		header(ZoteroRest.Headers.IF_UNMODIFIED_SINCE_VERSION, lastVersion.toString());
 
 		return request;
 	}

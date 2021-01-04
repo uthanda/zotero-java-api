@@ -1,5 +1,8 @@
 package zotero.apiimpl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import zotero.api.Links;
 import zotero.api.Tag;
 import zotero.api.constants.TagType;
@@ -89,13 +92,23 @@ public class TagImpl implements Tag
 		this.numItems = info.getNumberItems();
 	}
 
+	public static Map<String,Object> toRest(Tag tag)
+	{
+		Map<String,Object> map = new HashMap<>();
+		
+		map.put(ZoteroKeys.Tag.TAG, tag.getTag());
+		map.put(ZoteroKeys.Tag.TYPE, tag.getType().getZoteroType());
+		
+		return map;
+	}
+	
 	public static TagImpl fromRest(ZoteroRestItem item, LibraryImpl library)
 	{
 		String tag = item.getTag();
 		int numItems = ((Double) item.getMeta().get(ZoteroKeys.Meta.NUM_ITEMS)).intValue();
 		int type = ((Double) item.getMeta().get(ZoteroKeys.Meta.TYPE)).intValue();
 
-		Links links = LinksImpl.fromRest(item.getLinks());
+		Links links = LinksImpl.fromRest(library, item.getLinks());
 
 		return new TagImpl(tag, TagType.fromType(type), numItems, links, library);
 	}

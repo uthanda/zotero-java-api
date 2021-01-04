@@ -6,15 +6,16 @@ import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.properties.Property;
 
-public class PropertyImpl<T> implements Property<T>
+public abstract class PropertyImpl<T> implements Property<T>
 {
 	private final String key;
 	private final PropertyType propertyType;
 	private T value;
 	private boolean dirty;
 	private boolean readOnly;
+	private boolean cleared = false;
 
-	public PropertyImpl(PropertyType propertyType, String key, T value, boolean readOnly)
+	protected PropertyImpl(PropertyType propertyType, String key, T value, boolean readOnly)
 	{
 		this.key = key;
 		this.propertyType = propertyType;
@@ -51,6 +52,7 @@ public class PropertyImpl<T> implements Property<T>
 		checkReadOnly();
 
 		this.dirty = true;
+		this.cleared = false;
 		this.value = value;
 	}
 
@@ -67,13 +69,36 @@ public class PropertyImpl<T> implements Property<T>
 	{
 		checkReadOnly();
 
-		this.dirty = true;
 		this.value = null;
+		this.dirty = true;
+		this.cleared = true;
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		return String.format("[%s key=%s, dirty=%b, value=%s]", this.getClass().getSimpleName(), key, dirty, value);
+	}
+
+	public Object toRestValue()
+	{
+		if (cleared)
+		{
+			return Boolean.FALSE;
+		}
+		else if (dirty)
+		{
+			return value;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	@FunctionalInterface
+	public static interface RestSerializer
+	{
+		Object serialize(PropertyImpl<?> property);
 	}
 }

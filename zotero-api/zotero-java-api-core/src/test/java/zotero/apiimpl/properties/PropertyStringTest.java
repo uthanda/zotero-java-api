@@ -45,7 +45,7 @@ public class PropertyStringTest
 	@Test
 	public void testClearValue()
 	{
-		PropertyString prop = new PropertyStringImpl("testProperty", "Foo");
+		PropertyStringImpl prop = new PropertyStringImpl("testProperty", "Foo");
 		prop.clearValue();
 		
 		assertNull(prop.getValue());
@@ -64,5 +64,16 @@ public class PropertyStringTest
 	{
 		PropertyString prop = new PropertyStringImpl("testProperty", "Foo", true);
 		prop.setValue("Bar");
+	}
+	
+	@Test
+	public void testToRest()
+	{
+		PropertyStringImpl prop = new PropertyStringImpl("testProperty", "Foo");
+		assertNull(prop.toRestValue());
+		prop.setValue("Bar");
+		assertEquals("Bar", prop.toRestValue());
+		prop.clearValue();
+		assertEquals(Boolean.FALSE, prop.toRestValue());
 	}
 }

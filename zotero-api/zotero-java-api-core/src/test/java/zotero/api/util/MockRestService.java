@@ -134,35 +134,25 @@ public class MockRestService
 
 	public static CloseableHttpResponse getEntityFromData(String path, String query, String methodName) throws RuntimeException
 	{
-		String error = String.format("Not found: '%s'.'%s'.'%s'", path, methodName, query);
+		JsonObject node;
 
-		if (!data.has(path))
+		try
+		{
+			node = getEntityNode(path, query, methodName);
+		}
+		catch (RuntimeException e1)
 		{
 			try
 			{
+				String error = String.format("Not found: '%s'.'%s'.'%s'", path, methodName, query);
 				return new TestResponse(HttpURLConnection.HTTP_NOT_FOUND, new StringEntity(error));
 			}
-			catch (UnsupportedEncodingException e1)
+			catch (UnsupportedEncodingException e2)
 			{
-				throw new RuntimeException(e1);
+				throw new RuntimeException(e2);
 			}
 		}
 
-		JsonObject getNode = data.get(path).getAsJsonObject();
-
-		if (!getNode.has(methodName))
-		{
-			return new TestResponse(HttpURLConnection.HTTP_NOT_FOUND, createStringEntity(error));
-		}
-
-		JsonObject pathNode = getNode.get(methodName).getAsJsonObject();
-
-		if (!pathNode.has(query))
-		{
-			return new TestResponse(HttpURLConnection.HTTP_NOT_FOUND, createStringEntity(error));
-		}
-
-		JsonObject node = pathNode.get(query).getAsJsonObject();
 		JsonObject headers = node.get("headers").getAsJsonObject();
 		JsonElement item = node.get("item");
 
@@ -176,6 +166,30 @@ public class MockRestService
 		response.setEntity(entity);
 
 		return response;
+	}
+
+	public static JsonObject getEntityNode(String path, String query, String methodName) throws RuntimeException
+	{
+		if (!data.has(path))
+		{
+			throw new RuntimeException();
+		}
+
+		JsonObject getNode = data.get(path).getAsJsonObject();
+
+		if (!getNode.has(methodName))
+		{
+			throw new RuntimeException();
+		}
+
+		JsonObject pathNode = getNode.get(methodName).getAsJsonObject();
+
+		if (!pathNode.has(query))
+		{
+			throw new RuntimeException();
+		}
+
+		return pathNode.get(query).getAsJsonObject();
 	}
 
 	private static StringEntity createStringEntity(String format)

@@ -1,9 +1,9 @@
 package zotero.api.collections;
 
-import java.util.List;
 import java.util.Set;
 
 import zotero.api.constants.RelationshipType;
+import zotero.apiimpl.ChangeTracker;
 
 /**
  * Provides a collection of relationships between two items.
@@ -11,7 +11,7 @@ import zotero.api.constants.RelationshipType;
  * @author Michael Oland
  * @since 1.0
  */
-public interface Relationships
+public interface Relationships extends ChangeTracker, Iterable<RelationSet>
 {
 	/**
 	 * Gets the relationships of the specified type.
@@ -19,7 +19,7 @@ public interface Relationships
 	 * @param type Relationship type
 	 * @return List of keys for related items.
 	 */
-	List<String> getRelatedKeys(RelationshipType type);
+	RelationSet getRelatedItems(RelationshipType type);
 	
 	/**
 	 * Gets the types of relationships currently present.
@@ -27,6 +27,6 @@ public interface Relationships
 	 * @return Set of relationship types present for the item.
 	 */
 	Set<RelationshipType> getTypes();
-	
-	// TODO this should be refactored to provide not the keys but the items
+
+	void clear();
 }

@@ -4,7 +4,7 @@ import zotero.api.constants.PropertyType;
 import zotero.api.properties.PropertyObject;
 import zotero.apiimpl.ChangeTracker;
 
-public class PropertyObjectImpl<T extends ChangeTracker> extends PropertyImpl<T> implements PropertyObject<T>
+public abstract class PropertyObjectImpl<T extends ChangeTracker> extends PropertyImpl<T> implements PropertyObject<T>
 {
 	private Class<T> type;
 

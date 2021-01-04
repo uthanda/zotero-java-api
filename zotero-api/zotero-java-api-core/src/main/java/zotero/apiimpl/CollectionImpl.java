@@ -5,8 +5,10 @@ import zotero.api.constants.ZoteroKeys;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.iterators.TagIterator;
+import zotero.api.properties.Property;
 import zotero.apiimpl.iterators.TagIteratorImpl;
 import zotero.apiimpl.properties.PropertiesImpl;
+import zotero.apiimpl.properties.PropertyImpl;
 import zotero.apiimpl.rest.ZoteroRest;
 import zotero.apiimpl.rest.ZoteroRest.URLParameter;
 import zotero.apiimpl.rest.model.ZoteroRestData;
@@ -92,19 +94,23 @@ public final class CollectionImpl extends EntryImpl implements Collection
 
 	private ZoteroRestItem buildContent(boolean delta)
 	{
-		ZoteroRestItem.ItemBuilder ib = new ZoteroRestItem.ItemBuilder(delta);
+		ZoteroRestData data = new ZoteroRestData();
+		
+		Object parentCollection = ((PropertyImpl<?>)getProperties().getProperty(ZoteroKeys.Collection.PARENT_COLLECTION)).toRestValue();
+		Object name = ((PropertyImpl<?>)getProperties().getProperty(ZoteroKeys.Collection.NAME)).toRestValue();
+		
+		data.put(ZoteroKeys.Collection.PARENT_COLLECTION, parentCollection);
+		data.put(ZoteroKeys.Collection.PARENT_COLLECTION, name);
 
-		ZoteroRestData.DataBuilder db = ib.dataBuilder();
-
-		db.addProperty(getProperties().getProperty(ZoteroKeys.Collection.PARENT_COLLECTION));
-		db.addProperty(getProperties().getProperty(ZoteroKeys.Collection.NAME));
-
+		ZoteroRestItem item = new ZoteroRestItem();
+		item.setData(data);
+		
 		if (getVersion() != null)
 		{
-			ib.version(getVersion());
+			item.setVersion(getVersion());
 		}
 
-		return ib.build();
+		return item;
 	}
 
 	@Override

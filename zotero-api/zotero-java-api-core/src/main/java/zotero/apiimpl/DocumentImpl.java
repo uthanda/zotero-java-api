@@ -11,8 +11,10 @@ import static zotero.apiimpl.rest.ZoteroRest.Items.CHILDREN;
 import java.util.Date;
 
 import zotero.api.Document;
+import zotero.api.Note;
 import zotero.api.collections.Creators;
 import zotero.api.constants.ItemType;
+import zotero.api.constants.ZoteroKeys;
 import zotero.api.iterators.ItemIterator;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 
@@ -92,6 +94,22 @@ public class DocumentImpl extends ItemImpl implements Document
 		super.reinitialize(type);
 	}
 
+	@Override
+	public final String getTitle()
+	{
+		checkDeletionStatus();
+	
+		return super.getProperties().getString(ZoteroKeys.Item.TITLE);
+	}
+
+	@Override
+	public final void setTitle(String title)
+	{
+		checkDeletionStatus();
+	
+		super.getProperties().putValue(ZoteroKeys.Item.TITLE, title);
+	}
+
 	public static ItemImpl fromRest(ZoteroRestItem jsonItem, LibraryImpl library)
 	{
 		DocumentImpl document = new DocumentImpl(jsonItem,library);
@@ -101,6 +119,12 @@ public class DocumentImpl extends ItemImpl implements Document
 		document.parsedDate = (String) jsonItem.getMeta().get(PARSED_DATE);
 		
 		return document;
+	}
+
+	@Override
+	public Note createNote()
+	{
+		return new NoteImpl((LibraryImpl)getLibrary(), getKey());
 	}
 
 }

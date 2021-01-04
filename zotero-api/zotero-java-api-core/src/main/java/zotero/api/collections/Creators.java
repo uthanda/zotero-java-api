@@ -1,9 +1,8 @@
 package zotero.api.collections;
 
-import java.util.List;
-
 import zotero.api.Creator;
 import zotero.api.constants.CreatorType;
+import zotero.apiimpl.ChangeTracker;
 
 /**
  * Contains a list of creators for a given item.
@@ -11,7 +10,7 @@ import zotero.api.constants.CreatorType;
  * @author Michael Oland
  * @since 1.0
  */
-public interface Creators extends List<Creator>
+public interface Creators extends Iterable<Creator>, ChangeTracker
 {
 	/**
 	 * Adds a new creator to the collection.
@@ -21,4 +20,12 @@ public interface Creators extends List<Creator>
 	 * @param lastName Last name
 	 */
 	void add(CreatorType type, String firstName, String lastName);
+
+	int size();
+
+	Creator get(int index);
+
+	void remove(Creator creator);
+
+	void remove(int index);
 }

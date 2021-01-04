@@ -14,8 +14,9 @@ import zotero.apiimpl.properties.PropertyStringImpl;
 
 public final class CreatorImpl extends PropertiesItemImpl implements Creator, ChangeTracker
 {
-	public CreatorImpl()
+	public CreatorImpl(LibraryImpl library)
 	{
+		super(library);
 		PropertyEnumImpl<CreatorType> creatorTypeProperty = new PropertyEnumImpl<>(ZoteroKeys.Creator.CREATOR_TYPE, CreatorType.class, null);
 		((PropertiesImpl)getProperties()).addProperty(new PropertyStringImpl(ZoteroKeys.Creator.LAST_NAME, null));
 		((PropertiesImpl)getProperties()).addProperty(new PropertyStringImpl(ZoteroKeys.Creator.FIRST_NAME, null));
@@ -23,11 +24,11 @@ public final class CreatorImpl extends PropertiesItemImpl implements Creator, Ch
 	}
 
 	@SuppressWarnings("unchecked")
-	public static CreatorImpl fromRest(Object json)
+	public static CreatorImpl fromRest(LibraryImpl library, Object json)
 	{
 		Map<String, Object> values = (Map<String, Object>) json;
 
-		CreatorImpl creator = new CreatorImpl();
+		CreatorImpl creator = new CreatorImpl(library);
 
 		CreatorType type = null;
 

@@ -25,6 +25,7 @@ public class ZoteroKeys
 		private Tag() {}
 		
 		public static final String TAG = "tag";
+		public static final String TYPE = "type";
 	}
 	
 	public static final class Creator
@@ -75,6 +76,7 @@ public class ZoteroKeys
 		public static final String COLLECTIONS = "collections";
 		public static final String TAGS = "tags";
 		public static final String ACCESS_DATE = "accessDate";
+		public static final String NOTE = "note";
 
 		private Item() {}
 	}

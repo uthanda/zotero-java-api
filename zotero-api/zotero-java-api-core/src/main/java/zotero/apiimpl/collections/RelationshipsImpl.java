@@ -1,32 +1,37 @@
 package zotero.apiimpl.collections;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import zotero.api.collections.RelationSet;
 import zotero.api.collections.Relationships;
 import zotero.api.constants.RelationshipType;
 import zotero.apiimpl.ChangeTracker;
-import zotero.apiimpl.properties.PropertyListImpl.ObservableList;
+import zotero.apiimpl.LibraryImpl;
 
 public final class RelationshipsImpl implements Relationships, ChangeTracker
 {
-	private EnumMap<RelationshipType, ObservableList<String>> relationships;
+	private final EnumMap<RelationshipType, RelationSet> relationships;
+	private final LibraryImpl library;
+	private boolean isDirty = false;
+	private boolean cleared = false;
 
-	public RelationshipsImpl()
+	public RelationshipsImpl(LibraryImpl library)
 	{
 		this.relationships = new EnumMap<>(RelationshipType.class);
+		this.library = library;
 	}
 
 	@Override
-	public List<String> getRelatedKeys(RelationshipType type)
+	public RelationSet getRelatedItems(RelationshipType type)
 	{
-		if (!relationships.containsKey(type))
-		{
-			relationships.put(type, new ObservableList<>(type.getZoteroName(), null, false));
-		}
+		relationships.computeIfAbsent(type, e -> new RelationSetImpl(library, e));
 
 		return relationships.get(type);
 	}
@@ -36,48 +41,73 @@ public final class RelationshipsImpl implements Relationships, ChangeTracker
 		return relationships.keySet();
 	}
 
-	@SuppressWarnings("unchecked")
-	public static RelationshipsImpl fromMap(Map<String, Object> values)
+	public boolean isDirty()
 	{
-		RelationshipsImpl r = new RelationshipsImpl();
+		boolean dirty = this.isDirty;
+
+		for (RelationSet list : relationships.values())
+		{
+			dirty |= list.isDirty();
+		}
+
+		return dirty;
+	}
+
+	@Override
+	public String toString()
+	{
+		return String.format("[Relationships: map:%s, dirty:%b]", relationships.toString(), isDirty());
+	}
+
+	@Override
+	public void clear()
+	{
+		this.isDirty = true;
+		this.cleared = true;
+		this.relationships.clear();
+	}
+
+	@Override
+	public Iterator<RelationSet> iterator()
+	{
+		return relationships.values().iterator();
+	}
+
+	@SuppressWarnings("unchecked")
+	public static RelationshipsImpl fromRest(LibraryImpl library, Map<String, Object> values)
+	{
+		RelationshipsImpl r = new RelationshipsImpl(library);
 
 		if (values == null)
 		{
 			return r;
 		}
-		
+
 		values.forEach((stype, list) -> {
 			RelationshipType type = RelationshipType.fromZoteroType(stype);
-			r.relationships.put(type, new ObservableList<>(type.getZoteroName(), (List<String>) list, false));
+			Set<String> set = new LinkedHashSet<>((List<String>) list);
+			r.relationships.put(type, new RelationSetImpl(library, type, set));
 		});
 
 		return r;
 	}
 
-	public boolean isDirty()
+	public static Object toRest(RelationshipsImpl relationships)
 	{
-		boolean isDirty = false;
-
-		for (ObservableList<String> list : relationships.values())
+		if (relationships.cleared)
 		{
-			isDirty |= list.isDirty();
+			return false;
 		}
 
-		return isDirty;
-	}
+		if (relationships.relationships.isEmpty())
+		{
+			return null;
+		}
 
-	public static Map<String, List<String>> toRest(Relationships relationships)
-	{
 		Map<String, List<String>> zrs = new HashMap<>();
 
-		relationships.getTypes().forEach(type -> zrs.put(type.getZoteroName(), relationships.getRelatedKeys(type)));
+		relationships.relationships.forEach((type, set) -> zrs.put(type.getZoteroName(), new ArrayList<>(((RelationSetImpl) set).getKeys())));
 
 		return zrs;
-	}
-	
-	@Override
-	public String toString()
-	{
-		return String.format("[Relationships: map:%s, dirty:%b]", relationships.toString(), isDirty());
 	}
 }

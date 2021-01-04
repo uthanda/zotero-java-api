@@ -3,6 +3,8 @@ package zotero.api.properties;
 import java.util.Date;
 import java.util.Set;
 
+import zotero.api.Library;
+
 public interface Properties
 {
 	String getString(String key);
@@ -19,4 +21,6 @@ public interface Properties
 	void putValue(String key, String value);
 
 	void putValue(String key, Integer value);
+	
+	Library getLibrary();
 }

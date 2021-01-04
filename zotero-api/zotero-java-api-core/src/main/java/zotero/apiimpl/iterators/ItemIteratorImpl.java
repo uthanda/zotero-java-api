@@ -7,9 +7,9 @@ import zotero.apiimpl.LibraryImpl;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.response.RestResponse;
 
-public final class ZoteroItemIteratorImpl extends ZoteroIteratorImpl<Item> implements ItemIterator
+public final class ItemIteratorImpl extends ZoteroIteratorImpl<Item> implements ItemIterator
 {
-	public ZoteroItemIteratorImpl(RestResponse<ZoteroRestItem[]> response, LibraryImpl library)
+	public ItemIteratorImpl(RestResponse<ZoteroRestItem[]> response, LibraryImpl library)
 	{
 		super(response, ItemImpl::fromItem, library);
 	}

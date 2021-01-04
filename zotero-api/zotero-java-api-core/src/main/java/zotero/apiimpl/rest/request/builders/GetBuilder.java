@@ -50,4 +50,10 @@ public class GetBuilder<T, R extends ResponseBuilder<T>> extends BaseBuilder<T, 
 
 		return request;
 	}
+
+	public GetBuilder<T, R> entryUrl(String path)
+	{
+		this.specialUrl = "https://" + ZoteroRest.API.HOST + path;
+		return this;
+	}
 }

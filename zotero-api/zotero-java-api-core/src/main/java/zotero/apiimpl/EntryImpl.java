@@ -37,20 +37,20 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 
 	protected EntryImpl(LibraryImpl library)
 	{
-		super();
+		super(library);
 		this.library = library;
 		this.version = null;
 	}
 
 	protected EntryImpl(ItemType type, LibraryImpl library)
 	{
-		super(type);
+		super(library, type);
 		this.library = library;
 	}
 
 	protected EntryImpl(LinkMode mode, LibraryImpl library)
 	{
-		super(mode);
+		super(library, mode);
 		this.library = library;
 	}
 
@@ -60,7 +60,7 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 		this.key = item.getKey();
 		this.version = item.getVersion();
 		this.library = library;
-		this.links = LinksImpl.fromRest(item.getLinks());
+		this.links = LinksImpl.fromRest(library, item.getLinks());
 	}
 
 	@Override
@@ -152,15 +152,15 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 		this.deleted = true;
 	}
 
-	public static void loadLinks(EntryImpl entry, ZoteroRestLinks links)
+	public static void loadLinks(LibraryImpl library, EntryImpl entry, ZoteroRestLinks links)
 	{
-		entry.links = LinksImpl.fromRest(links);
+		entry.links = LinksImpl.fromRest(library, links);
 	}
 
 	protected void refresh(ZoteroRestItem item)
 	{
 		// Refresh the links
-		this.links = LinksImpl.fromRest(item.getLinks());
+		this.links = LinksImpl.fromRest(library, item.getLinks());
 		this.key = item.getKey();
 		this.version = item.getVersion();
 		super.refresh(library, item);

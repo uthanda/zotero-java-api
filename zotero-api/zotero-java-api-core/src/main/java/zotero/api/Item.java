@@ -31,21 +31,6 @@ public interface Item extends Entry
 	Date getAccessDate();
 
 	// Quick access to common metadata items
-	/**
-	 * Gets the title of the item. This is a convenience method
-	 * that wraps around <code>getProperties().getString(ZoteroKeys.TITLE)</code>.
-	 * 
-	 * @return Item title
-	 */
-	String getTitle();
-
-	/**
-	 * Sets the title of the item. This is a convenience method
-	 * that wraps around <code>getProperties().putString(ZoteroKeys.TITLE, title)</code>.
-	 * 
-	 * @param title Item title
-	 */
-	void setTitle(String title);
 
 	/**
 	 * Gets the tags for the item.

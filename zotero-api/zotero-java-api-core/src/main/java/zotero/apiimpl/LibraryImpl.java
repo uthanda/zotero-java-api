@@ -19,7 +19,7 @@ import zotero.api.search.CollectionSearch;
 import zotero.api.search.ItemSearch;
 import zotero.apiimpl.iterators.CollectionIteratorImpl;
 import zotero.apiimpl.iterators.TagIteratorImpl;
-import zotero.apiimpl.iterators.ZoteroItemIteratorImpl;
+import zotero.apiimpl.iterators.ItemIteratorImpl;
 import zotero.apiimpl.rest.ZoteroRest;
 import zotero.apiimpl.rest.ZoteroRest.Collections;
 import zotero.apiimpl.rest.ZoteroRest.Items;
@@ -91,7 +91,7 @@ public final class LibraryImpl extends Library
 
 		RestResponse<ZoteroRestItem[]> response = performRequest(builder);
 
-		return new ZoteroItemIteratorImpl(response, this);
+		return new ItemIteratorImpl(response, this);
 	}
 
 	@Override
@@ -166,10 +166,10 @@ public final class LibraryImpl extends Library
 		{
 			builder.urlParam(URLParameter.ITEM_KEY, key);
 		}
-
+		
 		RestResponse<ZoteroRestItem[]> response = performRequest(builder);
 
-		return new ZoteroItemIteratorImpl(response, this);
+		return new ItemIteratorImpl(response, this);
 	}
 
 	@Override

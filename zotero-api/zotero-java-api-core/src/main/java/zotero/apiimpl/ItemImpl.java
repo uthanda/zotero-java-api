@@ -1,6 +1,7 @@
 package zotero.apiimpl;
 
 import zotero.api.constants.ZoteroKeys;
+import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.rest.ZoteroRest;
 import zotero.apiimpl.rest.ZoteroRest.URLParameter;
 
@@ -13,7 +14,6 @@ import zotero.api.collections.Tags;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.properties.PropertyObject;
-import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 
@@ -32,22 +32,6 @@ public class ItemImpl extends EntryImpl implements Item
 	protected ItemImpl(LinkMode mode, LibraryImpl library)
 	{
 		super(mode, library);
-	}
-
-	@Override
-	public final String getTitle()
-	{
-		checkDeletionStatus();
-
-		return super.getProperties().getString(ZoteroKeys.Item.TITLE);
-	}
-
-	@Override
-	public final void setTitle(String title)
-	{
-		checkDeletionStatus();
-
-		super.getProperties().putValue(ZoteroKeys.Item.TITLE, title);
 	}
 
 	@Override
@@ -85,16 +69,30 @@ public class ItemImpl extends EntryImpl implements Item
 	public static Item fromItem(ZoteroRestItem jsonItem, LibraryImpl library)
 	{
 		ItemImpl item;
-		if (jsonItem.getData().get(ZoteroKeys.Item.ITEM_TYPE).equals(ItemType.ATTACHMENT.getZoteroName()))
+		String zoteroType = (String) jsonItem.getData().get(ZoteroKeys.Item.ITEM_TYPE);
+
+		ItemType itemType = ItemType.fromZoteroType(zoteroType);
+		
+		switch (itemType)
 		{
-			item = AttachmentImpl.fromRest(jsonItem, library);
-		}
-		else
-		{
-			item = DocumentImpl.fromRest(jsonItem, library);
+			case ATTACHMENT:
+			{
+				item = AttachmentImpl.fromRest(jsonItem, library);
+				break;
+			}
+			case NOTE:
+			{
+				item = NoteImpl.fromRest(jsonItem, library);
+				break;
+			}
+			default:
+			{
+				item = DocumentImpl.fromRest(jsonItem, library);
+				break;
+			}
 		}
 
-		EntryImpl.loadLinks(item, jsonItem.getLinks());
+		EntryImpl.loadLinks(library, item, jsonItem.getLinks());
 
 		return item;
 	}
@@ -125,7 +123,7 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		ZoteroRestItem item = buildRestItem(true);
 		item.setVersion(getVersion());
-		
+
 		super.executeUpdate(ZoteroRest.Items.SPECIFIC, URLParameter.ITEM_KEY, this.getKey(), item);
 	}
 
@@ -134,7 +132,7 @@ public class ItemImpl extends EntryImpl implements Item
 		ZoteroRestItem item = buildRestItem(false);
 
 		item = executeCreate(ZoteroRest.Items.ALL, item);
-		
+
 		this.refresh(item);
 	}
 
@@ -145,19 +143,20 @@ public class ItemImpl extends EntryImpl implements Item
 
 	private ZoteroRestItem buildRestItem(boolean deltaMode)
 	{
-		ZoteroRestItem.ItemBuilder ib = new ZoteroRestItem.ItemBuilder(deltaMode);
-
-		ib.key(getKey());
-
-		ZoteroRestData.DataBuilder db = ib.dataBuilder();
-
-		((PropertiesImpl) getProperties()).addToBuilder(db);
-
-		if(getVersion() != null) {
-			ib.version(getVersion());
-		}
+		ZoteroRestData data = new ZoteroRestData();
 		
-		return ib.build();
+		PropertiesImpl.toRest(data, getProperties(), deltaMode);
+
+		ZoteroRestItem item = new ZoteroRestItem();
+		item.setKey(getKey());
+		item.setData(data);
+		
+		if (getVersion() != null)
+		{
+			item.setVersion(getVersion());
+		}
+
+		return item;
 	}
 
 	@SuppressWarnings("unchecked")

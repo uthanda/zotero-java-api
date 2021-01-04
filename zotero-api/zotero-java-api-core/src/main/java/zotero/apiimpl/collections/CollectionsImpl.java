@@ -73,8 +73,12 @@ public class CollectionsImpl implements Collections, ChangeTracker
 		return collections;
 	}
 
-	public static List<String> toRest(CollectionsImpl collections)
+	public static Object toRest(CollectionsImpl collections)
 	{
+		if(!collections.isDirty) {
+			return null;
+		}
+		
 		return Arrays.asList(collections.collections.toArray(new String[collections.collections.size()]));
 	}
 
@@ -82,5 +86,11 @@ public class CollectionsImpl implements Collections, ChangeTracker
 	public String toString()
 	{
 		return String.format("[Collections list:%s, dirty:%b]", this.collections.toString(), isDirty);
+	}
+
+	@Override
+	public void clear()
+	{
+		collections.clear();
 	}
 }

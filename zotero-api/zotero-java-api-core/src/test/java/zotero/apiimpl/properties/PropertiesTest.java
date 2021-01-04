@@ -134,9 +134,9 @@ public class PropertiesTest
 	@Test
 	public void testToRestFull()
 	{
-		PropertiesImpl properties = new PropertiesImpl();
+		PropertiesImpl properties = new PropertiesImpl(library);
 		
-		CreatorsImpl creators = new CreatorsImpl();
+		CreatorsImpl creators = new CreatorsImpl(library);
 		creators.add(CreatorType.ARTIST, "Vincent", "Van Gogh");
 		
 		Tag tag = library.createTag("Painter");
@@ -144,8 +144,8 @@ public class PropertiesTest
 		TagsImpl tags = new TagsImpl();
 		tags.add(tag);
 		
-		RelationshipsImpl relationships = new RelationshipsImpl();
-		relationships.getRelatedKeys(RelationshipType.DC_REPLACES).add("KEY123");
+		RelationshipsImpl relationships = new RelationshipsImpl(library);
+		relationships.getRelatedItems(RelationshipType.DC_REPLACES).addRelation("B4ERDVS4");
 		
 		Collection collection = library.fetchCollection("A6C8YX9M");
 		((PropertyStringImpl)collection.getProperties().getProperty(ZoteroKeys.Collection.PARENT_COLLECTION)).setValue("COL12345");
@@ -154,10 +154,10 @@ public class PropertiesTest
 		collections.addToCollection(collection);
 		
 		properties.addProperty(new PropertyStringImpl(ZoteroKeys.Item.TITLE, "A title"));
-		properties.addProperty(new PropertyListImpl<>(ZoteroKeys.Item.TAGS, Tag.class, tags));
-		properties.addProperty(new PropertyObjectImpl<>(ZoteroKeys.Document.CREATORS, CreatorsImpl.class, creators));
-		properties.addProperty(new PropertyObjectImpl<>(ZoteroKeys.Item.RELATIONS, RelationshipsImpl.class, relationships));
-		properties.addProperty(new PropertyObjectImpl<>(ZoteroKeys.Item.COLLECTIONS, CollectionsImpl.class, collections));
+		properties.addProperty(new PropertyTagsImpl(tags));
+		properties.addProperty(new PropertyCreatorsImpl(creators));
+		properties.addProperty(new PropertyRelationshipsImpl(relationships));
+		properties.addProperty(new PropertyCollectionsImpl(collections));
 		
 		ZoteroRestData data = new ZoteroRestData();
 		
@@ -175,23 +175,23 @@ public class PropertiesTest
 		
 		assertEquals("A6C8YX9M", ((List<String>)data.get(ZoteroKeys.Item.COLLECTIONS)).get(0));
 		
-		assertEquals("KEY123", ((Map<String,List<String>>)data.get(ZoteroKeys.Item.RELATIONS)).get(RelationshipType.DC_REPLACES.getZoteroName()).get(0));
+		assertEquals("B4ERDVS4", ((Map<String,List<String>>)data.get(ZoteroKeys.Item.RELATIONS)).get(RelationshipType.DC_REPLACES.getZoteroName()).get(0));
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testToRestDelta()
 	{
-		PropertiesImpl properties = new PropertiesImpl();
+		PropertiesImpl properties = new PropertiesImpl(library);
 		
-		CreatorsImpl creators = CreatorsImpl.fromRest(new Gson().fromJson("[{'creatorType':'author','firstName':'Vincent','lastName':'Van Gogh'}]", List.class));
+		CreatorsImpl creators = CreatorsImpl.fromRest(library, new Gson().fromJson("[{'creatorType':'author','firstName':'Vincent','lastName':'Van Gogh'}]", List.class));
 		creators.add(CreatorType.ARTIST, "Steve", "Taylor");
 		
 		TagsImpl tags = new TagsImpl(Arrays.asList(library.createTag("Painter")));
 		tags.add(library.createTag("Singer"));
 		
-		RelationshipsImpl relationships = RelationshipsImpl.fromMap(new Gson().fromJson("{'dc:replaces':['KEY123']}", Map.class));
-		relationships.getRelatedKeys(RelationshipType.OWL_SAMEAS).add("KEY2345");
+		RelationshipsImpl relationships = RelationshipsImpl.fromRest(library, new Gson().fromJson("{'dc:replaces':['KEY123']}", Map.class));
+		relationships.getRelatedItems(RelationshipType.OWL_SAMEAS).addRelation("B4ERDVS4");
 
 		Collection collection = library.fetchCollection("A6C8YX9M");
 		
@@ -199,10 +199,10 @@ public class PropertiesTest
 		collections.addToCollection(collection);
 		
 		properties.addProperty(new PropertyStringImpl(ZoteroKeys.Item.TITLE, "A title"));
-		properties.addProperty(new PropertyListImpl<>(ZoteroKeys.Item.TAGS, Tag.class, tags));
-		properties.addProperty(new PropertyObjectImpl<>(ZoteroKeys.Document.CREATORS, CreatorsImpl.class, creators));
-		properties.addProperty(new PropertyObjectImpl<>(ZoteroKeys.Item.RELATIONS, RelationshipsImpl.class, relationships));
-		properties.addProperty(new PropertyObjectImpl<>(ZoteroKeys.Item.COLLECTIONS, CollectionsImpl.class, collections));
+		properties.addProperty(new PropertyTagsImpl(tags));
+		properties.addProperty(new PropertyCreatorsImpl(creators));
+		properties.addProperty(new PropertyRelationshipsImpl(relationships));
+		properties.addProperty(new PropertyCollectionsImpl(collections));
 		
 		ZoteroRestData data = new ZoteroRestData();
 		
@@ -218,7 +218,7 @@ public class PropertiesTest
 	@Test
 	public void testInitializeCollectionProperties()
 	{
-		PropertiesImpl properties = new PropertiesImpl();
+		PropertiesImpl properties = new PropertiesImpl(library);
 		
 		PropertiesImpl.initializeCollectionProperties(properties);
 		
@@ -231,21 +231,21 @@ public class PropertiesTest
 	@Test
 	public void testInitializeDocumentProperties()
 	{
-		PropertiesImpl properties = new PropertiesImpl();
+		PropertiesImpl properties = new PropertiesImpl(library);
 		
 		PropertiesImpl.initializeDocumentProperties(ItemType.CASE, properties, null);
 		
-		assertEquals(17, properties.getPropertyNames().size());
+		assertEquals(19, properties.getPropertyNames().size());
 	}
 
 	@Test
 	public void testInitializeAttachmentProperties()
 	{
-		PropertiesImpl properties = new PropertiesImpl();
+		PropertiesImpl properties = new PropertiesImpl(library);
 		
 		PropertiesImpl.initializeAttachmentProperties(LinkMode.IMPORTED_FILE, properties);
 		
-		assertEquals(10, properties.getPropertyNames().size());
+		assertEquals(12, properties.getPropertyNames().size());
 		// TODO Need to check the properties here
 	}
 
@@ -264,7 +264,7 @@ public class PropertiesTest
 	@Test
 	public void testAddProperty()
 	{
-		PropertiesImpl properties = new PropertiesImpl();
+		PropertiesImpl properties = new PropertiesImpl(library);
 		properties.addProperty(new PropertyStringImpl(ZoteroKeys.Item.TITLE, "Foo"));
 	
 		assertEquals(1, properties.getPropertyNames().size());
@@ -275,7 +275,7 @@ public class PropertiesTest
 	@Test
 	public void testPutValue()
 	{
-		PropertiesImpl properties = new PropertiesImpl();
+		PropertiesImpl properties = new PropertiesImpl(library);
 		properties.addProperty(new PropertyStringImpl(ZoteroKeys.Item.TITLE, "Foo"));
 		
 		properties.putValue(ZoteroKeys.Item.TITLE, "New value");

@@ -10,34 +10,34 @@ import org.junit.Test;
 
 import zotero.api.constants.PropertyType;
 import zotero.api.exceptions.ZoteroRuntimeException;
-import zotero.api.properties.PropertyDate;
 
 public class PropertyDateTest
 {
-	private PropertyDate property = new PropertyDateImpl("testProperty", new Date(0));
-
 	@Test
 	public void testGetPropertyType()
 	{
+		PropertyDateImpl property = new PropertyDateImpl("testProperty", new Date(0));
 		assertEquals(PropertyType.DATE, property.getPropertyType());
 	}
 
 	@Test
 	public void testGetKey()
 	{
+		PropertyDateImpl property = new PropertyDateImpl("testProperty", new Date(0));
 		assertEquals("testProperty", property.getKey());
 	}
 	
 	@Test
 	public void testGetValue()
 	{
+		PropertyDateImpl property = new PropertyDateImpl("testProperty", new Date(0));
 		assertEquals(new Date(0), property.getValue());
 	}
 
 	@Test
 	public void testSetValue()
 	{
-		PropertyDate prop = new PropertyDateImpl("testProperty", new Date(0));
+		PropertyDateImpl prop = new PropertyDateImpl("testProperty", new Date(0));
 		prop.setValue(new Date(1));
 
 		assertEquals(new Date(1), prop.getValue());
@@ -47,7 +47,7 @@ public class PropertyDateTest
 	@Test
 	public void testClearValue()
 	{
-		PropertyDate prop = new PropertyDateImpl("testProperty", new Date(0));
+		PropertyDateImpl prop = new PropertyDateImpl("testProperty", new Date(0));
 		prop.clearValue();
 		
 		assertNull(prop.getValue());
@@ -57,14 +57,25 @@ public class PropertyDateTest
 	@Test(expected = ZoteroRuntimeException.class)
 	public void testClearValueReadOnly()
 	{
-		PropertyDate prop = new PropertyDateImpl("testProperty", new Date(0), true);
+		PropertyDateImpl prop = new PropertyDateImpl("testProperty", new Date(0), true);
 		prop.clearValue();
 	}
 	
 	@Test(expected = ZoteroRuntimeException.class)
 	public void testSetValueReadOnly()
 	{
-		PropertyDate prop = new PropertyDateImpl("testProperty", new Date(0), true);
+		PropertyDateImpl prop = new PropertyDateImpl("testProperty", new Date(0), true);
 		prop.setValue(new Date(1));
+	}
+	
+	@Test
+	public void testToRest()
+	{
+		PropertyDateImpl prop = new PropertyDateImpl("testProperty", new Date(0));
+		assertNull(prop.toRestValue());
+		prop.setValue(new Date(1));
+		assertEquals(1, prop.toRestValue());
+		prop.clearValue();
+		assertEquals(Boolean.FALSE, prop.toRestValue());
 	}
 }

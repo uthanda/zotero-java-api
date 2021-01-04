@@ -2,6 +2,7 @@ package zotero.api.collections;
 
 import zotero.api.Collection;
 import zotero.api.iterators.CollectionIterator;
+import zotero.apiimpl.ChangeTracker;
 
 /**
  * A Collections collection provides access to the collections for a given item.  It also provides
@@ -10,7 +11,7 @@ import zotero.api.iterators.CollectionIterator;
  * @author Michael Oland
  * @since 1.0
  */
-public interface Collections
+public interface Collections extends ChangeTracker
 {
 	/**
 	 * Gets the iterator for the collections.
@@ -32,4 +33,6 @@ public interface Collections
 	 * @param collection Collection to unlink
 	 */
 	void removeFromCollection(Collection collection);
+
+	void clear();
 }

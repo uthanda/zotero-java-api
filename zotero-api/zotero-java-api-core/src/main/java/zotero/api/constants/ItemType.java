@@ -39,7 +39,7 @@ public enum ItemType implements ZoteroEnum
 	VIDEO_RECORDING("videoRecording"),
 	WEB_PAGE("webpage");
 
-	private String zoteroName;
+	private final String zoteroName;
 
 	private ItemType(String zoteroName)
 	{
@@ -51,7 +51,7 @@ public enum ItemType implements ZoteroEnum
 		return zoteroName;
 	}
 	
-	public static ItemType fromZoteroType(String zoteroType)
+	public static final ItemType fromZoteroType(String zoteroType)
 	{
 		for(ItemType type : ItemType.values())
 		{

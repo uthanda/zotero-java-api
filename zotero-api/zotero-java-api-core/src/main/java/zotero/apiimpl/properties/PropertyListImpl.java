@@ -12,41 +12,14 @@ import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.properties.PropertyList;
-import zotero.apiimpl.collections.CreatorsImpl;
-import zotero.apiimpl.collections.TagsImpl;
 
 public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.ObservableList<T>> implements PropertyList<T, PropertyListImpl.ObservableList<T>>
 {
 	private Class<T> type;
 
-	public PropertyListImpl(String key, Class<T> type, List<T> values)
+	public PropertyListImpl(String key, List<T> values)
 	{
-		this(key, type, values, false);
-	}
-
-	public PropertyListImpl(String key, Class<T> type, List<T> values, boolean readOnly)
-	{
-		super(PropertyType.LIST, key, buildList(key, values, readOnly), readOnly);
-		this.type = type;
-	}
-
-	static <T> ObservableList<T> buildList(String key, List<T> values, boolean readOnly)
-	{
-		// This allows for leaving the creators/tags collections alone as we
-		// cast them later
-		// TODO there may be an issue here if we're looking to copy a collection
-		if (values instanceof CreatorsImpl)
-		{
-			return (ObservableList<T>) values;
-		}
-		else if (values instanceof TagsImpl)
-		{
-			return (ObservableList<T>) values;
-		}
-		else
-		{
-			return new ObservableList<>(key, values, readOnly);
-		}
+		super(PropertyType.LIST, key, new ObservableList<>(key, values, false), false);
 	}
 
 	@Override
@@ -58,8 +31,6 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 	@SuppressWarnings("squid:S2160") // Disabled because it doesn't change the core behavior
 	public static class ObservableList<T> extends ArrayList<T>
 	{
-		// TODO Should this actually implement Set instead of List?
-		
 		/**
 		 * 
 		 */
@@ -270,5 +241,12 @@ public class PropertyListImpl<T> extends PropertyImpl<PropertyListImpl.Observabl
 	public Class<T> getType()
 	{
 		return type;
+	}
+	
+	@Override
+	public void clearValue()
+	{
+		super.clearValue();
+		super.getValue().clear();
 	}
 }

@@ -11,28 +11,28 @@ public enum TagType
 	 */
 	USER(0);
 
-	private final int type;
+	private final int zoteroType;
 
 	TagType(int type)
 	{
-		this.type = type;
+		this.zoteroType = type;
 	}
 
-	public int getType()
+	public int getZoteroType()
 	{
-		return type;
+		return zoteroType;
 	}
 
-	public static TagType fromType(int type)
+	public static TagType fromType(int zoteroType)
 	{
-		switch (type)
+		switch (zoteroType)
 		{
 			case 1:
 				return TagType.AUTOMATIC;
 			case 0:
 				return TagType.USER;
 			default:
-				throw new EnumConstantNotPresentException(RelationshipType.class, Integer.toString(type));
+				throw new EnumConstantNotPresentException(RelationshipType.class, Integer.toString(zoteroType));
 		}
 
 	}

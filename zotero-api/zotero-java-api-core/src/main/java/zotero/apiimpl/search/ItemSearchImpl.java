@@ -13,7 +13,7 @@ import zotero.api.search.Direction;
 import zotero.api.search.ItemEndpointSearch;
 import zotero.api.search.ItemSearch;
 import zotero.apiimpl.LibraryImpl;
-import zotero.apiimpl.iterators.ZoteroItemIteratorImpl;
+import zotero.apiimpl.iterators.ItemIteratorImpl;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.response.RestResponse;
 
@@ -38,7 +38,7 @@ public class ItemSearchImpl extends ItemEndpointSearchImpl<ItemSearch, ItemItera
 	{
 		RestResponse<ZoteroRestItem[]> response = execute();
 
-		return new ZoteroItemIteratorImpl(response, library);
+		return new ItemIteratorImpl(response, library);
 	}
 
 	@Override

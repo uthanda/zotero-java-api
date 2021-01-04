@@ -1,9 +1,10 @@
 package zotero.apiimpl.properties;
 
 import zotero.api.constants.PropertyType;
+import zotero.api.constants.ZoteroEnum;
 import zotero.api.properties.PropertyEnum;
 
-public class PropertyEnumImpl<T extends Enum<T>> extends PropertyImpl<T> implements PropertyEnum<T>
+public class PropertyEnumImpl<T extends Enum<T> & ZoteroEnum> extends PropertyImpl<T> implements PropertyEnum<T>
 {
 	private Class<T> type;
 
@@ -22,5 +23,18 @@ public class PropertyEnumImpl<T extends Enum<T>> extends PropertyImpl<T> impleme
 	public Class<T> getType()
 	{
 		return type;
+	}
+	
+	@Override
+	public Object toRestValue()
+	{
+		return getValue().getZoteroName();
+	}
+	
+	@Override
+	public void clearValue()
+	{
+		super.clearValue();
+		super.setValue(null);
 	}
 }

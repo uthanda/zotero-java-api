@@ -1,49 +1,53 @@
 package zotero.apiimpl.collections;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import zotero.api.Tag;
 import zotero.api.collections.Tags;
 import zotero.api.constants.ZoteroKeys;
 import zotero.apiimpl.LibraryImpl;
 import zotero.apiimpl.TagImpl;
-import zotero.apiimpl.properties.PropertyListImpl;
 
-public final class TagsImpl extends PropertyListImpl.ObservableList<Tag> implements Tags
+public final class TagsImpl implements Tags
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 855435163437169254L;
+	private boolean isDirty = false;
+	private boolean cleared = false;
+	private Set<Tag> tags;
 
 	public TagsImpl()
 	{
-		super(ZoteroKeys.Item.TAGS, null, false);
+		tags = new LinkedHashSet<>();
 	}
 
 	public TagsImpl(List<Tag> values)
 	{
-		super(ZoteroKeys.Item.TAGS, values, false);
+		tags = new LinkedHashSet<>(values);
 	}
 
-	public static List<Map<String, String>> toRest(Tags tags)
+	//@formatter:off
+	public static Object toRest(TagsImpl tags)
 	{
-		TagsImpl t = (TagsImpl) tags;
-
-		List<Map<String, String>> zrt = new ArrayList<>();
-
-		t.forEach(e -> {
-			Map<String, String> map = new HashMap<>();
-			map.put(ZoteroKeys.Tag.TAG, e.getTag());
-			zrt.add(map);
-		});
-
-		return zrt;
+		if(tags.cleared) {
+			return Boolean.FALSE;
+		}
+		
+		if(!tags.isDirty) {
+			return null;
+		}
+		
+		return tags.tags
+				.stream()
+				.map(TagImpl::toRest)
+				.collect(Collectors.toList());
 	}
-
+	//@formatter:on
+	
 	@SuppressWarnings("unchecked")
 	public static Tags fromRest(LibraryImpl library, Object value)
 	{
@@ -63,5 +67,47 @@ public final class TagsImpl extends PropertyListImpl.ObservableList<Tag> impleme
 	public String toString()
 	{
 		return String.format("[Tags: tags:%s, dirty:%b]", super.toString(), this.isDirty());
+	}
+
+	@Override
+	public boolean isDirty()
+	{
+		return isDirty;
+	}
+
+	@Override
+	public int size()
+	{
+		return tags.size();
+	}
+	
+	@Override
+	public void add(Tag tag)
+	{
+		this.tags.add(tag);
+		this.cleared = false;
+		this.isDirty = true;
+	}
+
+	@Override
+	public Iterator<Tag> iterator()
+	{
+		return tags.iterator();
+	}
+
+	@Override
+	public void remove(Tag tag)
+	{
+		tags.remove(tag);
+		this.cleared = false;
+		this.isDirty = true;
+	}
+
+	@Override
+	public void clear()
+	{
+		this.cleared = true;
+		this.isDirty = true;
+		this.tags.clear();
 	}
 }

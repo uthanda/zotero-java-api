@@ -24,26 +24,25 @@ final class LinksImpl implements Links
 		return links.get(key);
 	}
 
-	public LinkImpl create(LinkType key)
+	public LinkImpl create(LibraryImpl library, LinkType key)
 	{
-		// TODO key checking should go here
 		if (links.containsKey(key))
 		{
 			throw new IllegalStateException("Key " + key + " already exists");
 		}
 
-		LinkImpl link = new LinkImpl();
+		LinkImpl link = new LinkImpl(library);
 
 		links.put(key, link);
 
 		return link;
 	}
 
-	public static Links fromRest(ZoteroRestLinks links)
+	public static Links fromRest(LibraryImpl library, ZoteroRestLinks links)
 	{
 		LinksImpl zl = new LinksImpl();
 
-		zl.links.putAll(links.entrySet().stream().collect(Collectors.toMap(e -> LinkType.fromZoteroType(e.getKey()), e -> LinkImpl.from(e.getValue()))));
+		zl.links.putAll(links.entrySet().stream().collect(Collectors.toMap(e -> LinkType.fromZoteroType(e.getKey()), e -> LinkImpl.from(library, e.getValue()))));
 
 		return zl;
 	}

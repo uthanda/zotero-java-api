@@ -1,8 +1,14 @@
-package zotero.api;
+package zotero.api.collections;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.impl.client.HttpClients;
@@ -14,11 +20,18 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import zotero.api.Document;
+import zotero.api.Library;
+import zotero.api.Links;
+import zotero.api.Tag;
+import zotero.api.ZoteroAPIKey;
 import zotero.api.constants.LinkType;
 import zotero.api.constants.TagType;
+import zotero.api.constants.ZoteroKeys;
 import zotero.api.iterators.TagIterator;
 import zotero.api.util.MockRestService;
 import zotero.apiimpl.TagImpl;
+import zotero.apiimpl.collections.TagsImpl;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ HttpClients.class })
@@ -83,11 +96,11 @@ public class TagsTest
 	}
 	
 	@Test
-	public void testRefresh()
+	public void testIterator()
 	{
 		Document doc = (Document) library.fetchItem("B4ERDVS4");
 		
-		Tag tag = doc.getTags().get(0);
+		Tag tag = doc.getTags().iterator().next();
 		
 		assertEquals("followrefs", tag.getTag());
 		
@@ -97,16 +110,36 @@ public class TagsTest
 		assertEquals("https://api.zotero.org/users/12345678/tags/followrefs", links.get(LinkType.SELF).getHref());
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
-	public void testCompare()
+	public void testToRest()
 	{
-		TagImpl one = new TagImpl("Foo", TagType.AUTOMATIC, 0, null, null);
-		TagImpl two = new TagImpl("Foo", TagType.USER, 0, null, null);
-		TagImpl three = new TagImpl("Foo", TagType.USER, 0, null, null);
+		Document doc = (Document) library.fetchItem("B4ERDVS4");
 		
-		assertNotEquals(one, two);
-		assertNotEquals(one, three);
-		assertEquals(two, three);
-	}
+		TagsImpl tags = (TagsImpl) doc.getTags();
+		
+		// No changes should be NULL
+		assertNull(TagsImpl.toRest(tags));
+		
+		tags.clear();
 
+		// Cleared should be false
+		assertEquals(Boolean.FALSE, TagsImpl.toRest(tags));
+		
+		TagImpl tag = new TagImpl("Foo", TagType.USER, 0, null, null);
+		tags.add(tag);
+		tag = new TagImpl("Bar", TagType.AUTOMATIC, 0, null, null);
+		tags.add(tag);
+		
+		// Dirty should result in REST data
+		List<Map<String,Object>> rest = (List<Map<String, Object>>) TagsImpl.toRest(tags);
+		
+		assertEquals(2, rest.size());
+
+		assertEquals(TagType.USER.getZoteroType(), rest.get(0).get(ZoteroKeys.Tag.TYPE));
+		assertEquals(TagType.AUTOMATIC.getZoteroType(), rest.get(1).get(ZoteroKeys.Tag.TYPE));
+		
+		assertEquals("Foo", rest.get(0).get(ZoteroKeys.Tag.TAG));
+		assertEquals("Bar", rest.get(1).get(ZoteroKeys.Tag.TAG));
+	}
 }

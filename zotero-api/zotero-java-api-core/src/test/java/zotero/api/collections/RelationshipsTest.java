@@ -1,11 +1,10 @@
 package zotero.api.collections;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
@@ -19,22 +18,22 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import zotero.api.Library;
 import zotero.api.ZoteroAPIKey;
-import zotero.api.constants.CreatorType;
+import zotero.api.constants.RelationshipType;
+import zotero.api.constants.ZoteroKeys;
 import zotero.api.util.MockRestService;
 import zotero.apiimpl.LibraryImpl;
-import zotero.apiimpl.collections.CreatorsImpl;
+import zotero.apiimpl.collections.RelationshipsImpl;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ HttpClients.class })
 @PowerMockIgnore({ "com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "org.w3c.*", "javax.management.*" })
-public class CreatorsTest
+public class RelationshipsTest
 {
-	private static Creators creators;
+	private static RelationshipsImpl relationships;
 
 	// Static setups
 	private static MockRestService service = new MockRestService();
@@ -52,17 +51,17 @@ public class CreatorsTest
 		JsonObject entity = MockRestService.getEntityNode("/users/12345678/items/B4ERDVS4", "<empty>", "GET");
 		
 		//@formatter:off
-		JsonArray array = entity
+		JsonObject object = entity
 				.get("item").getAsJsonObject()
 				.get("data").getAsJsonObject()
-				.get("creators").getAsJsonArray();
+				.get(ZoteroKeys.Item.RELATIONS).getAsJsonObject();
 		//@formatter:on
 		
 		@SuppressWarnings("unchecked")
-		List<Map<String,Object>> creators = new Gson().fromJson(array, List.class);
-		CreatorsTest.creators = CreatorsImpl.fromRest(library, creators);
+		Map<String, Object> creators = new Gson().fromJson(object, Map.class);
+		RelationshipsTest.relationships = RelationshipsImpl.fromRest(library, creators);
 	}
-
+	
 	@Before
 	public void initialize() throws NoSuchMethodException, SecurityException, ClientProtocolException, IOException
 	{
@@ -70,23 +69,21 @@ public class CreatorsTest
 	}
 	
 	@Test
-	public void testRead()
+	public void testGetTypes()
 	{
-		assertEquals(5,creators.size());
+		assertEquals(1, relationships.getTypes().size());
+		assertTrue(relationships.getTypes().contains(RelationshipType.DC_REPLACES));
 	}
 	
 	@Test
-	public void testIsDirty()
+	public void testGetRelatedItems()
 	{
-		CreatorsImpl creators = new CreatorsImpl(library);
-		assertFalse(creators.isDirty());
-		creators.add(CreatorType.ARTIST, "John", "Smith");
-		assertTrue(creators.isDirty());
-	}
-	
-	@Test
-	public void testToRest()
-	{
+		RelationSet relatedItems = relationships.getRelatedItems(RelationshipType.DC_REPLACES);
 		
+		assertEquals(2, relatedItems.size());
+		
+		Iterator<String> i = relatedItems.iterator();
+		
+		i.next();
 	}
 }

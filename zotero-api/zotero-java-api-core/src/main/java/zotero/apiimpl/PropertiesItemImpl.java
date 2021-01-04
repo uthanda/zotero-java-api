@@ -9,27 +9,41 @@ import zotero.apiimpl.rest.model.ZoteroRestItem;
 
 public class PropertiesItemImpl implements PropertiesItem
 {
-	private PropertiesImpl properties = new PropertiesImpl();
+	private final LibraryImpl library;
+	private PropertiesImpl properties;
 
-	PropertiesItemImpl()
+	PropertiesItemImpl(LibraryImpl library)
 	{
+		this.library = library;
+		this.properties =  new PropertiesImpl(library);
 	}
 
 	PropertiesItemImpl(LibraryImpl library, ZoteroRestItem item)
 	{
 		this.properties = PropertiesImpl.fromRest(library, item);
+		this.library = library;
 	}
 
-	PropertiesItemImpl(LinkMode mode)
+	PropertiesItemImpl(LibraryImpl library, LinkMode mode)
 	{
-		this.properties = new PropertiesImpl();
+		this.properties = new PropertiesImpl(library);
+		this.library = library;
 		PropertiesImpl.initializeAttachmentProperties(mode, this.properties);
 	}
-	
-	PropertiesItemImpl(ItemType type)
+
+	PropertiesItemImpl(LibraryImpl library, ItemType type)
 	{
-		this.properties = new PropertiesImpl();
-		PropertiesImpl.initializeDocumentProperties(type, this.properties, null);
+		this.properties = new PropertiesImpl(library);
+		this.library = library;
+
+		if (type == ItemType.NOTE)
+		{
+			PropertiesImpl.initializeNoteProperties(this.properties, null);
+		}
+		else
+		{
+			PropertiesImpl.initializeDocumentProperties(type, this.properties, null);
+		}
 	}
 
 	@Override
@@ -42,7 +56,7 @@ public class PropertiesItemImpl implements PropertiesItem
 	{
 		PropertiesImpl current = properties;
 
-		this.properties = new PropertiesImpl();
+		this.properties = new PropertiesImpl(library);
 
 		PropertiesImpl.initializeDocumentProperties(type, properties, current);
 	}
