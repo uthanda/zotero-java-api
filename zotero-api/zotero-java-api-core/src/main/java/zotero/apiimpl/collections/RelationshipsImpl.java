@@ -83,9 +83,22 @@ public final class RelationshipsImpl implements Relationships, ChangeTracker
 			return r;
 		}
 
-		values.forEach((stype, list) -> {
+		values.forEach((stype, item) -> {
 			RelationshipType type = RelationshipType.fromZoteroType(stype);
-			Set<String> set = new LinkedHashSet<>((List<String>) list);
+
+			Set<String> set = new LinkedHashSet<>();
+
+			// Have to do this because single links come back as a single item
+			// while multiple come back as list
+			if (item instanceof List)
+			{
+				set.addAll((List<String>) item);
+			}
+			else
+			{
+				set.add((String) item);
+			}
+
 			r.relationships.put(type, new RelationSetImpl(library, type, set));
 		});
 

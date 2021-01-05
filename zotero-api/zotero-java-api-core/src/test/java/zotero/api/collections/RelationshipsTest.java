@@ -90,6 +90,26 @@ public class RelationshipsTest
 		i.next();
 	}
 	
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testFromRest()
+	{
+		Map<String,Object> rest = new Gson().fromJson("{\"dc:relation\": [\"http://zotero.org/users/5787467/items/Y22WKAQL\", \"two\"]}", Map.class);
+		
+		Relationships relationships = RelationshipsImpl.fromRest(library, rest);
+		assertNotNull(relationships.getRelatedItems(RelationshipType.DC_RELATION));
+		assertEquals(2, relationships.getRelatedItems(RelationshipType.DC_RELATION).size());
+		assertTrue(relationships.getRelatedItems(RelationshipType.DC_RELATION).contains("http://zotero.org/users/5787467/items/Y22WKAQL"));
+		assertTrue(relationships.getRelatedItems(RelationshipType.DC_RELATION).contains("two"));
+		
+		rest = new Gson().fromJson("{\"dc:relation\": \"http://zotero.org/users/5787467/items/Y22WKAQL\"}", Map.class);
+		
+		relationships = RelationshipsImpl.fromRest(library, rest);
+		assertNotNull(relationships.getRelatedItems(RelationshipType.DC_RELATION));
+		assertEquals(1, relationships.getRelatedItems(RelationshipType.DC_RELATION).size());
+		assertTrue(relationships.getRelatedItems(RelationshipType.DC_RELATION).contains("http://zotero.org/users/5787467/items/Y22WKAQL"));
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testToRest()

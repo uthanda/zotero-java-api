@@ -14,8 +14,16 @@ import zotero.api.Document;
 import zotero.api.Note;
 import zotero.api.collections.Creators;
 import zotero.api.constants.ItemType;
+import zotero.api.constants.ZoteroExceptionCodes;
+import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.constants.ZoteroKeys;
+import zotero.api.constants.ZoteroKeys.DocumentKeys;
+import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.iterators.ItemIterator;
+import zotero.apiimpl.collections.CreatorsImpl;
+import zotero.apiimpl.properties.PropertiesImpl;
+import zotero.apiimpl.properties.PropertyCreatorsImpl;
+import zotero.apiimpl.properties.PropertyEnumImpl;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 
 public class DocumentImpl extends ItemImpl implements Document
@@ -24,14 +32,27 @@ public class DocumentImpl extends ItemImpl implements Document
 	private String parsedDate;
 	private String creatorSummary;
 
-	DocumentImpl(ZoteroRestItem jsonItem, LibraryImpl library)
+	public DocumentImpl(LibraryImpl library, ItemType type)
 	{
-		super(jsonItem, library);
+		super(library);
+		
+		initialize(library, type);
 	}
 
-	public DocumentImpl(ItemType type, LibraryImpl library)
+	@Override
+	public void initialize(LibraryImpl library, ItemType type) throws ZoteroRuntimeException
 	{
-		super(type, library);
+		// Initialize the base
+		super.initialize(library, type);
+		
+		PropertiesImpl properties = (PropertiesImpl) getProperties();
+		
+		if (type == ItemType.ATTACHMENT)
+		{
+			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.UNSUPPORTED_ENUM_VALUE, "Cannot initalize an attachment using initalize document properties");
+		}
+	
+		properties.addProperty(new PropertyCreatorsImpl(new CreatorsImpl(library)));
 	}
 
 	@Override
@@ -110,13 +131,14 @@ public class DocumentImpl extends ItemImpl implements Document
 		super.getProperties().putValue(ZoteroKeys.ItemKeys.TITLE, title);
 	}
 
-	public static ItemImpl fromRest(ZoteroRestItem jsonItem, LibraryImpl library)
+	public static ItemImpl fromRest(LibraryImpl library, ZoteroRestItem jsonItem)
 	{
-		DocumentImpl document = new DocumentImpl(jsonItem,library);
+		DocumentImpl document = new DocumentImpl(library, ItemType.ARTWORK);
 		
 		document.numChildren = ((Double)jsonItem.getMeta().get(NUM_CHILDREN)).intValue();
 		document.creatorSummary = (String) jsonItem.getMeta().get(CREATOR_SUMMARY);
 		document.parsedDate = (String) jsonItem.getMeta().get(PARSED_DATE);
+		document.refresh(jsonItem);
 		
 		return document;
 	}

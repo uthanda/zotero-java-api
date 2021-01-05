@@ -11,6 +11,7 @@ import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
+import zotero.api.constants.ZoteroKeys;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
@@ -64,7 +65,7 @@ public final class LibraryImpl extends Library
 
 		RestResponse<ZoteroRestItem> response = performRequest(req);
 
-		return CollectionImpl.fromItem(response.getResponse(), this);
+		return CollectionImpl.fromItem(this, response.getResponse());
 	}
 
 	@Override
@@ -154,7 +155,7 @@ public final class LibraryImpl extends Library
 
 		RestResponse<ZoteroRestItem> response = performRequest(builder);
 
-		return ItemImpl.fromItem(response.getResponse(), this);
+		return ItemImpl.fromRest(this, response.getResponse());
 	}
 
 	ItemIterator fetchItems(String url, String key)
@@ -175,7 +176,7 @@ public final class LibraryImpl extends Library
 	@Override
 	public Document createDocument(ItemType type)
 	{
-		return new DocumentImpl(type, this);
+		return new DocumentImpl(this, type);
 	}
 
 	public <T,B extends BaseBuilder<T,B,R>,R extends ResponseBuilder<T>> RestResponse<T> performRequest(BaseBuilder<T,B,R> builder)
@@ -205,13 +206,15 @@ public final class LibraryImpl extends Library
 	@Override
 	public Attachment createAttachment(LinkMode mode)
 	{
-		return new AttachmentImpl(mode, this);
+		return new AttachmentImpl(this, mode);
 	}
 
 	@Override
 	public Attachment createAttachment(Item parent, LinkMode mode)
 	{
-		return new AttachmentImpl(mode, this, parent.getKey());
+		Attachment attachment = createAttachment(mode);
+		attachment.getProperties().putValue(ZoteroKeys.AttachmentKeys.PARENT_ITEM, parent.getKey());
+		return attachment;
 	}
 
 	@Override

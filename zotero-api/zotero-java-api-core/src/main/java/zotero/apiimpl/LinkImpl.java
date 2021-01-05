@@ -1,11 +1,8 @@
 package zotero.apiimpl;
 
-import static zotero.api.constants.ZoteroKeys.LinkKeys.HREF;
-import static zotero.api.constants.ZoteroKeys.LinkKeys.LENGTH;
-import static zotero.api.constants.ZoteroKeys.LinkKeys.TYPE;
-
 import zotero.api.Link;
 import zotero.api.constants.LinkType;
+import zotero.api.constants.ZoteroKeys;
 import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.properties.PropertyEnumImpl;
 import zotero.apiimpl.properties.PropertyIntegerImpl;
@@ -14,51 +11,47 @@ import zotero.apiimpl.rest.model.ZoteroRestLink;
 
 final class LinkImpl extends PropertiesItemImpl implements Link
 {
-	LinkImpl(LibraryImpl library)
+	public LinkImpl(LibraryImpl library)
 	{
 		super(library);
+		
+		PropertiesImpl properties = (PropertiesImpl) getProperties();
+		
+		properties.addProperty(new PropertyStringImpl(ZoteroKeys.LinkKeys.HREF, null));
+		properties.addProperty(new PropertyIntegerImpl(ZoteroKeys.LinkKeys.LENGTH, null));
+		properties.addProperty(new PropertyIntegerImpl(ZoteroKeys.LinkKeys.ATTACHMENT_SIZE, null));
+		properties.addProperty(new PropertyStringImpl(ZoteroKeys.LinkKeys.TITLE, null));
+		properties.addProperty(new PropertyEnumImpl<>(ZoteroKeys.LinkKeys.TYPE, LinkType.class, null));
 	}
 
 	@Override
 	public final String getHref()
 	{
-		return getProperties().getString(HREF);
+		return getProperties().getString(ZoteroKeys.LinkKeys.HREF);
 	}
 
 	public final void setHref(String href)
 	{
-		getProperties().putValue(HREF, href);
+		getProperties().putValue(ZoteroKeys.LinkKeys.HREF, href);
 	}
 
 	@Override
 	public final String getType()
 	{
-		return getProperties().getString(TYPE);
+		return getProperties().getString(ZoteroKeys.LinkKeys.TYPE);
 	}
 
 	@SuppressWarnings("unchecked")
 	public final void setType(LinkType type)
 	{
-		((PropertyEnumImpl<LinkType>)getProperties().getProperty(TYPE)).setValue(type);
+		((PropertyEnumImpl<LinkType>)getProperties().getProperty(ZoteroKeys.LinkKeys.TYPE)).setValue(type);
 	}
 
-	public static LinkImpl from(LibraryImpl library, ZoteroRestLink jsonLink)
+	public static LinkImpl fromRest(LibraryImpl library, ZoteroRestLink item)
 	{
 		LinkImpl link = new LinkImpl(library);
-
-		PropertiesImpl props = (PropertiesImpl) link.getProperties();
-
-		jsonLink.entrySet().forEach(e -> {
-			if (e.getKey().equals(LENGTH))
-			{
-				props.addProperty(new PropertyIntegerImpl(LENGTH, ((Double) jsonLink.get(LENGTH)).intValue()));
-			}
-			else
-			{
-				props.addProperty(new PropertyStringImpl(e.getKey(), (String) e.getValue()));
-			}
-		});
-
+		((PropertiesImpl)link.getProperties()).fromRest(library, item);
+		
 		return link;
 	}
 }

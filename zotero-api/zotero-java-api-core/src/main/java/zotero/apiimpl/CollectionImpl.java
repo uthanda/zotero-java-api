@@ -7,6 +7,7 @@ import zotero.api.iterators.ItemIterator;
 import zotero.api.iterators.TagIterator;
 import zotero.apiimpl.iterators.TagIteratorImpl;
 import zotero.apiimpl.properties.PropertiesImpl;
+import zotero.apiimpl.properties.PropertyStringImpl;
 import zotero.apiimpl.rest.ZoteroRest;
 import zotero.apiimpl.rest.ZoteroRest.URLParameter;
 import zotero.apiimpl.rest.model.SerializationMode;
@@ -21,18 +22,26 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	private int numItems;
 	private int numCollections;
 
-	private CollectionImpl(ZoteroRestItem item, LibraryImpl library)
+	public CollectionImpl(LibraryImpl library, ZoteroRestItem item)
 	{
-		super(item, library);
-		this.numCollections = ((Double) item.getMeta().get(ZoteroKeys.MetaKeys.NUM_COLLECTIONS)).intValue();
-		this.numItems = ((Double) item.getMeta().get(ZoteroKeys.MetaKeys.NUM_ITEMS)).intValue();
+		this(library, ((Double) item.getMeta().get(ZoteroKeys.MetaKeys.NUM_COLLECTIONS)).intValue(), ((Double) item.getMeta().get(ZoteroKeys.MetaKeys.NUM_ITEMS)).intValue());
 	}
 
 	public CollectionImpl(LibraryImpl library)
 	{
+		this(library,0,0);
+	}
+
+	private CollectionImpl(LibraryImpl library, int numCollections, int numItems)
+	{
 		super(library);
-		this.numCollections = 0;
-		this.numItems = 0;
+		this.numCollections = numCollections;
+		this.numItems = numItems;
+		
+		PropertiesImpl properties = (PropertiesImpl) getProperties();
+		
+		properties.addProperty(new PropertyStringImpl(ZoteroKeys.CollectionKeys.NAME, null));
+		properties.addProperty(new PropertyStringImpl(ZoteroKeys.CollectionKeys.PARENT_COLLECTION, null));
 	}
 
 	@Override
@@ -45,8 +54,6 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	{
 		CollectionImpl collection = new CollectionImpl(library);
 
-		PropertiesImpl.initializeCollectionProperties((PropertiesImpl) collection.getProperties());
-
 		if (parent != null)
 		{
 			collection.getProperties().putValue(ZoteroKeys.CollectionKeys.PARENT_COLLECTION, parent.getKey());
@@ -55,9 +62,13 @@ public final class CollectionImpl extends EntryImpl implements Collection
 		return collection;
 	}
 
-	public static CollectionImpl fromItem(ZoteroRestItem item, LibraryImpl library)
+	public static CollectionImpl fromItem(LibraryImpl library, ZoteroRestItem item)
 	{
-		return new CollectionImpl(item, library);
+		CollectionImpl collection = new CollectionImpl(library, item);
+		
+		collection.refresh(item);
+		
+		return collection;
 	}
 
 	@Override

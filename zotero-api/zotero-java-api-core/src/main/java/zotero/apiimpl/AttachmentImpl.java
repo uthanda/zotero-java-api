@@ -20,13 +20,17 @@ import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 
 import zotero.api.Attachment;
+import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.constants.ZoteroKeys;
+import zotero.api.constants.ZoteroKeys.AttachmentKeys;
+import zotero.api.constants.ZoteroKeys.EntityKeys;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.properties.Properties;
 import zotero.apiimpl.properties.PropertiesImpl;
+import zotero.apiimpl.properties.PropertyEnumImpl;
 import zotero.apiimpl.properties.PropertyStringImpl;
 import zotero.apiimpl.rest.ZoteroRest;
 import zotero.apiimpl.rest.ZoteroRest.URLParameter;
@@ -45,32 +49,63 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	private InputStream is;
 	private Long fileSize;
 
-	public AttachmentImpl(ZoteroRestItem jsonItem, LibraryImpl library)
+	public AttachmentImpl(LibraryImpl library, LinkMode mode)
 	{
-		super(jsonItem, library);
+		super(library);
+		initialize(library, mode);
 	}
 
-	public AttachmentImpl(LinkMode mode, LibraryImpl library)
+	private AttachmentImpl(LibraryImpl library)
 	{
-		this(mode, library, null);
+		super(library);
 	}
-
-	/**
-	 * Creates a new attachment in pending state. It sets the parent key as a
-	 * read-only property in the properties collection.
-	 * 
-	 * @param mode
-	 * @param library
-	 * @param parentKey
-	 */
-	public AttachmentImpl(LinkMode mode, LibraryImpl library, String parentKey)
+	
+	public void initialize(LibraryImpl library, LinkMode mode) throws ZoteroRuntimeException
 	{
-		super(mode, library);
-		this.pending = true;
-		// Create the parent key property and set it to read-only.
-		((PropertiesImpl) getProperties()).addProperty(new PropertyStringImpl(ZoteroKeys.AttachmentKeys.PARENT_ITEM, parentKey, true));
-	}
+		super.initialize(library, ItemType.ATTACHMENT);
+		
+		PropertiesImpl properties = (PropertiesImpl) getProperties();
+		
+		properties.addProperty(new PropertyEnumImpl<>(AttachmentKeys.LINK_MODE, LinkMode.class, mode));
+		properties.addProperty(new PropertyStringImpl(AttachmentKeys.CHARSET, null));
+		properties.addProperty(new PropertyStringImpl(AttachmentKeys.CONTENT_TYPE, null));
+	
+		switch (mode)
+		{
+			case IMPORTED_FILE:
+			{
+				properties.addProperty(new PropertyStringImpl(AttachmentKeys.FILENAME, null));
+				properties.addProperty(new PropertyStringImpl(AttachmentKeys.MD5, null));
+				properties.addProperty(new PropertyStringImpl(AttachmentKeys.MTIME, null));
+				break;
+			}
+			case IMPORTED_URL:
+			{
+				properties.addProperty(new PropertyStringImpl(EntityKeys.URL, null));
+				properties.addProperty(new PropertyStringImpl(AttachmentKeys.FILENAME, null));
+				properties.addProperty(new PropertyStringImpl(AttachmentKeys.MD5, null));
+				properties.addProperty(new PropertyStringImpl(AttachmentKeys.MTIME, null));
+				break;
+			}
+			case LINKED_FILE:
+			{
+				properties.addProperty(new PropertyStringImpl(AttachmentKeys.PATH, null));
+				break;
+			}
+			case LINKED_URL:
+			{
+				properties.addProperty(new PropertyStringImpl(EntityKeys.URL, null));
+				break;
+			}
+			default:
+			{
+				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.UNSUPPORTED_ENUM_VALUE, "Cannot initalize an attachment of mode " + mode + ".  Mode not implemented.");
+			}
+	
+		}
 
+	}
+	
 	@Override
 	public LinkMode getLinkMode()
 	{
@@ -122,9 +157,11 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		getProperties().putValue(ZoteroKeys.AttachmentKeys.CONTENT_TYPE, type);
 	}
 
-	public static ItemImpl fromRest(ZoteroRestItem jsonItem, LibraryImpl library)
+	public static ItemImpl fromRest(LibraryImpl library, ZoteroRestItem item)
 	{
-		return new AttachmentImpl(jsonItem, library);
+		AttachmentImpl attachment = new AttachmentImpl(library);
+		attachment.refresh(item);
+		return attachment;
 	}
 
 	@Override

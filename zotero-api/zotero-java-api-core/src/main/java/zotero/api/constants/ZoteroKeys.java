@@ -214,5 +214,6 @@ public class ZoteroKeys
 		public static final String TYPE = "type";
 		public static final String LENGTH = "length";
 		public static final String TITLE = "title";
+		public static final String ATTACHMENT_SIZE = "attachmentSize";
 	}
 }

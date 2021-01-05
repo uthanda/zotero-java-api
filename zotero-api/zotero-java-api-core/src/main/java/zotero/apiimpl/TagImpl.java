@@ -102,7 +102,7 @@ public class TagImpl implements Tag
 		return map;
 	}
 	
-	public static TagImpl fromRest(ZoteroRestItem item, LibraryImpl library)
+	public static TagImpl fromRest(LibraryImpl library, ZoteroRestItem item)
 	{
 		String tag = item.getTag();
 		int numItems = ((Double) item.getMeta().get(ZoteroKeys.MetaKeys.NUM_ITEMS)).intValue();

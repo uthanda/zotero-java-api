@@ -5,11 +5,10 @@ import java.util.Arrays;
 import zotero.api.Entry;
 import zotero.api.Library;
 import zotero.api.Links;
-import zotero.api.constants.ItemType;
-import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.exceptions.ZoteroRuntimeException;
+import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.rest.ZoteroRest.Collections;
 import zotero.apiimpl.rest.ZoteroRest.Items;
 import zotero.apiimpl.rest.ZoteroRest.URLParameter;
@@ -40,27 +39,6 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 		super(library);
 		this.library = library;
 		this.version = null;
-	}
-
-	protected EntryImpl(ItemType type, LibraryImpl library)
-	{
-		super(library, type);
-		this.library = library;
-	}
-
-	protected EntryImpl(LinkMode mode, LibraryImpl library)
-	{
-		super(library, mode);
-		this.library = library;
-	}
-
-	EntryImpl(ZoteroRestItem item, LibraryImpl library)
-	{
-		super(library, item);
-		this.key = item.getKey();
-		this.version = item.getVersion();
-		this.library = library;
-		this.links = LinksImpl.fromRest(library, item.getLinks());
 	}
 
 	@Override
@@ -163,7 +141,7 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 		this.links = LinksImpl.fromRest(library, item.getLinks());
 		this.key = item.getKey();
 		this.version = item.getVersion();
-		super.refresh(library, item);
+		((PropertiesImpl) this.getProperties()).fromRest(library, item.getData());
 	}
 
 	protected ZoteroRestItem executeCreate(String url, ZoteroRestItem item) throws ZoteroRuntimeException

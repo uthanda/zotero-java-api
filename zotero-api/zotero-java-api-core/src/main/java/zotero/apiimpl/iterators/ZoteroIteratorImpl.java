@@ -18,10 +18,10 @@ class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 	private ZoteroRestItem[] page;
 	private RestResponse<ZoteroRestItem[]> response;
 	private int index = 0;
-	private BiFunction<ZoteroRestItem, LibraryImpl, T> builder;
+	private BiFunction<LibraryImpl, ZoteroRestItem, T> builder;
 	private LibraryImpl library;
 
-	protected ZoteroIteratorImpl(RestResponse<ZoteroRestItem[]> response, BiFunction<ZoteroRestItem, LibraryImpl, T> builder, LibraryImpl library)
+	protected ZoteroIteratorImpl(RestResponse<ZoteroRestItem[]> response, BiFunction<LibraryImpl, ZoteroRestItem, T> builder, LibraryImpl library)
 	{
 		this.totalCount = response.getTotalResults();
 		this.page = response.getResponse();
@@ -56,7 +56,7 @@ class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 			index = 0;
 		}
 
-		return builder.apply(page[index++], library);
+		return builder.apply(library, page[index++]);
 	}
 
 	@Override

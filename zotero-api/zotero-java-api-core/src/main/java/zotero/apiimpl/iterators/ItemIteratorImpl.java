@@ -11,6 +11,6 @@ public final class ItemIteratorImpl extends ZoteroIteratorImpl<Item> implements 
 {
 	public ItemIteratorImpl(RestResponse<ZoteroRestItem[]> response, LibraryImpl library)
 	{
-		super(response, ItemImpl::fromItem, library);
+		super(response, ItemImpl::fromRest, library);
 	}
 }

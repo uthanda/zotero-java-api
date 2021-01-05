@@ -14,10 +14,8 @@ import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
-import zotero.api.constants.ZoteroKeys;
 import zotero.api.constants.ZoteroKeys.AttachmentKeys;
 import zotero.api.constants.ZoteroKeys.DocumentKeys;
-import zotero.api.constants.ZoteroKeys.EntityKeys;
 import zotero.api.constants.ZoteroKeys.ItemKeys;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.properties.Properties;
@@ -26,14 +24,9 @@ import zotero.api.properties.PropertyDate;
 import zotero.api.properties.PropertyInteger;
 import zotero.api.properties.PropertyString;
 import zotero.apiimpl.LibraryImpl;
-import zotero.apiimpl.collections.CreatorsImpl;
-import zotero.apiimpl.collections.RelationshipsImpl;
-import zotero.apiimpl.collections.TagsImpl;
 import zotero.apiimpl.rest.model.SerializationMode;
 import zotero.apiimpl.rest.model.ZoteroRestData;
-import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.schema.ZoteroSchema;
-import zotero.apiimpl.rest.schema.ZoteroSchema.ZoteroType;
 
 public final class PropertiesImpl implements Properties
 {
@@ -114,14 +107,15 @@ public final class PropertiesImpl implements Properties
 		return String.format("[Properties props:%s]", properties.toString());
 	}
 
-	public static PropertiesImpl fromRest(LibraryImpl library, ZoteroRestItem item)
+	public void fromRest(LibraryImpl library, Map<String,Object> item)
 	{
-		PropertiesImpl properties = new PropertiesImpl(library);
 		ZoteroSchema schema = ZoteroSchema.getCurrentSchema();
 	
 		logger.debug("Starting to deserialize {}", item);
-	
-		for (Map.Entry<String, Object> e : item.getData().entrySet())
+
+		properties.clear();
+		
+		for (Map.Entry<String, Object> e : item.entrySet())
 		{
 			String name = e.getKey();
 			Object value = e.getValue();
@@ -159,11 +153,8 @@ public final class PropertiesImpl implements Properties
 				}
 			}
 	
-			properties.properties.put(name, property);
+			properties.put(name, property);
 		}
-	
-		return properties;
-	
 	}
 
 	@SuppressWarnings("squid:S1452")
@@ -216,110 +207,5 @@ public final class PropertiesImpl implements Properties
 			
 			data.put(key, prop.toRestValue());
 		}
-	}
-
-	public static void initializeCollectionProperties(PropertiesImpl properties)
-	{
-		properties.addProperty(new PropertyStringImpl(ZoteroKeys.CollectionKeys.NAME, null));
-		properties.addProperty(new PropertyStringImpl(ZoteroKeys.CollectionKeys.PARENT_COLLECTION, null));
-	}
-
-	public static void initializeDocumentProperties(ItemType type, PropertiesImpl properties, PropertiesImpl current)
-	{
-		if (type == ItemType.ATTACHMENT)
-		{
-			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.UNSUPPORTED_ENUM_VALUE, "Cannot initalize an attachment using initalize document properties");
-		}
-	
-		initializeItemProperties(type, properties, current);
-	
-		properties.properties.put(DocumentKeys.CREATORS, new PropertyCreatorsImpl(new CreatorsImpl(properties.library)));
-	}
-
-	static void initializeItemProperties(ItemType type, PropertiesImpl properties, PropertiesImpl current)
-	{
-		ZoteroSchema schema = ZoteroSchema.getCurrentSchema();
-		ZoteroType zoteroType = null;
-	
-		properties.properties.put(ItemKeys.ITEM_TYPE, new PropertyEnumImpl<>(ItemKeys.ITEM_TYPE, ItemType.class, type));
-		properties.properties.put(ItemKeys.RELATIONS, new PropertyRelationshipsImpl(new RelationshipsImpl(properties.library)));
-		properties.properties.put(ItemKeys.TAGS, new PropertyTagsImpl(new TagsImpl()));
-	
-		for (ZoteroType itemType : schema.getTypes())
-		{
-			if (itemType.getId().equals(type.getZoteroName()))
-			{
-				zoteroType = itemType;
-				break;
-			}
-		}
-	
-		if (zoteroType == null)
-		{
-			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.UNSUPPORTED_ENUM_VALUE, "Invalid type " + type.name());
-		}
-	
-		for (String key : zoteroType.getFields().keySet())
-		{
-			Property<?> prop = current != null ? current.getProperty(key) : null;
-	
-			if (prop == null)
-			{
-				prop = new PropertyStringImpl(key, null);
-			}
-	
-			properties.properties.put(key, prop);
-		}
-	}
-
-	@SuppressWarnings({"squid:S1199"})
-	public static void initializeAttachmentProperties(LinkMode mode, PropertiesImpl properties)
-	{
-		initializeItemProperties(ItemType.ATTACHMENT, properties, null);
-		
-		properties.addProperty(new PropertyEnumImpl<>(AttachmentKeys.LINK_MODE, LinkMode.class, mode));
-		properties.addProperty(new PropertyStringImpl(AttachmentKeys.CHARSET, null));
-		properties.addProperty(new PropertyStringImpl(AttachmentKeys.CONTENT_TYPE, null));
-	
-		switch (mode)
-		{
-			case IMPORTED_FILE:
-			{
-				properties.properties.put(AttachmentKeys.FILENAME, new PropertyStringImpl(AttachmentKeys.FILENAME, null));
-				properties.properties.put(AttachmentKeys.MD5, new PropertyStringImpl(AttachmentKeys.MD5, null));
-				properties.properties.put(AttachmentKeys.MTIME, new PropertyStringImpl(AttachmentKeys.MTIME, null));
-				break;
-			}
-			case IMPORTED_URL:
-			{
-				properties.properties.put(EntityKeys.URL, new PropertyStringImpl(EntityKeys.URL, null));
-				properties.properties.put(AttachmentKeys.FILENAME, new PropertyStringImpl(AttachmentKeys.FILENAME, null));
-				properties.properties.put(AttachmentKeys.MD5, new PropertyStringImpl(AttachmentKeys.MD5, null));
-				properties.properties.put(AttachmentKeys.MTIME, new PropertyStringImpl(AttachmentKeys.MTIME, null));
-				break;
-			}
-			case LINKED_FILE:
-			{
-				properties.properties.put(AttachmentKeys.PATH, new PropertyStringImpl(AttachmentKeys.PATH, null));
-				break;
-			}
-			case LINKED_URL:
-			{
-				properties.properties.put(EntityKeys.URL, new PropertyStringImpl(EntityKeys.URL, null));
-				break;
-			}
-			default:
-			{
-				throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.UNSUPPORTED_ENUM_VALUE, "Cannot initalize an attachment of mode " + mode + ".  Mode not implemented.");
-			}
-	
-		}
-	}
-
-	public static void initializeNoteProperties(PropertiesImpl properties, PropertiesImpl current)
-	{
-		initializeItemProperties(ItemType.NOTE, properties, current);
-		properties.addProperty(new PropertyStringImpl(ZoteroKeys.ItemKeys.NOTE, null));
-		properties.addProperty(new PropertyStringImpl(ZoteroKeys.AttachmentKeys.PARENT_ITEM, null));
 	}
 }

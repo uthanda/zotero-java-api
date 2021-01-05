@@ -42,7 +42,7 @@ final class LinksImpl implements Links
 	{
 		LinksImpl zl = new LinksImpl();
 
-		zl.links.putAll(links.entrySet().stream().collect(Collectors.toMap(e -> LinkType.fromZoteroType(e.getKey()), e -> LinkImpl.from(library, e.getValue()))));
+		zl.links.putAll(links.entrySet().stream().collect(Collectors.toMap(e -> LinkType.fromZoteroType(e.getKey()), e -> LinkImpl.fromRest(library, e.getValue()))));
 
 		return zl;
 	}
