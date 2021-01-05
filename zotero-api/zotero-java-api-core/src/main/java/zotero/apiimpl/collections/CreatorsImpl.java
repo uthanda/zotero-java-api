@@ -1,6 +1,6 @@
 package zotero.apiimpl.collections;
 
-import static zotero.api.constants.ZoteroKeys.Document.CREATORS;
+import static zotero.api.constants.ZoteroKeys.DocumentKeys.CREATORS;
 
 import java.util.ArrayList;
 import java.util.Iterator;

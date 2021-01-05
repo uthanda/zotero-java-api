@@ -41,6 +41,7 @@ import zotero.apiimpl.collections.CollectionsImpl;
 import zotero.apiimpl.collections.CreatorsImpl;
 import zotero.apiimpl.collections.RelationshipsImpl;
 import zotero.apiimpl.collections.TagsImpl;
+import zotero.apiimpl.rest.model.SerializationMode;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 
@@ -62,19 +63,19 @@ public class PropertiesTest
 		library = (LibraryImpl) Library.createLibrary(MockRestService.API_ID.toString(), new ZoteroAPIKey(MockRestService.API_KEY));
 		
 		Map<String,Object> creator = new HashMap<>();
-		creator.put(ZoteroKeys.Creator.CREATOR_TYPE, "author");
-		creator.put(ZoteroKeys.Creator.FIRST_NAME, "John");
-		creator.put(ZoteroKeys.Creator.LAST_NAME, "Doe");
+		creator.put(ZoteroKeys.CreatorKeys.CREATOR_TYPE, "author");
+		creator.put(ZoteroKeys.CreatorKeys.FIRST_NAME, "John");
+		creator.put(ZoteroKeys.CreatorKeys.LAST_NAME, "Doe");
 		
 		List<Map<String,Object>> creators = new ArrayList<>();
 		creators.add(creator);
 		
 		ZoteroRestData data = new ZoteroRestData();
-		data.put(ZoteroKeys.Item.ACCESS_DATE, "1970-01-01T00:00:00Z");
-		data.put(ZoteroKeys.Item.TITLE, "The Title");
-		data.put(ZoteroKeys.Item.VERSION, 12.0);
-		data.put(ZoteroKeys.Document.CREATORS, creators);
-		data.put(ZoteroKeys.Item.COLLECTIONS, Arrays.asList("Y82V25U2"));
+		data.put(ZoteroKeys.ItemKeys.ACCESS_DATE, "1970-01-01T00:00:00Z");
+		data.put(ZoteroKeys.ItemKeys.TITLE, "The Title");
+		data.put(ZoteroKeys.ItemKeys.VERSION, 12.0);
+		data.put(ZoteroKeys.DocumentKeys.CREATORS, creators);
+		data.put(ZoteroKeys.ItemKeys.COLLECTIONS, Arrays.asList("Y82V25U2"));
 		
 		item = new ZoteroRestItem();
 		item.setVersion(12);
@@ -93,25 +94,25 @@ public class PropertiesTest
 	@Test
 	public void testGetString()
 	{
-		assertEquals("The Title", props.getString(ZoteroKeys.Item.TITLE));
+		assertEquals("The Title", props.getString(ZoteroKeys.ItemKeys.TITLE));
 	}
 
 	@Test
 	public void testGetInteger()
 	{
-		assertEquals(12, props.getInteger(ZoteroKeys.Item.VERSION).intValue());
+		assertEquals(12, props.getInteger(ZoteroKeys.ItemKeys.VERSION).intValue());
 	}
 
 	@Test
 	public void testGetDate()
 	{
-		assertEquals(0L,props.getDate(ZoteroKeys.Item.ACCESS_DATE).getTime());
+		assertEquals(0L,props.getDate(ZoteroKeys.ItemKeys.ACCESS_DATE).getTime());
 	}
 	
 	@Test
 	public void testGetCollectionsProperty()
 	{
-		Collections collections = (Collections) props.getProperty(ZoteroKeys.Item.COLLECTIONS).getValue();
+		Collections collections = (Collections) props.getProperty(ZoteroKeys.ItemKeys.COLLECTIONS).getValue();
 		Collection collection = collections.iterator().next();
 		
 		assertEquals("Y82V25U2", collection.getKey());
@@ -120,7 +121,7 @@ public class PropertiesTest
 	@Test
 	public void testGetCreatorsProperty()
 	{
-		Creators creators = (Creators) props.getProperty(ZoteroKeys.Document.CREATORS).getValue();
+		Creators creators = (Creators) props.getProperty(ZoteroKeys.DocumentKeys.CREATORS).getValue();
 		assertEquals(1, creators.size());
 	}
 
@@ -148,12 +149,12 @@ public class PropertiesTest
 		relationships.getRelatedItems(RelationshipType.DC_REPLACES).addRelation("B4ERDVS4");
 		
 		Collection collection = library.fetchCollection("A6C8YX9M");
-		((PropertyStringImpl)collection.getProperties().getProperty(ZoteroKeys.Collection.PARENT_COLLECTION)).setValue("COL12345");
+		((PropertyStringImpl)collection.getProperties().getProperty(ZoteroKeys.CollectionKeys.PARENT_COLLECTION)).setValue("COL12345");
 		
 		CollectionsImpl collections = new CollectionsImpl();
 		collections.addToCollection(collection);
 		
-		properties.addProperty(new PropertyStringImpl(ZoteroKeys.Item.TITLE, "A title"));
+		properties.addProperty(new PropertyStringImpl(ZoteroKeys.ItemKeys.TITLE, "A title"));
 		properties.addProperty(new PropertyTagsImpl(tags));
 		properties.addProperty(new PropertyCreatorsImpl(creators));
 		properties.addProperty(new PropertyRelationshipsImpl(relationships));
@@ -161,26 +162,26 @@ public class PropertiesTest
 		
 		ZoteroRestData data = new ZoteroRestData();
 		
-		PropertiesImpl.toRest(data, properties, false);
+		PropertiesImpl.toRest(data, properties, SerializationMode.FULL);
 		
 		assertEquals(5, data.size());
 		
-		assertEquals("A title", data.get(ZoteroKeys.Item.TITLE));
+		assertEquals("A title", data.get(ZoteroKeys.ItemKeys.TITLE));
 
-		assertEquals("Vincent", ((List<Map<String,Object>>)data.get(ZoteroKeys.Document.CREATORS)).get(0).get(ZoteroKeys.Creator.FIRST_NAME));
-		assertEquals("Van Gogh", ((List<Map<String,Object>>)data.get(ZoteroKeys.Document.CREATORS)).get(0).get(ZoteroKeys.Creator.LAST_NAME));
-		assertEquals("artist", ((List<Map<String,Object>>)data.get(ZoteroKeys.Document.CREATORS)).get(0).get(ZoteroKeys.Creator.CREATOR_TYPE));
+		assertEquals("Vincent", ((List<Map<String,Object>>)data.get(ZoteroKeys.DocumentKeys.CREATORS)).get(0).get(ZoteroKeys.CreatorKeys.FIRST_NAME));
+		assertEquals("Van Gogh", ((List<Map<String,Object>>)data.get(ZoteroKeys.DocumentKeys.CREATORS)).get(0).get(ZoteroKeys.CreatorKeys.LAST_NAME));
+		assertEquals("artist", ((List<Map<String,Object>>)data.get(ZoteroKeys.DocumentKeys.CREATORS)).get(0).get(ZoteroKeys.CreatorKeys.CREATOR_TYPE));
 		
-		assertEquals("Painter", ((List<Map<String,Object>>)data.get(ZoteroKeys.Item.TAGS)).get(0).get(ZoteroKeys.Tag.TAG));
+		assertEquals("Painter", ((List<Map<String,Object>>)data.get(ZoteroKeys.ItemKeys.TAGS)).get(0).get(ZoteroKeys.TagKeys.TAG));
 		
-		assertEquals("A6C8YX9M", ((List<String>)data.get(ZoteroKeys.Item.COLLECTIONS)).get(0));
+		assertEquals("A6C8YX9M", ((List<String>)data.get(ZoteroKeys.ItemKeys.COLLECTIONS)).get(0));
 		
-		assertEquals("B4ERDVS4", ((Map<String,List<String>>)data.get(ZoteroKeys.Item.RELATIONS)).get(RelationshipType.DC_REPLACES.getZoteroName()).get(0));
+		assertEquals("B4ERDVS4", ((Map<String,List<String>>)data.get(ZoteroKeys.ItemKeys.RELATIONS)).get(RelationshipType.DC_REPLACES.getZoteroName()).get(0));
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testToRestDelta()
+	public void testToRestDeltaNoTitle()
 	{
 		PropertiesImpl properties = new PropertiesImpl(library);
 		
@@ -198,7 +199,7 @@ public class PropertiesTest
 		CollectionsImpl collections = CollectionsImpl.fromRest(library, Arrays.asList("COLL1234"));
 		collections.addToCollection(collection);
 		
-		properties.addProperty(new PropertyStringImpl(ZoteroKeys.Item.TITLE, "A title"));
+		properties.addProperty(new PropertyStringImpl(ZoteroKeys.ItemKeys.TITLE, "A title"));
 		properties.addProperty(new PropertyTagsImpl(tags));
 		properties.addProperty(new PropertyCreatorsImpl(creators));
 		properties.addProperty(new PropertyRelationshipsImpl(relationships));
@@ -206,13 +207,43 @@ public class PropertiesTest
 		
 		ZoteroRestData data = new ZoteroRestData();
 		
-		PropertiesImpl.toRest(data, properties, true);
+		PropertiesImpl.toRest(data, properties, SerializationMode.PARTIAL);
 		
 		assertEquals(4, data.size());
-		assertTrue(data.containsKey(ZoteroKeys.Item.TAGS));
-		assertTrue(data.containsKey(ZoteroKeys.Document.CREATORS));
-		assertTrue(data.containsKey(ZoteroKeys.Item.RELATIONS));
-		assertTrue(data.containsKey(ZoteroKeys.Item.COLLECTIONS));
+		assertTrue(data.containsKey(ZoteroKeys.ItemKeys.TAGS));
+		assertTrue(data.containsKey(ZoteroKeys.DocumentKeys.CREATORS));
+		assertTrue(data.containsKey(ZoteroKeys.ItemKeys.RELATIONS));
+		assertTrue(data.containsKey(ZoteroKeys.ItemKeys.COLLECTIONS));
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testToRestDeltaTitleOnly()
+	{
+		PropertiesImpl properties = new PropertiesImpl(library);
+		
+		CreatorsImpl creators = CreatorsImpl.fromRest(library, new Gson().fromJson("[{'creatorType':'author','firstName':'Vincent','lastName':'Van Gogh'}]", List.class));
+		
+		TagsImpl tags = new TagsImpl(Arrays.asList(library.createTag("Painter")));
+		
+		RelationshipsImpl relationships = RelationshipsImpl.fromRest(library, new Gson().fromJson("{'dc:replaces':['KEY123']}", Map.class));
+		
+		CollectionsImpl collections = CollectionsImpl.fromRest(library, Arrays.asList("COLL1234"));
+		
+		properties.addProperty(new PropertyStringImpl(ZoteroKeys.ItemKeys.TITLE, "A title"));
+		properties.addProperty(new PropertyTagsImpl(tags));
+		properties.addProperty(new PropertyCreatorsImpl(creators));
+		properties.addProperty(new PropertyRelationshipsImpl(relationships));
+		properties.addProperty(new PropertyCollectionsImpl(collections));
+		
+		properties.putValue(ZoteroKeys.ItemKeys.TITLE, "A new title");
+		
+		ZoteroRestData data = new ZoteroRestData();
+		
+		PropertiesImpl.toRest(data, properties, SerializationMode.PARTIAL);
+		
+		assertEquals(1, data.size());
+		assertTrue(data.containsKey(ZoteroKeys.ItemKeys.TITLE));
 	}
 
 	@Test
@@ -224,8 +255,8 @@ public class PropertiesTest
 		
 		Set<String> names = properties.getPropertyNames();
 		assertEquals(2, names.size());
-		assertTrue(names.contains(ZoteroKeys.Collection.NAME));
-		assertTrue(names.contains(ZoteroKeys.Collection.PARENT_COLLECTION));
+		assertTrue(names.contains(ZoteroKeys.CollectionKeys.NAME));
+		assertTrue(names.contains(ZoteroKeys.CollectionKeys.PARENT_COLLECTION));
 	}
 
 	@Test
@@ -254,33 +285,33 @@ public class PropertiesTest
 	{
 		Set<String> names = props.getPropertyNames();
 		assertEquals(5, names.size());
-		assertTrue(names.contains(ZoteroKeys.Item.VERSION));
-		assertTrue(names.contains(ZoteroKeys.Item.TITLE));
-		assertTrue(names.contains(ZoteroKeys.Item.ACCESS_DATE));
-		assertTrue(names.contains(ZoteroKeys.Document.CREATORS));
-		assertTrue(names.contains(ZoteroKeys.Item.COLLECTIONS));
+		assertTrue(names.contains(ZoteroKeys.ItemKeys.VERSION));
+		assertTrue(names.contains(ZoteroKeys.ItemKeys.TITLE));
+		assertTrue(names.contains(ZoteroKeys.ItemKeys.ACCESS_DATE));
+		assertTrue(names.contains(ZoteroKeys.DocumentKeys.CREATORS));
+		assertTrue(names.contains(ZoteroKeys.ItemKeys.COLLECTIONS));
 	}
 
 	@Test
 	public void testAddProperty()
 	{
 		PropertiesImpl properties = new PropertiesImpl(library);
-		properties.addProperty(new PropertyStringImpl(ZoteroKeys.Item.TITLE, "Foo"));
+		properties.addProperty(new PropertyStringImpl(ZoteroKeys.ItemKeys.TITLE, "Foo"));
 	
 		assertEquals(1, properties.getPropertyNames().size());
-		assertTrue(properties.getPropertyNames().contains(ZoteroKeys.Item.TITLE));
-		assertEquals("Foo", properties.getString(ZoteroKeys.Item.TITLE));
+		assertTrue(properties.getPropertyNames().contains(ZoteroKeys.ItemKeys.TITLE));
+		assertEquals("Foo", properties.getString(ZoteroKeys.ItemKeys.TITLE));
 	}
 	
 	@Test
 	public void testPutValue()
 	{
 		PropertiesImpl properties = new PropertiesImpl(library);
-		properties.addProperty(new PropertyStringImpl(ZoteroKeys.Item.TITLE, "Foo"));
+		properties.addProperty(new PropertyStringImpl(ZoteroKeys.ItemKeys.TITLE, "Foo"));
 		
-		properties.putValue(ZoteroKeys.Item.TITLE, "New value");
+		properties.putValue(ZoteroKeys.ItemKeys.TITLE, "New value");
 	
-		assertEquals("New value", properties.getString(ZoteroKeys.Item.TITLE));
-		assertTrue(((PropertyStringImpl)properties.getProperty(ZoteroKeys.Item.TITLE)).isDirty());
+		assertEquals("New value", properties.getString(ZoteroKeys.ItemKeys.TITLE));
+		assertTrue(((PropertyStringImpl)properties.getProperty(ZoteroKeys.ItemKeys.TITLE)).isDirty());
 	}
 }

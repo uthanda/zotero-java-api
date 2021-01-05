@@ -1,10 +1,13 @@
 package zotero.apiimpl.properties;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.junit.Test;
 
@@ -72,9 +75,13 @@ public class PropertyDateTest
 	public void testToRest()
 	{
 		PropertyDateImpl prop = new PropertyDateImpl("testProperty", new Date(0));
-		assertNull(prop.toRestValue());
+		
+		assertNotNull(prop.toRestValue());
+		assertEquals(0, DatatypeConverter.parseDateTime((String) prop.toRestValue()).getTimeInMillis());
+		
 		prop.setValue(new Date(1));
-		assertEquals(1, prop.toRestValue());
+		assertEquals(1, DatatypeConverter.parseDateTime((String) prop.toRestValue()).getTimeInMillis());
+		
 		prop.clearValue();
 		assertEquals(Boolean.FALSE, prop.toRestValue());
 	}

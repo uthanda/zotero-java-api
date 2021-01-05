@@ -11,7 +11,7 @@ public class PropertyCreatorsImpl extends PropertyObjectImpl<Creators>
 	
 	public PropertyCreatorsImpl(CreatorsImpl values)
 	{
-		super(ZoteroKeys.Document.CREATORS, Creators.class, values);
+		super(ZoteroKeys.DocumentKeys.CREATORS, Creators.class, values);
 		this.list = values;
 	}
 	

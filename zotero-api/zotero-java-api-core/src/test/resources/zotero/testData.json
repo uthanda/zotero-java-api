@@ -58,7 +58,7 @@
       }
     },
     "POST" : {
-      "[{\"data\":{\"itemType\":\"case\",\"creators\":[{\"firstName\":\"John\",\"lastName\":\"Dewey\",\"creatorType\":\"author\"}]}}]" : {
+      "[{\"data\":{\"itemType\":\"case\",\"creators\":[{\"firstName\":\"John\",\"lastName\":\"Dewey\",\"creatorType\":\"author\"}],\"tags\":[],\"relations\":{}}}]" : {
         "headers" : {},
         "item" : {
           "successful" : {
@@ -131,7 +131,7 @@
           "failed" : {}
         }
       },
-      "[{\"data\":{\"path\":\"path/to/file\",\"itemType\":\"attachment\",\"linkMode\":\"linked_file\",\"title\":\"Test Attachment\"}}]" : {
+      "[{\"data\":{\"path\":\"path/to/file\",\"itemType\":\"attachment\",\"linkMode\":\"linked_file\",\"relations\":{},\"title\":\"Test Attachment\",\"tags\":[]}}]" : {
         "headers" : {},
         "item" : {
           "successful" : {
@@ -187,7 +187,7 @@
           "failed" : {}
         }
       },
-      "[{\"data\":{\"itemType\":\"attachment\",\"linkMode\":\"linked_url\",\"title\":\"Zotero Website\",\"url\":\"http://www.zotero.org/\"}}]" : {
+      "[{\"data\":{\"itemType\":\"attachment\",\"linkMode\":\"linked_url\",\"relations\":{},\"title\":\"Zotero Website\",\"url\":\"http://www.zotero.org/\",\"tags\":[]}}]" : {
         "headers" : {},
         "item" : {
           "successful" : {
@@ -242,7 +242,7 @@
           "failed" : {}
         }
       },
-      "[{\"data\":{\"itemType\":\"attachment\",\"linkMode\":\"imported_url\",\"title\":\"Zotero Website\",\"url\":\"http://www.zotero.org/\"}}]" : {
+      "[{\"data\":{\"itemType\":\"attachment\",\"title\":\"Zotero Website\",\"url\":\"http://www.zotero.org/\",\"tags\":[],\"linkMode\":\"imported_url\",\"relations\":{}}}]" : {
         "headers" : {},
         "item" : {
           "successful" : {

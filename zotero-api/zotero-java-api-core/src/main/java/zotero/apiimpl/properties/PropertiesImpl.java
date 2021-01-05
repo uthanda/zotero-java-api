@@ -15,10 +15,10 @@ import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.constants.ZoteroKeys;
-import zotero.api.constants.ZoteroKeys.Attachment;
-import zotero.api.constants.ZoteroKeys.Document;
-import zotero.api.constants.ZoteroKeys.Entity;
-import zotero.api.constants.ZoteroKeys.Item;
+import zotero.api.constants.ZoteroKeys.AttachmentKeys;
+import zotero.api.constants.ZoteroKeys.DocumentKeys;
+import zotero.api.constants.ZoteroKeys.EntityKeys;
+import zotero.api.constants.ZoteroKeys.ItemKeys;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.properties.Properties;
 import zotero.api.properties.Property;
@@ -29,6 +29,7 @@ import zotero.apiimpl.LibraryImpl;
 import zotero.apiimpl.collections.CreatorsImpl;
 import zotero.apiimpl.collections.RelationshipsImpl;
 import zotero.apiimpl.collections.TagsImpl;
+import zotero.apiimpl.rest.model.SerializationMode;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.schema.ZoteroSchema;
@@ -102,6 +103,12 @@ public final class PropertiesImpl implements Properties
 	}
 
 	@Override
+	public Library getLibrary()
+	{
+		return library;
+	}
+
+	@Override
 	public String toString()
 	{
 		return String.format("[Properties props:%s]", properties.toString());
@@ -126,22 +133,22 @@ public final class PropertiesImpl implements Properties
 			// Deal with known properties
 			switch (e.getKey())
 			{
-				case Document.CREATORS:
+				case DocumentKeys.CREATORS:
 				{
 					property = PropertyCreatorsImpl.fromRest(library, value);
 					break;
 				}
-				case Item.TAGS:
+				case ItemKeys.TAGS:
 				{
 					property = PropertyTagsImpl.fromRest(library, value);
 					break;
 				}
-				case Item.COLLECTIONS:
+				case ItemKeys.COLLECTIONS:
 				{
 					property = PropertyCollectionsImpl.fromRest(library, value);
 					break;
 				}
-				case Item.RELATIONS:
+				case ItemKeys.RELATIONS:
 				{
 					property = PropertyRelationshipsImpl.fromRest(library, value);
 					break;
@@ -167,11 +174,11 @@ public final class PropertiesImpl implements Properties
 		{
 			property = PropertyDateImpl.fromRest(name, value);
 		}
-		else if (Item.ITEM_TYPE.equals(e.getKey()))
+		else if (ItemKeys.ITEM_TYPE.equals(e.getKey()))
 		{
 			property = new PropertyEnumImpl<>(e.getKey(), ItemType.class, ItemType.fromZoteroType((String) e.getValue()));
 		}
-		else if (Attachment.LINK_MODE.equals(e.getKey()))
+		else if (AttachmentKeys.LINK_MODE.equals(e.getKey()))
 		{
 			property = new PropertyEnumImpl<>(e.getKey(), LinkMode.class, LinkMode.fromZoteroType((String) e.getValue()));
 		}
@@ -192,7 +199,7 @@ public final class PropertiesImpl implements Properties
 	}
 
 	@SuppressWarnings({"squid:S1199"})
-	public static void toRest(ZoteroRestData data, Properties properties, boolean deltaMode)
+	public static void toRest(ZoteroRestData data, Properties properties, SerializationMode mode)
 	{
 		PropertiesImpl props = (PropertiesImpl) properties;
 	
@@ -202,7 +209,7 @@ public final class PropertiesImpl implements Properties
 			PropertyImpl<?> prop = (PropertyImpl<?>) e.getValue();
 	
 			// In Delta mode, we only add the changed properties
-			if (deltaMode && !prop.isDirty())
+			if (mode == SerializationMode.PARTIAL && !prop.isDirty())
 			{
 				continue;
 			}
@@ -213,8 +220,8 @@ public final class PropertiesImpl implements Properties
 
 	public static void initializeCollectionProperties(PropertiesImpl properties)
 	{
-		properties.addProperty(new PropertyStringImpl(ZoteroKeys.Collection.NAME, null));
-		properties.addProperty(new PropertyStringImpl(ZoteroKeys.Collection.PARENT_COLLECTION, null));
+		properties.addProperty(new PropertyStringImpl(ZoteroKeys.CollectionKeys.NAME, null));
+		properties.addProperty(new PropertyStringImpl(ZoteroKeys.CollectionKeys.PARENT_COLLECTION, null));
 	}
 
 	public static void initializeDocumentProperties(ItemType type, PropertiesImpl properties, PropertiesImpl current)
@@ -226,7 +233,7 @@ public final class PropertiesImpl implements Properties
 	
 		initializeItemProperties(type, properties, current);
 	
-		properties.properties.put(Document.CREATORS, new PropertyCreatorsImpl(new CreatorsImpl(properties.library)));
+		properties.properties.put(DocumentKeys.CREATORS, new PropertyCreatorsImpl(new CreatorsImpl(properties.library)));
 	}
 
 	static void initializeItemProperties(ItemType type, PropertiesImpl properties, PropertiesImpl current)
@@ -234,9 +241,9 @@ public final class PropertiesImpl implements Properties
 		ZoteroSchema schema = ZoteroSchema.getCurrentSchema();
 		ZoteroType zoteroType = null;
 	
-		properties.properties.put(Item.ITEM_TYPE, new PropertyEnumImpl<>(Item.ITEM_TYPE, ItemType.class, type));
-		properties.properties.put(Item.RELATIONS, new PropertyRelationshipsImpl(new RelationshipsImpl(properties.library)));
-		properties.properties.put(Item.TAGS, new PropertyTagsImpl(new TagsImpl()));
+		properties.properties.put(ItemKeys.ITEM_TYPE, new PropertyEnumImpl<>(ItemKeys.ITEM_TYPE, ItemType.class, type));
+		properties.properties.put(ItemKeys.RELATIONS, new PropertyRelationshipsImpl(new RelationshipsImpl(properties.library)));
+		properties.properties.put(ItemKeys.TAGS, new PropertyTagsImpl(new TagsImpl()));
 	
 		for (ZoteroType itemType : schema.getTypes())
 		{
@@ -270,35 +277,35 @@ public final class PropertiesImpl implements Properties
 	{
 		initializeItemProperties(ItemType.ATTACHMENT, properties, null);
 		
-		properties.addProperty(new PropertyEnumImpl<>(Attachment.LINK_MODE, LinkMode.class, mode));
-		properties.addProperty(new PropertyStringImpl(Attachment.CHARSET, null));
-		properties.addProperty(new PropertyStringImpl(Attachment.CONTENT_TYPE, null));
+		properties.addProperty(new PropertyEnumImpl<>(AttachmentKeys.LINK_MODE, LinkMode.class, mode));
+		properties.addProperty(new PropertyStringImpl(AttachmentKeys.CHARSET, null));
+		properties.addProperty(new PropertyStringImpl(AttachmentKeys.CONTENT_TYPE, null));
 	
 		switch (mode)
 		{
 			case IMPORTED_FILE:
 			{
-				properties.properties.put(Attachment.FILENAME, new PropertyStringImpl(Attachment.FILENAME, null));
-				properties.properties.put(Attachment.MD5, new PropertyStringImpl(Attachment.MD5, null));
-				properties.properties.put(Attachment.MTIME, new PropertyStringImpl(Attachment.MTIME, null));
+				properties.properties.put(AttachmentKeys.FILENAME, new PropertyStringImpl(AttachmentKeys.FILENAME, null));
+				properties.properties.put(AttachmentKeys.MD5, new PropertyStringImpl(AttachmentKeys.MD5, null));
+				properties.properties.put(AttachmentKeys.MTIME, new PropertyStringImpl(AttachmentKeys.MTIME, null));
 				break;
 			}
 			case IMPORTED_URL:
 			{
-				properties.properties.put(Entity.URL, new PropertyStringImpl(Entity.URL, null));
-				properties.properties.put(Attachment.FILENAME, new PropertyStringImpl(Attachment.FILENAME, null));
-				properties.properties.put(Attachment.MD5, new PropertyStringImpl(Attachment.MD5, null));
-				properties.properties.put(Attachment.MTIME, new PropertyStringImpl(Attachment.MTIME, null));
+				properties.properties.put(EntityKeys.URL, new PropertyStringImpl(EntityKeys.URL, null));
+				properties.properties.put(AttachmentKeys.FILENAME, new PropertyStringImpl(AttachmentKeys.FILENAME, null));
+				properties.properties.put(AttachmentKeys.MD5, new PropertyStringImpl(AttachmentKeys.MD5, null));
+				properties.properties.put(AttachmentKeys.MTIME, new PropertyStringImpl(AttachmentKeys.MTIME, null));
 				break;
 			}
 			case LINKED_FILE:
 			{
-				properties.properties.put(Attachment.PATH, new PropertyStringImpl(Attachment.PATH, null));
+				properties.properties.put(AttachmentKeys.PATH, new PropertyStringImpl(AttachmentKeys.PATH, null));
 				break;
 			}
 			case LINKED_URL:
 			{
-				properties.properties.put(Entity.URL, new PropertyStringImpl(Entity.URL, null));
+				properties.properties.put(EntityKeys.URL, new PropertyStringImpl(EntityKeys.URL, null));
 				break;
 			}
 			default:
@@ -312,13 +319,7 @@ public final class PropertiesImpl implements Properties
 	public static void initializeNoteProperties(PropertiesImpl properties, PropertiesImpl current)
 	{
 		initializeItemProperties(ItemType.NOTE, properties, current);
-		properties.addProperty(new PropertyStringImpl(ZoteroKeys.Item.NOTE, null));
-		properties.addProperty(new PropertyStringImpl(ZoteroKeys.Attachment.PARENT_ITEM, null));
-	}
-
-	@Override
-	public Library getLibrary()
-	{
-		return library;
+		properties.addProperty(new PropertyStringImpl(ZoteroKeys.ItemKeys.NOTE, null));
+		properties.addProperty(new PropertyStringImpl(ZoteroKeys.AttachmentKeys.PARENT_ITEM, null));
 	}
 }

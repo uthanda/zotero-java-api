@@ -9,7 +9,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.util.Map;
 
@@ -27,7 +26,6 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClients;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -41,7 +39,6 @@ import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.util.MockRestService;
-import zotero.api.util.TestResponse;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ HttpClients.class })
@@ -95,7 +92,7 @@ public class AttachmentsTest
 	{
 		Attachment attachment = library.createAttachment(LinkMode.LINKED_FILE);
 		attachment.setTitle("Test Attachment");
-		attachment.getProperties().putValue(ZoteroKeys.Attachment.PATH, "path/to/file");
+		attachment.getProperties().putValue(ZoteroKeys.AttachmentKeys.PATH, "path/to/file");
 		attachment.save();
 
 		assertNotNull(attachment.getKey());
@@ -106,7 +103,7 @@ public class AttachmentsTest
 	{
 		Attachment attachment = library.createAttachment(LinkMode.LINKED_URL);
 		attachment.setTitle("Zotero Website");
-		attachment.getProperties().putValue(ZoteroKeys.Attachment.URL, "http://www.zotero.org/");
+		attachment.getProperties().putValue(ZoteroKeys.AttachmentKeys.URL, "http://www.zotero.org/");
 		attachment.save();
 
 		assertNotNull(attachment.getKey());
@@ -117,7 +114,7 @@ public class AttachmentsTest
 	{
 		Attachment attachment = library.createAttachment(LinkMode.IMPORTED_URL);
 		attachment.setTitle("Zotero Website");
-		attachment.getProperties().putValue(ZoteroKeys.Attachment.URL, "http://www.zotero.org/");
+		attachment.getProperties().putValue(ZoteroKeys.AttachmentKeys.URL, "http://www.zotero.org/");
 		attachment.save();
 
 		assertNotNull(attachment.getKey());
@@ -141,9 +138,9 @@ public class AttachmentsTest
 
 		Attachment attachment = library.createAttachment(LinkMode.IMPORTED_FILE);
 		attachment.setTitle("Zotero Sample Attachment");
-		attachment.getProperties().putValue(ZoteroKeys.Attachment.FILENAME, "zotero.properties");
-		attachment.getProperties().putValue(ZoteroKeys.Attachment.MTIME, "1609673828440");
-		attachment.getProperties().putValue(ZoteroKeys.Attachment.CONTENT_TYPE, "text/plain");
+		attachment.getProperties().putValue(ZoteroKeys.AttachmentKeys.FILENAME, "zotero.properties");
+		attachment.getProperties().putValue(ZoteroKeys.AttachmentKeys.MTIME, "1609673828440");
+		attachment.getProperties().putValue(ZoteroKeys.AttachmentKeys.CONTENT_TYPE, "text/plain");
 		attachment.provideContent(new ByteArrayInputStream("testContent".getBytes()), 11L, "a9d008afc51e435b813611042192eb74");
 //		attachment.save();
 //

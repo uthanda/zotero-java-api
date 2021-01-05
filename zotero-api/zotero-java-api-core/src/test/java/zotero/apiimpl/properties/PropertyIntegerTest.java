@@ -1,6 +1,7 @@
 package zotero.apiimpl.properties;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -70,9 +71,13 @@ public class PropertyIntegerTest
 	public void testToRest()
 	{
 		PropertyIntegerImpl prop = new PropertyIntegerImpl("testProperty", 0);
-		assertNull(prop.toRestValue());
+		
+		assertNotNull(prop.toRestValue());
+		assertEquals(0, prop.toRestValue());
+		
 		prop.setValue(1);
 		assertEquals(1, prop.toRestValue());
+
 		prop.clearValue();
 		assertEquals(Boolean.FALSE, prop.toRestValue());
 	}

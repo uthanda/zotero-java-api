@@ -29,7 +29,7 @@ public class DocumentCreation
 		
 		// Set the properties
 		doc.setTitle("A test document");
-		doc.getProperties().putValue(ZoteroKeys.Item.TITLE, args[2]);
+		doc.getProperties().putValue(ZoteroKeys.ItemKeys.TITLE, args[2]);
 		doc.save();
 		
 		// Print the new item's key

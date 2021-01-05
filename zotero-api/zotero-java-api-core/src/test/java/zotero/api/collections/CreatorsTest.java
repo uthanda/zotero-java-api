@@ -2,6 +2,7 @@ package zotero.api.collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -25,6 +26,7 @@ import com.google.gson.JsonObject;
 import zotero.api.Library;
 import zotero.api.ZoteroAPIKey;
 import zotero.api.constants.CreatorType;
+import zotero.api.constants.ZoteroKeys;
 import zotero.api.util.MockRestService;
 import zotero.apiimpl.LibraryImpl;
 import zotero.apiimpl.collections.CreatorsImpl;
@@ -84,9 +86,29 @@ public class CreatorsTest
 		assertTrue(creators.isDirty());
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testToRest()
 	{
+		CreatorsImpl creators = new CreatorsImpl(library);
+
+		// Empty should serialize an empty list
+		List<Map<String, String>> list = (List<Map<String,String>>)CreatorsImpl.toRest(creators);
+		assertNotNull(list);
+		assertTrue(list.isEmpty());
 		
+		creators.add(CreatorType.ARTIST, "Kate", "Nash");
+
+		list = (List<Map<String,String>>)CreatorsImpl.toRest(creators);
+
+		assertNotNull(list);
+		assertFalse(list.isEmpty());
+		assertEquals(CreatorType.ARTIST.getZoteroName(), list.get(0).get(ZoteroKeys.CreatorKeys.CREATOR_TYPE));
+		assertEquals("Kate", list.get(0).get(ZoteroKeys.CreatorKeys.FIRST_NAME));
+		assertEquals("Nash", list.get(0).get(ZoteroKeys.CreatorKeys.LAST_NAME));
+		
+		creators.clear();
+		
+		assertEquals(Boolean.FALSE, CreatorsImpl.toRest(creators));
 	}
 }

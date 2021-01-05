@@ -68,7 +68,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		super(mode, library);
 		this.pending = true;
 		// Create the parent key property and set it to read-only.
-		((PropertiesImpl) getProperties()).addProperty(new PropertyStringImpl(ZoteroKeys.Attachment.PARENT_ITEM, parentKey, true));
+		((PropertiesImpl) getProperties()).addProperty(new PropertyStringImpl(ZoteroKeys.AttachmentKeys.PARENT_ITEM, parentKey, true));
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		super.checkDeletionStatus();
 		checkPendingStatus();
 
-		return (LinkMode) getProperties().getProperty(ZoteroKeys.Attachment.LINK_MODE).getValue();
+		return (LinkMode) getProperties().getProperty(ZoteroKeys.AttachmentKeys.LINK_MODE).getValue();
 	}
 
 	private void checkPendingStatus()
@@ -94,7 +94,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		super.checkDeletionStatus();
 		checkPendingStatus();
 
-		return getProperties().getString(ZoteroKeys.Attachment.CHARSET);
+		return getProperties().getString(ZoteroKeys.AttachmentKeys.CHARSET);
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	{
 		super.checkDeletionStatus();
 
-		getProperties().putValue(ZoteroKeys.Attachment.CHARSET, charset);
+		getProperties().putValue(ZoteroKeys.AttachmentKeys.CHARSET, charset);
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		super.checkDeletionStatus();
 		checkPendingStatus();
 
-		return getProperties().getString(ZoteroKeys.Attachment.CONTENT_TYPE);
+		return getProperties().getString(ZoteroKeys.AttachmentKeys.CONTENT_TYPE);
 	}
 
 	@Override
@@ -119,7 +119,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	{
 		super.checkDeletionStatus();
 
-		getProperties().putValue(ZoteroKeys.Attachment.CONTENT_TYPE, type);
+		getProperties().putValue(ZoteroKeys.AttachmentKeys.CONTENT_TYPE, type);
 	}
 
 	public static ItemImpl fromRest(ZoteroRestItem jsonItem, LibraryImpl library)
@@ -149,14 +149,14 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	{
 		Properties props = getProperties();
 
-		switch ((LinkMode) props.getProperty(ZoteroKeys.Attachment.LINK_MODE).getValue())
+		switch ((LinkMode) props.getProperty(ZoteroKeys.AttachmentKeys.LINK_MODE).getValue())
 		{
 			case IMPORTED_FILE:
 			{
-				String md5 = props.getString(ZoteroKeys.Attachment.MD5);
-				String mtime = props.getString(ZoteroKeys.Attachment.MTIME);
-				String filename = props.getString(ZoteroKeys.Attachment.FILENAME);
-				String contentType = props.getString(ZoteroKeys.Attachment.CONTENT_TYPE);
+				String md5 = props.getString(ZoteroKeys.AttachmentKeys.MD5);
+				String mtime = props.getString(ZoteroKeys.AttachmentKeys.MTIME);
+				String filename = props.getString(ZoteroKeys.AttachmentKeys.FILENAME);
+				String contentType = props.getString(ZoteroKeys.AttachmentKeys.CONTENT_TYPE);
 
 				if (contentType == null)
 				{
@@ -192,7 +192,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 			}
 			case IMPORTED_URL:
 			{
-				if (props.getString(ZoteroKeys.Entity.URL) == null)
+				if (props.getString(ZoteroKeys.EntityKeys.URL) == null)
 				{
 					throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.ATTACHMENT_MISSING_PARAM, "No url provided for attachment");
 				}
@@ -214,7 +214,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	{
 		this.is = is;
 		this.fileSize = fileSize;
-		getProperties().putValue(ZoteroKeys.Attachment.MD5, md5);
+		getProperties().putValue(ZoteroKeys.AttachmentKeys.MD5, md5);
 	}
 
 	@Override
@@ -240,10 +240,10 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	{
 		Properties props = getProperties();
 
-		String md5 = props.getString(ZoteroKeys.Attachment.MD5);
-		String mtime = props.getString(ZoteroKeys.Attachment.MTIME);
-		String filename = props.getString(ZoteroKeys.Attachment.FILENAME);
-		String mimeType = props.getString(ZoteroKeys.Attachment.CONTENT_TYPE);
+		String md5 = props.getString(ZoteroKeys.AttachmentKeys.MD5);
+		String mtime = props.getString(ZoteroKeys.AttachmentKeys.MTIME);
+		String filename = props.getString(ZoteroKeys.AttachmentKeys.FILENAME);
+		String mimeType = props.getString(ZoteroKeys.AttachmentKeys.CONTENT_TYPE);
 
 		validateImportedFileProperties(md5, mtime, filename);
 
@@ -259,9 +259,9 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		//@formatter:off
 		builder
 			.url(ZoteroRest.Items.FILE)
-			.formParam(zotero.api.constants.ZoteroKeys.Attachment.UPLOAD, uploadKey)
+			.formParam(zotero.api.constants.ZoteroKeys.AttachmentKeys.UPLOAD, uploadKey)
 			.urlParam(URLParameter.ITEM_KEY, getKey())
-			.header(ZoteroRest.Headers.IF_MATCH, getProperties().getString(ZoteroKeys.Attachment.MD5));
+			.header(ZoteroRest.Headers.IF_MATCH, getProperties().getString(ZoteroKeys.AttachmentKeys.MD5));
 		//@formatter:on
 
 		LibraryImpl library = (LibraryImpl) getLibrary();
@@ -313,10 +313,10 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		//@formatter:off
 		builder.url(ZoteroRest.Items.FILE)
 			.urlParam(URLParameter.ITEM_KEY, this.getKey())
-			.formParam(ZoteroKeys.Attachment.MD5, md5)
-			.formParam(ZoteroKeys.Attachment.FILENAME, filename)
-			.formParam(ZoteroKeys.Attachment.FILE_SIZE, fileSize.toString())
-			.formParam(ZoteroKeys.Attachment.MTIME, mtime)
+			.formParam(ZoteroKeys.AttachmentKeys.MD5, md5)
+			.formParam(ZoteroKeys.AttachmentKeys.FILENAME, filename)
+			.formParam(ZoteroKeys.AttachmentKeys.FILE_SIZE, fileSize.toString())
+			.formParam(ZoteroKeys.AttachmentKeys.MTIME, mtime)
 			.formParam("params", "1");
 		//@formatter:on
 
@@ -384,9 +384,9 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 
 			BasicFileAttributes attr = Files.readAttributes(Paths.get(file.getAbsolutePath()), BasicFileAttributes.class);
 
-			getProperties().putValue(ZoteroKeys.Attachment.FILENAME, file.getName());
-			getProperties().putValue(ZoteroKeys.Attachment.CONTENT_TYPE, mime);
-			getProperties().putValue(ZoteroKeys.Attachment.MTIME, Long.toString(attr.lastModifiedTime().toMillis()));
+			getProperties().putValue(ZoteroKeys.AttachmentKeys.FILENAME, file.getName());
+			getProperties().putValue(ZoteroKeys.AttachmentKeys.CONTENT_TYPE, mime);
+			getProperties().putValue(ZoteroKeys.AttachmentKeys.MTIME, Long.toString(attr.lastModifiedTime().toMillis()));
 		}
 		catch (IOException e)
 		{
@@ -430,7 +430,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	{
 		checkDeletionStatus();
 	
-		return super.getProperties().getString(ZoteroKeys.Item.TITLE);
+		return super.getProperties().getString(ZoteroKeys.ItemKeys.TITLE);
 	}
 
 	@Override
@@ -438,6 +438,6 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 	{
 		checkDeletionStatus();
 	
-		super.getProperties().putValue(ZoteroKeys.Item.TITLE, title);
+		super.getProperties().putValue(ZoteroKeys.ItemKeys.TITLE, title);
 	}
 }

@@ -1,8 +1,8 @@
 package zotero.apiimpl.search;
 
-import static zotero.api.constants.ZoteroKeys.Search.INCLUDE_TRASHED;
-import static zotero.api.constants.ZoteroKeys.Search.INCLUDE_TRASHED_FALSE;
-import static zotero.api.constants.ZoteroKeys.Search.INCLUDE_TRASHED_TRUE;
+import static zotero.api.constants.ZoteroKeys.SearchKeys.INCLUDE_TRASHED;
+import static zotero.api.constants.ZoteroKeys.SearchKeys.INCLUDE_TRASHED_FALSE;
+import static zotero.api.constants.ZoteroKeys.SearchKeys.INCLUDE_TRASHED_TRUE;
 import static zotero.apiimpl.rest.ZoteroRest.Items.ALL;
 
 import java.util.function.BiConsumer;

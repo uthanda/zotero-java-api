@@ -1,12 +1,10 @@
 package zotero.api.samples.docs;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 import zotero.api.Collection;
 import zotero.api.Document;
 import zotero.api.Library;
-import zotero.api.Tag;
 import zotero.api.samples.Configuration;
 
 public class DocumentAddCategory

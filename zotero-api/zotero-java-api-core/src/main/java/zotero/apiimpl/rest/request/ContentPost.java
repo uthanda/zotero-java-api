@@ -25,6 +25,7 @@ public class ContentPost extends RestRequest<Void>
 		return post;
 	}
 	
+	@Override
 	protected String buildURL() throws URISyntaxException
 	{
 		return getApiUrl();

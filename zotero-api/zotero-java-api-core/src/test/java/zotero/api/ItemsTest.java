@@ -29,11 +29,13 @@ import com.google.gson.Gson;
 
 import zotero.api.collections.Collections;
 import zotero.api.collections.Creators;
+import zotero.api.collections.RelationSet;
 import zotero.api.collections.Relationships;
 import zotero.api.collections.Tags;
 import zotero.api.constants.CreatorType;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkType;
+import zotero.api.constants.RelationshipType;
 import zotero.api.constants.TagType;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.iterators.CollectionIterator;
@@ -89,22 +91,22 @@ public class ItemsTest
 	public void testItemSpecificProperties()
 	{
 		// Check the arbitrary properties
-		assertEquals("Software and Systems Modeling", item.getProperties().getString(zotero.api.constants.ZoteroKeys.Document.PUBLICATION_TITLE));
-		assertEquals("vol1", item.getProperties().getString(zotero.api.constants.ZoteroKeys.Document.VOLUME));
-		assertEquals("issue1", item.getProperties().getString(zotero.api.constants.ZoteroKeys.Document.ISSUE));
-		assertEquals("1-2", item.getProperties().getString(zotero.api.constants.ZoteroKeys.Document.PAGES));
-		assertEquals("2019-11-7", item.getProperties().getString(zotero.api.constants.ZoteroKeys.Document.DATE));
-		assertEquals("s1", item.getProperties().getString(zotero.api.constants.ZoteroKeys.Document.SERIES));
-		assertEquals("SeriesTitle", item.getProperties().getString(zotero.api.constants.ZoteroKeys.Document.SERIES_TITLE));
-		assertEquals("SeriesText", item.getProperties().getString(zotero.api.constants.ZoteroKeys.Document.SERIES_TEXT));
-		assertEquals("Softw Syst Model", item.getProperties().getString(zotero.api.constants.ZoteroKeys.Document.JOURNAL_ABBREVIATION));
-		assertEquals("en", item.getProperties().getString(zotero.api.constants.ZoteroKeys.Document.LANGUAGE));
-		assertEquals("10.1007/s10270-019-00766-5", item.getProperties().getString(zotero.api.constants.ZoteroKeys.Document.DOI));
-		assertEquals("1619-1366, 1619-1374", item.getProperties().getString(zotero.api.constants.ZoteroKeys.Document.ISSN));
-		assertEquals("anArchive", item.getProperties().getString(zotero.api.constants.ZoteroKeys.Document.ARCHIVE));
-		assertEquals("theArchive", item.getProperties().getString(zotero.api.constants.ZoteroKeys.Document.ARCHIVE_LOCATION));
-		assertEquals("DOI.org (Crossref)", item.getProperties().getString(zotero.api.constants.ZoteroKeys.Document.LIBRARY_CATALOG));
-		assertEquals("42", item.getProperties().getString(zotero.api.constants.ZoteroKeys.Document.CALL_NUMBER));
+		assertEquals("Software and Systems Modeling", item.getProperties().getString(zotero.api.constants.ZoteroKeys.DocumentKeys.PUBLICATION_TITLE));
+		assertEquals("vol1", item.getProperties().getString(zotero.api.constants.ZoteroKeys.DocumentKeys.VOLUME));
+		assertEquals("issue1", item.getProperties().getString(zotero.api.constants.ZoteroKeys.DocumentKeys.ISSUE));
+		assertEquals("1-2", item.getProperties().getString(zotero.api.constants.ZoteroKeys.DocumentKeys.PAGES));
+		assertEquals("2019-11-7", item.getProperties().getString(zotero.api.constants.ZoteroKeys.DocumentKeys.DATE));
+		assertEquals("s1", item.getProperties().getString(zotero.api.constants.ZoteroKeys.DocumentKeys.SERIES));
+		assertEquals("SeriesTitle", item.getProperties().getString(zotero.api.constants.ZoteroKeys.DocumentKeys.SERIES_TITLE));
+		assertEquals("SeriesText", item.getProperties().getString(zotero.api.constants.ZoteroKeys.DocumentKeys.SERIES_TEXT));
+		assertEquals("Softw Syst Model", item.getProperties().getString(zotero.api.constants.ZoteroKeys.DocumentKeys.JOURNAL_ABBREVIATION));
+		assertEquals("en", item.getProperties().getString(zotero.api.constants.ZoteroKeys.DocumentKeys.LANGUAGE));
+		assertEquals("10.1007/s10270-019-00766-5", item.getProperties().getString(zotero.api.constants.ZoteroKeys.DocumentKeys.DOI));
+		assertEquals("1619-1366, 1619-1374", item.getProperties().getString(zotero.api.constants.ZoteroKeys.DocumentKeys.ISSN));
+		assertEquals("anArchive", item.getProperties().getString(zotero.api.constants.ZoteroKeys.DocumentKeys.ARCHIVE));
+		assertEquals("theArchive", item.getProperties().getString(zotero.api.constants.ZoteroKeys.DocumentKeys.ARCHIVE_LOCATION));
+		assertEquals("DOI.org (Crossref)", item.getProperties().getString(zotero.api.constants.ZoteroKeys.DocumentKeys.LIBRARY_CATALOG));
+		assertEquals("42", item.getProperties().getString(zotero.api.constants.ZoteroKeys.DocumentKeys.CALL_NUMBER));
 	}
 
 	@Test
@@ -184,9 +186,9 @@ public class ItemsTest
 	public void testRelationships()
 	{
 		Relationships relationships = item.getRelationships();
-//		List<String> relationUris = relationships.getRelatedItems(RelationshipType.DC_REPLACES);
-//		assertEquals("http://zotero.org/users/12345678/items/GX8ZD6D9", relationUris.get(0));
-//		assertEquals("http://zotero.org/users/12345678/items/NYA3Z5B9", relationUris.get(1));
+		RelationSet relationUris = relationships.getRelatedItems(RelationshipType.DC_REPLACES);
+		assertTrue(relationUris.contains("http://zotero.org/users/12345678/items/GX8ZD6D9"));
+		assertTrue(relationUris.contains("http://zotero.org/users/12345678/items/NYA3Z5B9"));
 	}
 
 	@Test
@@ -247,15 +249,15 @@ public class ItemsTest
 		assertNull(item.getKey());
 
 		ZoteroRestData data = item.getData();
-		assertTrue(data.get(zotero.api.constants.ZoteroKeys.Document.CREATORS) instanceof List);
+		assertTrue(data.get(zotero.api.constants.ZoteroKeys.DocumentKeys.CREATORS) instanceof List);
 
 		@SuppressWarnings("unchecked")
-		List<Map<String, String>> creators = (List<Map<String, String>>) data.get(zotero.api.constants.ZoteroKeys.Document.CREATORS);
+		List<Map<String, String>> creators = (List<Map<String, String>>) data.get(zotero.api.constants.ZoteroKeys.DocumentKeys.CREATORS);
 		assertEquals(1, creators.size());
 		Map<String, String> creator = creators.get(0);
-		assertEquals(CreatorType.AUTHOR.getZoteroName(), creator.get(zotero.api.constants.ZoteroKeys.Creator.CREATOR_TYPE));
-		assertEquals("John", creator.get(zotero.api.constants.ZoteroKeys.Creator.FIRST_NAME));
-		assertEquals("Dewey", creator.get(zotero.api.constants.ZoteroKeys.Creator.LAST_NAME));
+		assertEquals(CreatorType.AUTHOR.getZoteroName(), creator.get(zotero.api.constants.ZoteroKeys.CreatorKeys.CREATOR_TYPE));
+		assertEquals("John", creator.get(zotero.api.constants.ZoteroKeys.CreatorKeys.FIRST_NAME));
+		assertEquals("Dewey", creator.get(zotero.api.constants.ZoteroKeys.CreatorKeys.LAST_NAME));
 	}
 
 	@Test
@@ -292,42 +294,43 @@ public class ItemsTest
 
 		assertEquals(2, data.keySet().size());
 
-		assertTrue(data.containsKey(zotero.api.constants.ZoteroKeys.Document.CREATORS));
-		assertTrue(data.containsKey(zotero.api.constants.ZoteroKeys.Item.TITLE));
+		assertTrue(data.containsKey(zotero.api.constants.ZoteroKeys.DocumentKeys.CREATORS));
+		assertTrue(data.containsKey(zotero.api.constants.ZoteroKeys.ItemKeys.TITLE));
 
-		assertEquals("Changed title", data.get(zotero.api.constants.ZoteroKeys.Item.TITLE));
+		assertEquals("Changed title", data.get(zotero.api.constants.ZoteroKeys.ItemKeys.TITLE));
 
-		assertTrue(data.get(zotero.api.constants.ZoteroKeys.Document.CREATORS) instanceof List);
+		assertTrue(data.get(zotero.api.constants.ZoteroKeys.DocumentKeys.CREATORS) instanceof List);
 
 		@SuppressWarnings("unchecked")
-		List<Map<String, String>> creators = (List<Map<String, String>>) data.get(zotero.api.constants.ZoteroKeys.Document.CREATORS);
+		List<Map<String, String>> creators = (List<Map<String, String>>) data.get(zotero.api.constants.ZoteroKeys.DocumentKeys.CREATORS);
 		assertEquals(6, creators.size());
 		Map<String, String> creator = creators.get(5);
-		assertEquals(CreatorType.CARTOGRAPHER.getZoteroName(), creator.get(zotero.api.constants.ZoteroKeys.Creator.CREATOR_TYPE));
-		assertEquals("John", creator.get(zotero.api.constants.ZoteroKeys.Creator.FIRST_NAME));
-		assertEquals("Dewey", creator.get(zotero.api.constants.ZoteroKeys.Creator.LAST_NAME));
+		assertEquals(CreatorType.CARTOGRAPHER.getZoteroName(), creator.get(zotero.api.constants.ZoteroKeys.CreatorKeys.CREATOR_TYPE));
+		assertEquals("John", creator.get(zotero.api.constants.ZoteroKeys.CreatorKeys.FIRST_NAME));
+		assertEquals("Dewey", creator.get(zotero.api.constants.ZoteroKeys.CreatorKeys.LAST_NAME));
 	}
 
 	@Test
 	public void testDelete()
 	{
 		AtomicInteger ai = new AtomicInteger();
-		
+
 		service.setDelete(delete -> {
 
-			// Check the request info.  Should be the right URL and have the If-Unmodified-Since-Version header set
+			// Check the request info. Should be the right URL and have the
+			// If-Unmodified-Since-Version header set
 			assertEquals("/users/12345678/items/B4ERDVS4", delete.getURI().getPath());
 			assertNotNull(delete.getFirstHeader(ZoteroRest.Headers.IF_UNMODIFIED_SINCE_VERSION));
 			assertEquals("2906", delete.getFirstHeader(ZoteroRest.Headers.IF_UNMODIFIED_SINCE_VERSION).getValue());
-			
+
 			ai.incrementAndGet();
-			
+
 			return MockRestService.deleteSuccess.apply(delete);
 		});
 
 		Item delete = library.fetchItem(TEST_ITEM_B4ERDVS4);
 		delete.delete();
-		
+
 		assertEquals(1, ai.intValue());
 	}
 

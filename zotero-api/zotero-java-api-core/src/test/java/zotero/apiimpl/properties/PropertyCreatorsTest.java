@@ -29,7 +29,7 @@ public class PropertyCreatorsTest
 	public void testGetKey()
 	{
 		PropertyCreatorsImpl property = new PropertyCreatorsImpl(new CreatorsImpl(null));
-		assertEquals(ZoteroKeys.Document.CREATORS, property.getKey());
+		assertEquals(ZoteroKeys.DocumentKeys.CREATORS, property.getKey());
 	}
 	
 	@Test

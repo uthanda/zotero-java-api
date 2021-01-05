@@ -11,7 +11,7 @@ public class PropertyRelationshipsImpl extends PropertyObjectImpl<Relationships>
 {
 	public PropertyRelationshipsImpl(Relationships value)
 	{
-		super(ZoteroKeys.Item.RELATIONS, Relationships.class, value);
+		super(ZoteroKeys.ItemKeys.RELATIONS, Relationships.class, value);
 	}
 
 	@SuppressWarnings("unchecked")

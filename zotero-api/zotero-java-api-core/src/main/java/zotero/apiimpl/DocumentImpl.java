@@ -1,11 +1,11 @@
 package zotero.apiimpl;
 
-import static zotero.api.constants.ZoteroKeys.Document.CREATORS;
-import static zotero.api.constants.ZoteroKeys.Document.DATE_ADDED;
-import static zotero.api.constants.ZoteroKeys.Document.DATE_MODIFIED;
-import static zotero.api.constants.ZoteroKeys.Meta.CREATOR_SUMMARY;
-import static zotero.api.constants.ZoteroKeys.Meta.NUM_CHILDREN;
-import static zotero.api.constants.ZoteroKeys.Meta.PARSED_DATE;
+import static zotero.api.constants.ZoteroKeys.DocumentKeys.CREATORS;
+import static zotero.api.constants.ZoteroKeys.DocumentKeys.DATE_ADDED;
+import static zotero.api.constants.ZoteroKeys.DocumentKeys.DATE_MODIFIED;
+import static zotero.api.constants.ZoteroKeys.MetaKeys.CREATOR_SUMMARY;
+import static zotero.api.constants.ZoteroKeys.MetaKeys.NUM_CHILDREN;
+import static zotero.api.constants.ZoteroKeys.MetaKeys.PARSED_DATE;
 import static zotero.apiimpl.rest.ZoteroRest.Items.CHILDREN;
 
 import java.util.Date;
@@ -99,7 +99,7 @@ public class DocumentImpl extends ItemImpl implements Document
 	{
 		checkDeletionStatus();
 	
-		return super.getProperties().getString(ZoteroKeys.Item.TITLE);
+		return super.getProperties().getString(ZoteroKeys.ItemKeys.TITLE);
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class DocumentImpl extends ItemImpl implements Document
 	{
 		checkDeletionStatus();
 	
-		super.getProperties().putValue(ZoteroKeys.Item.TITLE, title);
+		super.getProperties().putValue(ZoteroKeys.ItemKeys.TITLE, title);
 	}
 
 	public static ItemImpl fromRest(ZoteroRestItem jsonItem, LibraryImpl library)

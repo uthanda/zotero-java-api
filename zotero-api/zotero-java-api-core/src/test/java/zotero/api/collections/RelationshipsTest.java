@@ -1,10 +1,13 @@
 package zotero.api.collections;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
@@ -54,7 +57,7 @@ public class RelationshipsTest
 		JsonObject object = entity
 				.get("item").getAsJsonObject()
 				.get("data").getAsJsonObject()
-				.get(ZoteroKeys.Item.RELATIONS).getAsJsonObject();
+				.get(ZoteroKeys.ItemKeys.RELATIONS).getAsJsonObject();
 		//@formatter:on
 		
 		@SuppressWarnings("unchecked")
@@ -85,5 +88,29 @@ public class RelationshipsTest
 		Iterator<String> i = relatedItems.iterator();
 		
 		i.next();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testToRest()
+	{
+		RelationshipsImpl relationships = new RelationshipsImpl(library);
+
+		// Empty should serialize an empty list
+		Map<String, List<String>> zrs = (Map<String, List<String>>)RelationshipsImpl.toRest(relationships);
+		assertNotNull(zrs);
+		assertTrue(zrs.isEmpty());
+		
+		relationships.getRelatedItems(RelationshipType.DC_RELATION).addRelation("http://www.zotero.org/");
+
+		zrs = (Map<String, List<String>>)RelationshipsImpl.toRest(relationships);
+
+		assertNotNull(zrs);
+		assertFalse(zrs.isEmpty());
+		assertEquals("http://www.zotero.org/", zrs.get(RelationshipType.DC_RELATION.getZoteroName()).get(0));
+		
+		relationships.clear();
+		
+		assertEquals(Boolean.FALSE, RelationshipsImpl.toRest(relationships));
 	}
 }

@@ -75,10 +75,6 @@ public class CollectionsImpl implements Collections, ChangeTracker
 
 	public static Object toRest(CollectionsImpl collections)
 	{
-		if(!collections.isDirty) {
-			return null;
-		}
-		
 		return Arrays.asList(collections.collections.toArray(new String[collections.collections.size()]));
 	}
 

@@ -86,13 +86,9 @@ public abstract class PropertyImpl<T> implements Property<T>
 		{
 			return Boolean.FALSE;
 		}
-		else if (dirty)
-		{
-			return value;
-		}
 		else
 		{
-			return null;
+			return value;
 		}
 	}
 

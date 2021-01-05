@@ -15,19 +15,19 @@ public class NoteImpl extends ItemImpl implements Note
 	public NoteImpl(LibraryImpl library, String key)
 	{
 		super(ItemType.NOTE, library);
-		getProperties().putValue(ZoteroKeys.Attachment.PARENT_ITEM, key);
+		getProperties().putValue(ZoteroKeys.AttachmentKeys.PARENT_ITEM, key);
 	}
 
 	@Override
 	public String getNoteContent()
 	{
-		return getProperties().getString(ZoteroKeys.Item.NOTE);
+		return getProperties().getString(ZoteroKeys.ItemKeys.NOTE);
 	}
 
 	@Override
 	public void setNoteContent(String content)
 	{
-		getProperties().putValue(ZoteroKeys.Item.NOTE, content);
+		getProperties().putValue(ZoteroKeys.ItemKeys.NOTE, content);
 	}
 
 	public static ItemImpl fromRest(ZoteroRestItem jsonItem, LibraryImpl library)

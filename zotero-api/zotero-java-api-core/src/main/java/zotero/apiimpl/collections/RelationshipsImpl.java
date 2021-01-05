@@ -99,11 +99,6 @@ public final class RelationshipsImpl implements Relationships, ChangeTracker
 			return false;
 		}
 
-		if (relationships.relationships.isEmpty())
-		{
-			return null;
-		}
-
 		Map<String, List<String>> zrs = new HashMap<>();
 
 		relationships.relationships.forEach((type, set) -> zrs.put(type.getZoteroName(), new ArrayList<>(((RelationSetImpl) set).getKeys())));

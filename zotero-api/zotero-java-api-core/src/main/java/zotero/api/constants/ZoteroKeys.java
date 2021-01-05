@@ -11,33 +11,33 @@ public class ZoteroKeys
 	{
 	}
 	
-	public static final class Search
+	public static final class SearchKeys
 	{
 		public static final String INCLUDE_TRASHED_FALSE = "0";
 		public static final String INCLUDE_TRASHED_TRUE = "1";
 		public static final String INCLUDE_TRASHED = "includeTrashed";
 
-		private Search() {}
+		private SearchKeys() {}
 	}
 
-	public static final class Tag
+	public static final class TagKeys
 	{
-		private Tag() {}
+		private TagKeys() {}
 		
 		public static final String TAG = "tag";
 		public static final String TYPE = "type";
 	}
 	
-	public static final class Creator
+	public static final class CreatorKeys
 	{
-		private Creator() {}
+		private CreatorKeys() {}
 		
 		public static final String LAST_NAME = "lastName";
 		public static final String FIRST_NAME = "firstName";
 		public static final String CREATOR_TYPE = "creatorType";
 	}
 	
-	public static final class Meta
+	public static final class MetaKeys
 	{
 		public static final String CREATOR_SUMMARY = "creatorSummary";
 		public static final String NUM_CHILDREN = "numChildren";
@@ -46,28 +46,28 @@ public class ZoteroKeys
 		public static final String NUM_ITEMS = "numItems";
 		public static final String TYPE = "type";
 
-		private Meta() {}
+		private MetaKeys() {}
 	}
 	
-	public static final class Collection extends Entity
+	public static final class CollectionKeys extends EntityKeys
 	{
 		public static final String PARENT_COLLECTION = "parentCollection";
 		public static final String NAME = "name";
 
-		private Collection() {}
+		private CollectionKeys() {}
 	}
 	
-	public static class Entity
+	public static class EntityKeys
 	{
 		public static final String URL = "url";
 		public static final String VERSION = "version";
 
-		private Entity() {}
+		private EntityKeys() {}
 		
 		public static final String KEY = "key";
 	}
 	
-	public static class Item extends Entity
+	public static class ItemKeys extends EntityKeys
 	{
 		public static final String EXTRA = "extra";
 		public static final String TITLE = "title";
@@ -78,10 +78,10 @@ public class ZoteroKeys
 		public static final String ACCESS_DATE = "accessDate";
 		public static final String NOTE = "note";
 
-		private Item() {}
+		private ItemKeys() {}
 	}
 	
-	public static final class Document extends Item
+	public static final class DocumentKeys extends ItemKeys
 	{
 		public static final String WEBSITE_TITLE = "websiteTitle";
 		public static final String BOOK_TITLE = "bookTitle";
@@ -187,14 +187,14 @@ public class ZoteroKeys
 		public static final String PRIORITY_NUMBERS = "priorityNumbers";
 		public static final String LABEL = "label";
 
-		private Document() {}
+		private DocumentKeys() {}
 	}
 	
-	public static final class Attachment extends Item
+	public static final class AttachmentKeys extends ItemKeys
 	{
 		public static final String LINK_MODE = "linkMode";
 		public static final String UPLOAD = "upload";
-		private Attachment() {}
+		private AttachmentKeys() {}
 		
 		public static final String MD5 = "md5";
 		public static final String MTIME = "mtime";
@@ -206,9 +206,9 @@ public class ZoteroKeys
 		public static final String FILE_SIZE = "filesize";
 	}
 	
-	public static final class Link
+	public static final class LinkKeys
 	{
-		private Link() {}
+		private LinkKeys() {}
 		
 		public static final String HREF = "href";
 		public static final String TYPE = "type";

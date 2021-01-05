@@ -5,12 +5,11 @@ import zotero.api.constants.ZoteroKeys;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.iterators.TagIterator;
-import zotero.api.properties.Property;
 import zotero.apiimpl.iterators.TagIteratorImpl;
 import zotero.apiimpl.properties.PropertiesImpl;
-import zotero.apiimpl.properties.PropertyImpl;
 import zotero.apiimpl.rest.ZoteroRest;
 import zotero.apiimpl.rest.ZoteroRest.URLParameter;
+import zotero.apiimpl.rest.model.SerializationMode;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 import zotero.apiimpl.rest.request.builders.GetBuilder;
@@ -25,8 +24,8 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	private CollectionImpl(ZoteroRestItem item, LibraryImpl library)
 	{
 		super(item, library);
-		this.numCollections = ((Double) item.getMeta().get(ZoteroKeys.Meta.NUM_COLLECTIONS)).intValue();
-		this.numItems = ((Double) item.getMeta().get(ZoteroKeys.Meta.NUM_ITEMS)).intValue();
+		this.numCollections = ((Double) item.getMeta().get(ZoteroKeys.MetaKeys.NUM_COLLECTIONS)).intValue();
+		this.numItems = ((Double) item.getMeta().get(ZoteroKeys.MetaKeys.NUM_ITEMS)).intValue();
 	}
 
 	public CollectionImpl(LibraryImpl library)
@@ -50,7 +49,7 @@ public final class CollectionImpl extends EntryImpl implements Collection
 
 		if (parent != null)
 		{
-			collection.getProperties().putValue(ZoteroKeys.Collection.PARENT_COLLECTION, parent.getKey());
+			collection.getProperties().putValue(ZoteroKeys.CollectionKeys.PARENT_COLLECTION, parent.getKey());
 		}
 
 		return collection;
@@ -78,29 +77,25 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	{
 		// Either If-Unmodified-Since-Version or object version property must be
 		// provided for key-based writes
-		ZoteroRestItem item = buildContent(true);
+		ZoteroRestItem item = buildContent(SerializationMode.PARTIAL);
 
 		super.executeUpdate(ZoteroRest.Collections.SPECIFIC, URLParameter.COLLECTION_KEY, getKey(), item);
 	}
 
 	private void performCreate()
 	{
-		ZoteroRestItem item = buildContent(false);
+		ZoteroRestItem item = buildContent(SerializationMode.FULL);
 
 		item = super.executeCreate(ZoteroRest.Collections.ALL, item);
 
 		this.refresh(item);
 	}
 
-	private ZoteroRestItem buildContent(boolean delta)
+	private ZoteroRestItem buildContent(SerializationMode mode)
 	{
 		ZoteroRestData data = new ZoteroRestData();
 		
-		Object parentCollection = ((PropertyImpl<?>)getProperties().getProperty(ZoteroKeys.Collection.PARENT_COLLECTION)).toRestValue();
-		Object name = ((PropertyImpl<?>)getProperties().getProperty(ZoteroKeys.Collection.NAME)).toRestValue();
-		
-		data.put(ZoteroKeys.Collection.PARENT_COLLECTION, parentCollection);
-		data.put(ZoteroKeys.Collection.PARENT_COLLECTION, name);
+		PropertiesImpl.toRest(data, getProperties(), mode);
 
 		ZoteroRestItem item = new ZoteroRestItem();
 		item.setData(data);
@@ -128,13 +123,13 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	@Override
 	public String getName()
 	{
-		return getProperties().getString(ZoteroKeys.Collection.NAME);
+		return getProperties().getString(ZoteroKeys.CollectionKeys.NAME);
 	}
 
 	@Override
 	public void setName(String name)
 	{
-		getProperties().putValue(ZoteroKeys.Collection.NAME, name);
+		getProperties().putValue(ZoteroKeys.CollectionKeys.NAME, name);
 	}
 
 	@Override
@@ -153,7 +148,7 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	@Override
 	public Collection fetchParentCollection()
 	{
-		String parentCollectionKey = getProperties().getString(ZoteroKeys.Collection.PARENT_COLLECTION);
+		String parentCollectionKey = getProperties().getString(ZoteroKeys.CollectionKeys.PARENT_COLLECTION);
 
 		if (parentCollectionKey == null)
 		{

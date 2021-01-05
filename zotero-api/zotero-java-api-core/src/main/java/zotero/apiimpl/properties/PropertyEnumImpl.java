@@ -28,7 +28,9 @@ public class PropertyEnumImpl<T extends Enum<T> & ZoteroEnum> extends PropertyIm
 	@Override
 	public Object toRestValue()
 	{
-		return getValue().getZoteroName();
+		Object value = super.toRestValue();
+		
+		return value instanceof ZoteroEnum ? ((ZoteroEnum)value).getZoteroName() : value;
 	}
 	
 	@Override

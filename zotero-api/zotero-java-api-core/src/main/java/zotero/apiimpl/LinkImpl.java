@@ -1,8 +1,8 @@
 package zotero.apiimpl;
 
-import static zotero.api.constants.ZoteroKeys.Link.HREF;
-import static zotero.api.constants.ZoteroKeys.Link.LENGTH;
-import static zotero.api.constants.ZoteroKeys.Link.TYPE;
+import static zotero.api.constants.ZoteroKeys.LinkKeys.HREF;
+import static zotero.api.constants.ZoteroKeys.LinkKeys.LENGTH;
+import static zotero.api.constants.ZoteroKeys.LinkKeys.TYPE;
 
 import zotero.api.Link;
 import zotero.api.constants.LinkType;

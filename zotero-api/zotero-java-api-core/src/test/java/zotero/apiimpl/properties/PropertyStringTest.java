@@ -70,7 +70,7 @@ public class PropertyStringTest
 	public void testToRest()
 	{
 		PropertyStringImpl prop = new PropertyStringImpl("testProperty", "Foo");
-		assertNull(prop.toRestValue());
+		assertEquals("Foo", prop.toRestValue());
 		prop.setValue("Bar");
 		assertEquals("Bar", prop.toRestValue());
 		prop.clearValue();

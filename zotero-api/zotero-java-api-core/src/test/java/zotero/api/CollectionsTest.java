@@ -232,8 +232,8 @@ public class CollectionsTest
 		
 		// We should have 2 properties: name and parentCollection
 		assertEquals(2, data.size());
-		assertEquals("New collection", data.get(zotero.api.constants.ZoteroKeys.Collection.NAME));		
-		assertEquals(KEY_NO_SUBS, data.get(zotero.api.constants.ZoteroKeys.Collection.PARENT_COLLECTION));
+		assertEquals("New collection", data.get(zotero.api.constants.ZoteroKeys.CollectionKeys.NAME));		
+		assertEquals(KEY_NO_SUBS, data.get(zotero.api.constants.ZoteroKeys.CollectionKeys.PARENT_COLLECTION));
 	}
 	
 	@Test
@@ -266,7 +266,7 @@ public class CollectionsTest
 		
 		ZoteroRestData data = item.getData();
 		assertEquals(1, data.size());
-		assertEquals("Changed name", data.get(zotero.api.constants.ZoteroKeys.Collection.NAME));		
+		assertEquals("Changed name", data.get(zotero.api.constants.ZoteroKeys.CollectionKeys.NAME));		
 	}
 	
 	@Test

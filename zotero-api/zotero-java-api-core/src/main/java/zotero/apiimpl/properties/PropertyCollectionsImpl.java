@@ -12,12 +12,12 @@ public class PropertyCollectionsImpl extends PropertyObjectImpl<Collections>
 {
 	public PropertyCollectionsImpl(Collections value)
 	{
-		super(ZoteroKeys.Item.COLLECTIONS, Collections.class, value);
+		super(ZoteroKeys.ItemKeys.COLLECTIONS, Collections.class, value);
 	}
 
+	@SuppressWarnings({"squid:S1452","unchecked"})
 	public static Property<?> fromRest(LibraryImpl library, Object value)
 	{
-		@SuppressWarnings("unchecked")
 		CollectionsImpl collections = CollectionsImpl.fromRest(library, (List<String>) value);
 
 		return new PropertyCollectionsImpl(collections);

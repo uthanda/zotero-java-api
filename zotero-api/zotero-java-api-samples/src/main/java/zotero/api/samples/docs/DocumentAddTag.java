@@ -1,11 +1,9 @@
 package zotero.api.samples.docs;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 import zotero.api.Document;
 import zotero.api.Library;
-import zotero.api.Tag;
 import zotero.api.samples.Configuration;
 
 public class DocumentAddTag
@@ -31,7 +29,7 @@ public class DocumentAddTag
 		System.out.println("Current");
 		System.out.println("Key      : " + doc.getKey());
 		System.out.println("Title    : " + doc.getTitle());
-		System.out.println("Tags     : " + doc.getTags().stream().map(Tag::getTag).collect(Collectors.joining(",")));
+		System.out.println("Tags     : " + doc.getTags());
 
 		doc.getTags().add(library.createTag(args[2]));
 		
@@ -42,6 +40,6 @@ public class DocumentAddTag
 		System.out.println("Updated:");
 		System.out.println("Key      : " + doc.getKey());
 		System.out.println("Title    : " + doc.getTitle());
-		System.out.println("Tags     : " + doc.getTags().stream().map(Tag::getTag).collect(Collectors.joining(",")));
+		System.out.println("Tags     : " + doc.getTags());
 	}
 }

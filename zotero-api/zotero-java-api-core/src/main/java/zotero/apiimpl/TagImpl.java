@@ -96,8 +96,8 @@ public class TagImpl implements Tag
 	{
 		Map<String,Object> map = new HashMap<>();
 		
-		map.put(ZoteroKeys.Tag.TAG, tag.getTag());
-		map.put(ZoteroKeys.Tag.TYPE, tag.getType().getZoteroType());
+		map.put(ZoteroKeys.TagKeys.TAG, tag.getTag());
+		map.put(ZoteroKeys.TagKeys.TYPE, tag.getType().getZoteroType());
 		
 		return map;
 	}
@@ -105,8 +105,8 @@ public class TagImpl implements Tag
 	public static TagImpl fromRest(ZoteroRestItem item, LibraryImpl library)
 	{
 		String tag = item.getTag();
-		int numItems = ((Double) item.getMeta().get(ZoteroKeys.Meta.NUM_ITEMS)).intValue();
-		int type = ((Double) item.getMeta().get(ZoteroKeys.Meta.TYPE)).intValue();
+		int numItems = ((Double) item.getMeta().get(ZoteroKeys.MetaKeys.NUM_ITEMS)).intValue();
+		int type = ((Double) item.getMeta().get(ZoteroKeys.MetaKeys.TYPE)).intValue();
 
 		Links links = LinksImpl.fromRest(library, item.getLinks());
 

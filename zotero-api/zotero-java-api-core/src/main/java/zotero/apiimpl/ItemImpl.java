@@ -14,6 +14,7 @@ import zotero.api.collections.Tags;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.properties.PropertyObject;
+import zotero.apiimpl.rest.model.SerializationMode;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 
@@ -39,7 +40,7 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		checkDeletionStatus();
 
-		return (ItemType) getProperties().getProperty(ZoteroKeys.Item.ITEM_TYPE).getValue();
+		return (ItemType) getProperties().getProperty(ZoteroKeys.ItemKeys.ITEM_TYPE).getValue();
 	}
 
 	@Override
@@ -47,7 +48,7 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		checkDeletionStatus();
 
-		return super.getProperties().getDate(ZoteroKeys.Item.ACCESS_DATE);
+		return super.getProperties().getDate(ZoteroKeys.ItemKeys.ACCESS_DATE);
 	}
 
 	@Override
@@ -55,7 +56,7 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		checkDeletionStatus();
 
-		return (Collections) getProperties().getProperty(ZoteroKeys.Item.COLLECTIONS).getValue();
+		return (Collections) getProperties().getProperty(ZoteroKeys.ItemKeys.COLLECTIONS).getValue();
 	}
 
 	@Override
@@ -63,13 +64,13 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		checkDeletionStatus();
 
-		return (Tags) getProperties().getProperty(ZoteroKeys.Item.TAGS).getValue();
+		return (Tags) getProperties().getProperty(ZoteroKeys.ItemKeys.TAGS).getValue();
 	}
 
 	public static Item fromItem(ZoteroRestItem jsonItem, LibraryImpl library)
 	{
 		ItemImpl item;
-		String zoteroType = (String) jsonItem.getData().get(ZoteroKeys.Item.ITEM_TYPE);
+		String zoteroType = (String) jsonItem.getData().get(ZoteroKeys.ItemKeys.ITEM_TYPE);
 
 		ItemType itemType = ItemType.fromZoteroType(zoteroType);
 		
@@ -121,7 +122,7 @@ public class ItemImpl extends EntryImpl implements Item
 
 	private void updateItem()
 	{
-		ZoteroRestItem item = buildRestItem(true);
+		ZoteroRestItem item = buildRestItem(SerializationMode.PARTIAL);
 		item.setVersion(getVersion());
 
 		super.executeUpdate(ZoteroRest.Items.SPECIFIC, URLParameter.ITEM_KEY, this.getKey(), item);
@@ -129,7 +130,7 @@ public class ItemImpl extends EntryImpl implements Item
 
 	private void createItem()
 	{
-		ZoteroRestItem item = buildRestItem(false);
+		ZoteroRestItem item = buildRestItem(SerializationMode.FULL);
 
 		item = executeCreate(ZoteroRest.Items.ALL, item);
 
@@ -141,11 +142,11 @@ public class ItemImpl extends EntryImpl implements Item
 		// Content and property validation goes here
 	}
 
-	private ZoteroRestItem buildRestItem(boolean deltaMode)
+	private ZoteroRestItem buildRestItem(SerializationMode mode)
 	{
 		ZoteroRestData data = new ZoteroRestData();
 		
-		PropertiesImpl.toRest(data, getProperties(), deltaMode);
+		PropertiesImpl.toRest(data, getProperties(), mode);
 
 		ZoteroRestItem item = new ZoteroRestItem();
 		item.setKey(getKey());
@@ -163,6 +164,6 @@ public class ItemImpl extends EntryImpl implements Item
 	@Override
 	public final Relationships getRelationships()
 	{
-		return ((PropertyObject<Relationships>) super.getProperties().getProperty(ZoteroKeys.Item.RELATIONS)).getValue();
+		return ((PropertyObject<Relationships>) super.getProperties().getProperty(ZoteroKeys.ItemKeys.RELATIONS)).getValue();
 	}
 }

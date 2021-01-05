@@ -39,7 +39,6 @@ public class CategoryRetrieval
 			Item item = i.next();
 			
 			System.out.println("\tKey   : " + item.getKey());
-			System.out.println("\tTitle : " + item.getTitle());
 			System.out.println("\tType  : " + item.getItemType());
 		}
 	}

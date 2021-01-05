@@ -3,7 +3,6 @@ package zotero.api.collections;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -118,8 +117,7 @@ public class TagsTest
 		
 		TagsImpl tags = (TagsImpl) doc.getTags();
 		
-		// No changes should be NULL
-		assertNull(TagsImpl.toRest(tags));
+		assertNotNull(TagsImpl.toRest(tags));
 		
 		tags.clear();
 
@@ -136,10 +134,10 @@ public class TagsTest
 		
 		assertEquals(2, rest.size());
 
-		assertEquals(TagType.USER.getZoteroType(), rest.get(0).get(ZoteroKeys.Tag.TYPE));
-		assertEquals(TagType.AUTOMATIC.getZoteroType(), rest.get(1).get(ZoteroKeys.Tag.TYPE));
+		assertEquals(TagType.USER.getZoteroType(), rest.get(0).get(ZoteroKeys.TagKeys.TYPE));
+		assertEquals(TagType.AUTOMATIC.getZoteroType(), rest.get(1).get(ZoteroKeys.TagKeys.TYPE));
 		
-		assertEquals("Foo", rest.get(0).get(ZoteroKeys.Tag.TAG));
-		assertEquals("Bar", rest.get(1).get(ZoteroKeys.Tag.TAG));
+		assertEquals("Foo", rest.get(0).get(ZoteroKeys.TagKeys.TAG));
+		assertEquals("Bar", rest.get(1).get(ZoteroKeys.TagKeys.TAG));
 	}
 }

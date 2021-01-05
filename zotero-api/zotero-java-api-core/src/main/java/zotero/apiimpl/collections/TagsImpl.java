@@ -30,24 +30,21 @@ public final class TagsImpl implements Tags
 		tags = new LinkedHashSet<>(values);
 	}
 
-	//@formatter:off
 	public static Object toRest(TagsImpl tags)
 	{
-		if(tags.cleared) {
+		if (tags.cleared)
+		{
 			return Boolean.FALSE;
 		}
-		
-		if(!tags.isDirty) {
-			return null;
-		}
-		
+
+		//@formatter:off
 		return tags.tags
 				.stream()
 				.map(TagImpl::toRest)
 				.collect(Collectors.toList());
+		//@formatter:on
 	}
-	//@formatter:on
-	
+
 	@SuppressWarnings("unchecked")
 	public static Tags fromRest(LibraryImpl library, Object value)
 	{
@@ -58,7 +55,7 @@ public final class TagsImpl implements Tags
 
 		List<Tag> values = new ArrayList<>();
 
-		((List<Map<String, Object>>) value).forEach(e -> values.add((new TagImpl((String) e.get(ZoteroKeys.Tag.TAG), library))));
+		((List<Map<String, Object>>) value).forEach(e -> values.add((new TagImpl((String) e.get(ZoteroKeys.TagKeys.TAG), library))));
 
 		return new TagsImpl(values);
 	}
@@ -80,7 +77,7 @@ public final class TagsImpl implements Tags
 	{
 		return tags.size();
 	}
-	
+
 	@Override
 	public void add(Tag tag)
 	{

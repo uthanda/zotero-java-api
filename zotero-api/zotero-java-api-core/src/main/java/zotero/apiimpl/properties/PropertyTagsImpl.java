@@ -9,7 +9,7 @@ public class PropertyTagsImpl extends PropertyObjectImpl<Tags>
 {
 	public PropertyTagsImpl(Tags values)
 	{
-		super(ZoteroKeys.Item.TAGS, Tags.class, values);
+		super(ZoteroKeys.ItemKeys.TAGS, Tags.class, values);
 	}
 
 	@Override
