@@ -42,17 +42,24 @@ class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 		if (index >= page.length)
 		{
 			String nextLink = response.getLink(NEXT);
-			
+
 			if (nextLink == null)
 			{
 				throw new NoSuchElementException();
 			}
 
-			GetBuilder<ZoteroRestItem[],?> b = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class)).specialUrl(nextLink);
-			
+			GetBuilder<ZoteroRestItem[], ?> b = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class)).specialUrl(nextLink);
+
 			response = library.performRequest(b);
-			
+
 			page = response.getResponse();
+
+			// Apparently it'll return a value of []
+			if (page.length == 0)
+			{
+				return null;
+			}
+
 			index = 0;
 		}
 

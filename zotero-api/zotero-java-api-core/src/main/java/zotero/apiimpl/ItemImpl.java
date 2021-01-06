@@ -39,15 +39,15 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		ZoteroSchema schema = ZoteroSchema.getCurrentSchema();
 		ZoteroType zoteroType = null;
-	
+		
 		PropertiesImpl properties = (PropertiesImpl) getProperties();
 		
 		properties.addProperty(new PropertyEnumImpl<>(ItemKeys.ITEM_TYPE, ItemType.class, type));
-		
+
 		properties.addProperty(new PropertyRelationshipsImpl(new RelationshipsImpl(library)));
 		
 		properties.addProperty(new PropertyTagsImpl(new TagsImpl()));
-	
+
 		for (ZoteroType itemType : schema.getTypes())
 		{
 			if (itemType.getId().equals(type.getZoteroName()))
@@ -206,6 +206,6 @@ public class ItemImpl extends EntryImpl implements Item
 
 	public void reinitialize(ItemType type)
 	{
-		initialize((LibraryImpl) getLibrary(), type);
+		throw new UnsupportedOperationException("reinitialize");
 	}
 }

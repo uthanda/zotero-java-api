@@ -242,7 +242,7 @@
           "failed" : {}
         }
       },
-      "[{\"data\":{\"itemType\":\"attachment\",\"title\":\"Zotero Website\",\"url\":\"http://www.zotero.org/\",\"tags\":[],\"linkMode\":\"imported_url\",\"relations\":{}}}]" : {
+      "[{\"data\":{\"itemType\":\"attachment\",\"linkMode\":\"imported_url\",\"relations\":{},\"title\":\"Zotero Website\",\"url\":\"http://www.zotero.org/\",\"tags\":[]}}]" : {
         "headers" : {},
         "item" : {
           "successful" : {

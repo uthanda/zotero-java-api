@@ -5,6 +5,7 @@ import zotero.api.constants.ItemType;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.apiimpl.properties.PropertiesImpl;
+import zotero.apiimpl.properties.PropertyStringImpl;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 
 public class NoteImpl extends ItemImpl implements Note
@@ -24,7 +25,8 @@ public class NoteImpl extends ItemImpl implements Note
 	public void initialize(LibraryImpl library, String parentKey) throws ZoteroRuntimeException
 	{
 		super.initialize(library, ItemType.NOTE);
-		getProperties().putValue(ZoteroKeys.AttachmentKeys.PARENT_ITEM, parentKey);
+		((PropertiesImpl)getProperties()).addProperty(new PropertyStringImpl(ZoteroKeys.AttachmentKeys.PARENT_ITEM, parentKey));
+		((PropertiesImpl)getProperties()).addProperty(new PropertyStringImpl(ZoteroKeys.ItemKeys.NOTE, null));
 	}
 	
 	@Override

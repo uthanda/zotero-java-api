@@ -3,6 +3,7 @@ package zotero.apiimpl.properties;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,7 +41,7 @@ public final class PropertiesImpl implements Properties
 	{
 		this.library = library;
 	}
-	
+
 	@Override
 	public String getString(String key)
 	{
@@ -66,7 +67,7 @@ public final class PropertiesImpl implements Properties
 		{
 			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.INVALID_PROPERTY, "Property " + key + " invalid because it's not in the collection");
 		}
-		
+
 		return properties.get(key);
 	}
 
@@ -107,23 +108,23 @@ public final class PropertiesImpl implements Properties
 		return String.format("[Properties props:%s]", properties.toString());
 	}
 
-	public void fromRest(LibraryImpl library, Map<String,Object> item)
+	public void fromRest(LibraryImpl library, Map<String, Object> item)
 	{
 		ZoteroSchema schema = ZoteroSchema.getCurrentSchema();
-	
+
 		logger.debug("Starting to deserialize {}", item);
 
 		properties.clear();
-		
+
 		for (Map.Entry<String, Object> e : item.entrySet())
 		{
 			String name = e.getKey();
 			Object value = e.getValue();
-	
+
 			logger.debug("Processing {} of type {} and value {}", name, value != null ? value.getClass().getCanonicalName() : "?", value);
-	
+
 			Property<?> property = null;
-	
+
 			// Deal with known properties
 			switch (e.getKey())
 			{
@@ -152,7 +153,7 @@ public final class PropertiesImpl implements Properties
 					property = createSimpleProperty(schema, e, name, value);
 				}
 			}
-	
+
 			properties.put(name, property);
 		}
 	}
@@ -189,23 +190,44 @@ public final class PropertiesImpl implements Properties
 		return property;
 	}
 
-	@SuppressWarnings({"squid:S1199"})
+	@SuppressWarnings({ "squid:S1199" })
 	public static void toRest(ZoteroRestData data, Properties properties, SerializationMode mode)
 	{
 		PropertiesImpl props = (PropertiesImpl) properties;
-	
+
 		for (Map.Entry<String, Property<?>> e : props.properties.entrySet())
 		{
 			String key = e.getKey();
 			PropertyImpl<?> prop = (PropertyImpl<?>) e.getValue();
-	
+
 			// In Delta mode, we only add the changed properties
 			if (mode == SerializationMode.PARTIAL && !prop.isDirty())
 			{
 				continue;
 			}
-			
+
 			data.put(key, prop.toRestValue());
 		}
+	}
+
+	@Override
+	public Iterator<Property<?>> iterator()
+	{
+		return new Iterator<Property<?>>()
+		{
+			private Iterator<Property<?>> i = properties.values().iterator();
+			
+			@Override
+			public boolean hasNext()
+			{
+				return i.hasNext();
+			}
+
+			@Override
+			public Property<?> next()
+			{
+				return i.next();
+			}
+		};
 	}
 }

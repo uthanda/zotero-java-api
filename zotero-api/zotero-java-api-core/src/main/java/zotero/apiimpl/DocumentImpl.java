@@ -17,13 +17,11 @@ import zotero.api.constants.ItemType;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.constants.ZoteroKeys;
-import zotero.api.constants.ZoteroKeys.DocumentKeys;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.iterators.ItemIterator;
 import zotero.apiimpl.collections.CreatorsImpl;
 import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.properties.PropertyCreatorsImpl;
-import zotero.apiimpl.properties.PropertyEnumImpl;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 
 public class DocumentImpl extends ItemImpl implements Document

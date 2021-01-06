@@ -31,8 +31,6 @@ import zotero.api.ZoteroAPIKey;
 import zotero.api.collections.Collections;
 import zotero.api.collections.Creators;
 import zotero.api.constants.CreatorType;
-import zotero.api.constants.ItemType;
-import zotero.api.constants.LinkMode;
 import zotero.api.constants.RelationshipType;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.util.MockRestService;
@@ -81,7 +79,8 @@ public class PropertiesTest
 		item.setVersion(12);
 		item.setData(data);
 		
-		props = PropertiesImpl.fromRest(library, item);
+		props = new PropertiesImpl(library);
+		props.fromRest(library, item.getData());
 	}
 
 	@Before
@@ -244,40 +243,6 @@ public class PropertiesTest
 		
 		assertEquals(1, data.size());
 		assertTrue(data.containsKey(ZoteroKeys.ItemKeys.TITLE));
-	}
-
-	@Test
-	public void testInitializeCollectionProperties()
-	{
-		PropertiesImpl properties = new PropertiesImpl(library);
-		
-		PropertiesImpl.initializeCollectionProperties(properties);
-		
-		Set<String> names = properties.getPropertyNames();
-		assertEquals(2, names.size());
-		assertTrue(names.contains(ZoteroKeys.CollectionKeys.NAME));
-		assertTrue(names.contains(ZoteroKeys.CollectionKeys.PARENT_COLLECTION));
-	}
-
-	@Test
-	public void testInitializeDocumentProperties()
-	{
-		PropertiesImpl properties = new PropertiesImpl(library);
-		
-		PropertiesImpl.initializeDocumentProperties(ItemType.CASE, properties, null);
-		
-		assertEquals(19, properties.getPropertyNames().size());
-	}
-
-	@Test
-	public void testInitializeAttachmentProperties()
-	{
-		PropertiesImpl properties = new PropertiesImpl(library);
-		
-		PropertiesImpl.initializeAttachmentProperties(LinkMode.IMPORTED_FILE, properties);
-		
-		assertEquals(12, properties.getPropertyNames().size());
-		// TODO Need to check the properties here
 	}
 
 	@Test

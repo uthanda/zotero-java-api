@@ -5,7 +5,7 @@ import java.util.Set;
 
 import zotero.api.Library;
 
-public interface Properties
+public interface Properties extends Iterable<Property<?>>
 {
 	String getString(String key);
 
