@@ -267,6 +267,13 @@ public final class ZoteroRest
 		{
 		}
 	}
+	
+	public static final class Batching
+	{
+		private Batching() {}
+		
+		public static final int MAX_BATCH_COUNT = 50;
+	}
 
 	private ZoteroRest()
 	{

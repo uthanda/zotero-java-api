@@ -2,9 +2,14 @@ package zotero.apiimpl;
 
 import zotero.api.Collection;
 import zotero.api.constants.ZoteroKeys;
+import zotero.api.iterators.AttachmentIterator;
 import zotero.api.iterators.CollectionIterator;
+import zotero.api.iterators.DocumentIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.iterators.TagIterator;
+import zotero.apiimpl.iterators.AttachmentIteratorImpl;
+import zotero.apiimpl.iterators.DocumentIteratorImpl;
+import zotero.apiimpl.iterators.ItemIteratorImpl;
 import zotero.apiimpl.iterators.TagIteratorImpl;
 import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.properties.PropertyStringImpl;
@@ -45,11 +50,23 @@ public final class CollectionImpl extends EntryImpl implements Collection
 	}
 
 	@Override
-	public ItemIterator fetchItems()
+	public DocumentIterator fetchDocuments()
 	{
-		return getLibrary().fetchCollectionItems(this.getKey());
+		return ((LibraryImpl)getLibrary()).fetchCollectionItems(ZoteroRest.Items.COLLECTION_ITEMS, getKey(), new DocumentIteratorImpl((LibraryImpl) getLibrary()));
 	}
 
+	@Override
+	public AttachmentIterator fetchAttachments()
+	{
+		return ((LibraryImpl)getLibrary()).fetchCollectionItems(ZoteroRest.Items.COLLECTION_ITEMS, getKey(), new AttachmentIteratorImpl((LibraryImpl) getLibrary()));
+	}
+	
+	@Override
+	public ItemIterator fetchItems()
+	{
+		return ((LibraryImpl)getLibrary()).fetchCollectionItems(ZoteroRest.Items.COLLECTION_ITEMS, getKey(), new ItemIteratorImpl((LibraryImpl) getLibrary()));
+	}
+	
 	public static CollectionImpl create(LibraryImpl library, Collection parent)
 	{
 		CollectionImpl collection = new CollectionImpl(library);
@@ -178,8 +195,12 @@ public final class CollectionImpl extends EntryImpl implements Collection
 		builder.url(ZoteroRest.Tags.COLLECTION_TAGS);
 		builder.urlParam(URLParameter.COLLECTION_KEY, this.getKey());
 
+		TagIteratorImpl it = new TagIteratorImpl(library);
+		
 		RestResponse<ZoteroRestItem[]> response = library.performRequest(builder);
+		it.addQueryParams(builder);
 
-		return new TagIteratorImpl(response, library);
+		it.setResponse(response);
+		return it;
 	}
 }

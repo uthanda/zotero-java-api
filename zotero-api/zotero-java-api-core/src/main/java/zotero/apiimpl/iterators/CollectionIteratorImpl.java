@@ -4,13 +4,18 @@ import zotero.api.Collection;
 import zotero.api.iterators.CollectionIterator;
 import zotero.apiimpl.CollectionImpl;
 import zotero.apiimpl.LibraryImpl;
-import zotero.apiimpl.rest.model.ZoteroRestItem;
-import zotero.apiimpl.rest.response.RestResponse;
+import zotero.apiimpl.rest.request.builders.GetBuilder;
 
 public final class CollectionIteratorImpl extends ZoteroIteratorImpl<Collection> implements CollectionIterator
 {
-	public CollectionIteratorImpl(RestResponse<ZoteroRestItem[]> response, LibraryImpl library)
+	public CollectionIteratorImpl(LibraryImpl library)
 	{
-		super(response, CollectionImpl::fromItem, library);
+		super(CollectionImpl::fromItem, library);
+	}
+
+	@Override
+	public void addQueryParams(GetBuilder<?, ?> builder)
+	{
+		// NOOP
 	}
 }

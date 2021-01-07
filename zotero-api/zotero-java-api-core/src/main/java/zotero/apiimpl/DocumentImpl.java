@@ -1,13 +1,5 @@
 package zotero.apiimpl;
 
-import static zotero.api.constants.ZoteroKeys.DocumentKeys.CREATORS;
-import static zotero.api.constants.ZoteroKeys.DocumentKeys.DATE_ADDED;
-import static zotero.api.constants.ZoteroKeys.DocumentKeys.DATE_MODIFIED;
-import static zotero.api.constants.ZoteroKeys.MetaKeys.CREATOR_SUMMARY;
-import static zotero.api.constants.ZoteroKeys.MetaKeys.NUM_CHILDREN;
-import static zotero.api.constants.ZoteroKeys.MetaKeys.PARSED_DATE;
-import static zotero.apiimpl.rest.ZoteroRest.Items.CHILDREN;
-
 import java.util.Date;
 
 import zotero.api.Document;
@@ -18,10 +10,14 @@ import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.exceptions.ZoteroRuntimeException;
-import zotero.api.iterators.ItemIterator;
+import zotero.api.iterators.AttachmentIterator;
+import zotero.api.iterators.NoteIterator;
 import zotero.apiimpl.collections.CreatorsImpl;
+import zotero.apiimpl.iterators.AttachmentIteratorImpl;
+import zotero.apiimpl.iterators.NoteIteratorImpl;
 import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.properties.PropertyCreatorsImpl;
+import zotero.apiimpl.rest.ZoteroRest;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 
 public class DocumentImpl extends ItemImpl implements Document
@@ -58,7 +54,7 @@ public class DocumentImpl extends ItemImpl implements Document
 	{
 		checkDeletionStatus();
 
-		return super.getProperties().getDate(DATE_ADDED);
+		return super.getProperties().getDate(ZoteroKeys.DocumentKeys.DATE_ADDED);
 	}
 
 	@Override
@@ -66,7 +62,7 @@ public class DocumentImpl extends ItemImpl implements Document
 	{
 		checkDeletionStatus();
 
-		return super.getProperties().getDate(DATE_MODIFIED);
+		return super.getProperties().getDate(ZoteroKeys.DocumentKeys.DATE_MODIFIED);
 	}
 
 	@Override
@@ -90,11 +86,19 @@ public class DocumentImpl extends ItemImpl implements Document
 	}
 
 	@Override
-	public ItemIterator fetchChildren()
+	public NoteIterator fetchNotes()
 	{
 		checkDeletionStatus();
 
-		return ((LibraryImpl) getLibrary()).fetchItems(CHILDREN, this.getKey());
+		return ((LibraryImpl) getLibrary()).fetchItems(ZoteroRest.Items.CHILDREN, this.getKey(), new NoteIteratorImpl((LibraryImpl) getLibrary()));
+	}
+
+	@Override
+	public AttachmentIterator fetchAttachments()
+	{
+		checkDeletionStatus();
+
+		return ((LibraryImpl) getLibrary()).fetchItems(ZoteroRest.Items.CHILDREN, this.getKey(), new AttachmentIteratorImpl((LibraryImpl) getLibrary()));
 	}
 
 	@Override
@@ -102,7 +106,7 @@ public class DocumentImpl extends ItemImpl implements Document
 	{
 		checkDeletionStatus();
 
-		return (Creators) super.getProperties().getProperty(CREATORS).getValue();
+		return (Creators) super.getProperties().getProperty(ZoteroKeys.DocumentKeys.CREATORS).getValue();
 	}
 
 	@Override
@@ -129,22 +133,22 @@ public class DocumentImpl extends ItemImpl implements Document
 		super.getProperties().putValue(ZoteroKeys.ItemKeys.TITLE, title);
 	}
 
-	public static ItemImpl fromRest(LibraryImpl library, ZoteroRestItem jsonItem)
-	{
-		DocumentImpl document = new DocumentImpl(library, ItemType.ARTWORK);
-		
-		document.numChildren = ((Double)jsonItem.getMeta().get(NUM_CHILDREN)).intValue();
-		document.creatorSummary = (String) jsonItem.getMeta().get(CREATOR_SUMMARY);
-		document.parsedDate = (String) jsonItem.getMeta().get(PARSED_DATE);
-		document.refresh(jsonItem);
-		
-		return document;
-	}
-
 	@Override
 	public Note createNote()
 	{
 		return new NoteImpl((LibraryImpl)getLibrary(), getKey());
+	}
+
+	public static Document fromRest(LibraryImpl library, ZoteroRestItem jsonItem)
+	{
+		DocumentImpl document = new DocumentImpl(library, ItemType.ARTWORK);
+		
+		document.numChildren = ((Double)jsonItem.getMeta().get(ZoteroKeys.MetaKeys.NUM_CHILDREN)).intValue();
+		document.creatorSummary = (String) jsonItem.getMeta().get(ZoteroKeys.MetaKeys.CREATOR_SUMMARY);
+		document.parsedDate = (String) jsonItem.getMeta().get(ZoteroKeys.MetaKeys.PARSED_DATE);
+		document.refresh(jsonItem);
+		
+		return document;
 	}
 
 }

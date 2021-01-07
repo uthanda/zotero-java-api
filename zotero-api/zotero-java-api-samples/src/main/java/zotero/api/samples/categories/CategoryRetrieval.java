@@ -5,7 +5,7 @@ import java.io.IOException;
 import zotero.api.Collection;
 import zotero.api.Item;
 import zotero.api.Library;
-import zotero.api.iterators.ItemIterator;
+import zotero.api.iterators.DocumentIterator;
 import zotero.api.samples.Configuration;
 
 public class CategoryRetrieval
@@ -32,7 +32,7 @@ public class CategoryRetrieval
 		System.out.println("Name  : " + collection.getName());
 		System.out.println("Items : " + collection.getNumberOfItems());
 
-		ItemIterator i = collection.fetchItems();
+		DocumentIterator i = collection.fetchDocuments();
 
 		while (i.hasNext())
 		{

@@ -7,6 +7,8 @@ import zotero.api.Item;
 import zotero.api.Library;
 import zotero.api.Tag;
 import zotero.api.ZoteroAuth;
+import zotero.api.batch.CreateItemsBatch;
+import zotero.api.batch.UpdateItemsBatch;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
@@ -16,11 +18,15 @@ import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.iterators.TagIterator;
+import zotero.api.iterators.ZoteroIterator;
 import zotero.api.search.CollectionSearch;
 import zotero.api.search.ItemSearch;
+import zotero.apiimpl.batch.CreateItemsBatchImpl;
+import zotero.apiimpl.batch.UpdateItemsBatchImpl;
 import zotero.apiimpl.iterators.CollectionIteratorImpl;
-import zotero.apiimpl.iterators.TagIteratorImpl;
 import zotero.apiimpl.iterators.ItemIteratorImpl;
+import zotero.apiimpl.iterators.TagIteratorImpl;
+import zotero.apiimpl.iterators.ZoteroIteratorImpl;
 import zotero.apiimpl.rest.ZoteroRest;
 import zotero.apiimpl.rest.ZoteroRest.Collections;
 import zotero.apiimpl.rest.ZoteroRest.Items;
@@ -59,7 +65,7 @@ public final class LibraryImpl extends Library
 	@Override
 	public Collection fetchCollection(String key)
 	{
-		GetBuilder<ZoteroRestItem,?> req = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem.class));
+		GetBuilder<ZoteroRestItem, ?> req = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem.class));
 
 		req.url(Collections.SPECIFIC).urlParam(URLParameter.COLLECTION_KEY, key);
 
@@ -74,31 +80,36 @@ public final class LibraryImpl extends Library
 		return CollectionImpl.create(this, parent);
 	}
 
-	@Override
 	public ItemIterator fetchCollectionItems(String key)
 	{
-		return fetchCollectionItems(Items.COLLECTION_ITEMS, key);
+		return fetchCollectionItems(Items.COLLECTION_ITEMS, key, new ItemIteratorImpl(this));
 	}
-	
-	private ItemIterator fetchCollectionItems(String url, String key)
+
+	public <T extends ZoteroIterator<?>> T fetchCollectionItems(String url, String key, T iterator)
 	{
-		GetBuilder<ZoteroRestItem[],?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class));
+		GetBuilder<ZoteroRestItem[], ?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class));
 		builder.url(url);
 
 		if (key != null)
 		{
 			builder.urlParam(URLParameter.COLLECTION_KEY, key);
 		}
-
+		
+		@SuppressWarnings("unchecked")
+		ZoteroIteratorImpl<T> it = (ZoteroIteratorImpl<T>) iterator;
+		
+		it.addQueryParams(builder);
+		
 		RestResponse<ZoteroRestItem[]> response = performRequest(builder);
-
-		return new ItemIteratorImpl(response, this);
+		
+		it.setResponse(response);
+		
+		return iterator;
 	}
 
-	@Override
 	public ItemIterator fetchCollectionItemsTop(String key)
 	{
-		return fetchCollectionItems(Items.COLLECTION_ITEMS_TOP, key);
+		return fetchCollectionItems(Items.COLLECTION_ITEMS_TOP, key, new ItemIteratorImpl(this));
 	}
 
 	@Override
@@ -115,7 +126,7 @@ public final class LibraryImpl extends Library
 
 	CollectionIterator fetchCollections(String url, String key)
 	{
-		GetBuilder<ZoteroRestItem[],?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class));
+		GetBuilder<ZoteroRestItem[], ?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class));
 		builder.url(url);
 
 		if (key != null)
@@ -123,33 +134,40 @@ public final class LibraryImpl extends Library
 			builder.urlParam(URLParameter.COLLECTION_KEY, key);
 		}
 
+		CollectionIteratorImpl it = new CollectionIteratorImpl(this);
+		
+		it.addQueryParams(builder);
+		
 		RestResponse<ZoteroRestItem[]> response = performRequest(builder);
-
-		return new CollectionIteratorImpl(response, this);
+		
+		it.setResponse(response);
+		
+		return it;
+		
 	}
 
 	@Override
 	public ItemIterator fetchItemsAll()
 	{
-		return fetchItems(Items.ALL, null);
+		return fetchItems(Items.ALL, null, new ItemIteratorImpl(this));
 	}
 
 	@Override
 	public ItemIterator fetchItemsTop()
 	{
-		return fetchItems(Items.TOP, null);
+		return fetchItems(Items.TOP, null, new ItemIteratorImpl(this));
 	}
 
 	@Override
 	public ItemIterator fetchItemsTrash()
 	{
-		return fetchItems(Items.TRASH, null);
+		return fetchItems(Items.TRASH, null, new ItemIteratorImpl(this));
 	}
 
 	@Override
 	public Item fetchItem(String key)
 	{
-		GetBuilder<ZoteroRestItem,?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem.class));
+		GetBuilder<ZoteroRestItem, ?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem.class));
 
 		builder.url(Items.SPECIFIC).urlParam(URLParameter.ITEM_KEY, key);
 
@@ -158,9 +176,9 @@ public final class LibraryImpl extends Library
 		return ItemImpl.fromRest(this, response.getResponse());
 	}
 
-	ItemIterator fetchItems(String url, String key)
+	<T extends ZoteroIterator<?>> T fetchItems(String url, String key, T iterator)
 	{
-		GetBuilder<ZoteroRestItem[],?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class));
+		GetBuilder<ZoteroRestItem[], ?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class));
 		builder.url(url);
 
 		if (key != null)
@@ -168,9 +186,15 @@ public final class LibraryImpl extends Library
 			builder.urlParam(URLParameter.ITEM_KEY, key);
 		}
 		
+		ZoteroIteratorImpl<?> it = (ZoteroIteratorImpl<?>)iterator;
+		
+		it.addQueryParams(builder);
+		
 		RestResponse<ZoteroRestItem[]> response = performRequest(builder);
-
-		return new ItemIteratorImpl(response, this);
+		
+		it.setResponse(response);
+		
+		return iterator;
 	}
 
 	@Override
@@ -179,7 +203,7 @@ public final class LibraryImpl extends Library
 		return new DocumentImpl(this, type);
 	}
 
-	public <T,B extends BaseBuilder<T,B,R>,R extends ResponseBuilder<T>> RestResponse<T> performRequest(BaseBuilder<T,B,R> builder)
+	public <T, B extends BaseBuilder<T, B, R>, R extends ResponseBuilder<T>> RestResponse<T> performRequest(BaseBuilder<T, B, R> builder)
 	{
 		RestResponse<T> resp = builder.auth(auth).id(id).setUsers().build().execute();
 
@@ -228,7 +252,7 @@ public final class LibraryImpl extends Library
 	{
 		return fetchTags(ZoteroRest.Tags.ALL, null, null);
 	}
-	
+
 	@Override
 	public TagIterator fetchTag(String name)
 	{
@@ -237,7 +261,7 @@ public final class LibraryImpl extends Library
 
 	private TagIterator fetchTags(String url, URLParameter parameter, String key)
 	{
-		GetBuilder<ZoteroRestItem[],?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class));
+		GetBuilder<ZoteroRestItem[], ?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem[].class));
 		builder.url(url);
 
 		if (key != null)
@@ -245,8 +269,24 @@ public final class LibraryImpl extends Library
 			builder.urlParam(parameter, key);
 		}
 
+		TagIteratorImpl ti = new TagIteratorImpl(this);
+		
 		RestResponse<ZoteroRestItem[]> response = performRequest(builder);
+		ti.addQueryParams(builder);
 
-		return new TagIteratorImpl(response, this);
+		ti.setResponse(response);
+		return ti;
+	}
+
+	@Override
+	public CreateItemsBatch createCreateItemsBatch()
+	{
+		return new CreateItemsBatchImpl(this);
+	}
+
+	@Override
+	public UpdateItemsBatch createUpdateItemsBatch()
+	{
+		return new UpdateItemsBatchImpl(this);
 	}
 }

@@ -100,39 +100,21 @@ public class ItemImpl extends EntryImpl implements Item
 		return (Tags) getProperties().getProperty(ZoteroKeys.ItemKeys.TAGS).getValue();
 	}
 
-	public static Item fromRest(LibraryImpl library, ZoteroRestItem jsonItem)
+	@SuppressWarnings("unchecked")
+	@Override
+	public final Relationships getRelationships()
 	{
-		String zoteroType = (String) jsonItem.getData().get(ZoteroKeys.ItemKeys.ITEM_TYPE);
+		return ((PropertyObject<Relationships>) super.getProperties().getProperty(ZoteroKeys.ItemKeys.RELATIONS)).getValue();
+	}
 
-		ItemType itemType = ItemType.fromZoteroType(zoteroType);
-		
-		ItemImpl item;
-		
-		switch (itemType)
-		{
-			case ATTACHMENT:
-			{
-				item = AttachmentImpl.fromRest(library, jsonItem);
-				break;
-			}
-			case NOTE:
-			{
-				item = NoteImpl.fromRest(library, jsonItem);
-				break;
-			}
-			default:
-			{
-				item = DocumentImpl.fromRest(library, jsonItem);
-				break;
-			}
-		}
+	public void reinitialize(ItemType type)
+	{
+		throw new UnsupportedOperationException("reinitialize");
+	}
 
-		// Refresh the properties
-		item.refresh(jsonItem);
-
-		EntryImpl.loadLinks(library, item, jsonItem.getLinks());
-
-		return item;
+	public void validate()
+	{
+		// Content and property validation goes here
 	}
 
 	@Override
@@ -174,12 +156,7 @@ public class ItemImpl extends EntryImpl implements Item
 		this.refresh(item);
 	}
 
-	public void validate()
-	{
-		// Content and property validation goes here
-	}
-
-	private ZoteroRestItem buildRestItem(SerializationMode mode)
+	public ZoteroRestItem buildRestItem(SerializationMode mode)
 	{
 		ZoteroRestData data = new ZoteroRestData();
 		
@@ -197,15 +174,38 @@ public class ItemImpl extends EntryImpl implements Item
 		return item;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public final Relationships getRelationships()
+	public static Item fromRest(LibraryImpl library, ZoteroRestItem jsonItem)
 	{
-		return ((PropertyObject<Relationships>) super.getProperties().getProperty(ZoteroKeys.ItemKeys.RELATIONS)).getValue();
-	}
-
-	public void reinitialize(ItemType type)
-	{
-		throw new UnsupportedOperationException("reinitialize");
+		String zoteroType = (String) jsonItem.getData().get(ZoteroKeys.ItemKeys.ITEM_TYPE);
+	
+		ItemType itemType = ItemType.fromZoteroType(zoteroType);
+		
+		ItemImpl item;
+		
+		switch (itemType)
+		{
+			case ATTACHMENT:
+			{
+				item = (ItemImpl) AttachmentImpl.fromRest(library, jsonItem);
+				break;
+			}
+			case NOTE:
+			{
+				item = (ItemImpl) NoteImpl.fromRest(library, jsonItem);
+				break;
+			}
+			default:
+			{
+				item = (ItemImpl) DocumentImpl.fromRest(library, jsonItem);
+				break;
+			}
+		}
+	
+		// Refresh the properties
+		item.refresh(jsonItem);
+	
+		EntryImpl.loadLinks(library, item, jsonItem.getLinks());
+	
+		return item;
 	}
 }

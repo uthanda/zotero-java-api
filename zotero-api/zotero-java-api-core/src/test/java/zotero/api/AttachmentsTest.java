@@ -37,7 +37,7 @@ import com.google.gson.JsonSyntaxException;
 
 import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroKeys;
-import zotero.api.iterators.ItemIterator;
+import zotero.api.iterators.AttachmentIterator;
 import zotero.api.util.MockRestService;
 
 @RunWith(PowerMockRunner.class)
@@ -68,7 +68,7 @@ public class AttachmentsTest
 	@Test
 	public void testRetrieve() throws IOException
 	{
-		ItemIterator i = item.fetchChildren();
+		AttachmentIterator i = item.fetchAttachments();
 
 		Item itemAttachment = i.next();
 		itemAttachment = i.next();

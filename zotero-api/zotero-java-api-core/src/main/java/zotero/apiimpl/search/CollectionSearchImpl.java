@@ -24,7 +24,11 @@ public class CollectionSearchImpl extends ItemEndpointSearchImpl<CollectionSearc
 	{
 		RestResponse<ZoteroRestItem[]> response = execute();
 
-		return new CollectionIteratorImpl(response, library);
+		CollectionIteratorImpl it = new CollectionIteratorImpl(library);
+		
+		it.setResponse(response);
+		
+		return it;
 	}
 
 	@Override

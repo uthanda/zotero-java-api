@@ -1,6 +1,8 @@
 package zotero.api;
 
+import zotero.api.iterators.AttachmentIterator;
 import zotero.api.iterators.CollectionIterator;
+import zotero.api.iterators.DocumentIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.iterators.TagIterator;
 
@@ -46,11 +48,11 @@ public interface Collection extends Entry
 	// Related item methods
 	
 	/**
-	 * Fetches the items contained in the collection
+	 * Fetches the documents contained in the collection
 	 * 
-	 * @return Item iterator
+	 * @return Document iterator
 	 */
-	ItemIterator fetchItems();
+	DocumentIterator fetchDocuments();
 	
 	/**
 	 * Fetches the sub-collections
@@ -73,4 +75,8 @@ public interface Collection extends Entry
 	 * @return Tag iterator
 	 */
 	TagIterator fetchTags(boolean top);
+
+	AttachmentIterator fetchAttachments();
+	
+	ItemIterator fetchItems();
 }

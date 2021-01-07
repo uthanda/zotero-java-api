@@ -36,9 +36,13 @@ public class ItemSearchImpl extends ItemEndpointSearchImpl<ItemSearch, ItemItera
 	@Override
 	public ItemIterator search()
 	{
+		ItemIteratorImpl it = new ItemIteratorImpl(library);
+		
 		RestResponse<ZoteroRestItem[]> response = execute();
 
-		return new ItemIteratorImpl(response, library);
+		it.setResponse(response);
+		
+		return it;
 	}
 
 	@Override

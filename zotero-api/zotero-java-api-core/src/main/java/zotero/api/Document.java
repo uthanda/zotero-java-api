@@ -4,7 +4,8 @@ import java.util.Date;
 
 import zotero.api.collections.Creators;
 import zotero.api.constants.ItemType;
-import zotero.api.iterators.ItemIterator;
+import zotero.api.iterators.AttachmentIterator;
+import zotero.api.iterators.NoteIterator;
 
 /**
  * Represents a document (non-attachment item) in the library. It provides the
@@ -52,11 +53,18 @@ public interface Document extends Item
 	int getNumberOfChilden();
 
 	/**
-	 * Fetches the children of this item.
+	 * Fetches the notes for this item.
 	 * 
-	 * @return Item iterator for access the item's children.
+	 * @return Note iterator for access the item's notes.
 	 */
-	ItemIterator fetchChildren();
+	NoteIterator fetchNotes();
+	
+	/**
+	 * Fetches the attachments for this item.
+	 * 
+	 * @return Attachment iterator for access the item's attachments.
+	 */
+	AttachmentIterator fetchAttachments();
 
 	/**
 	 * Gets the list of creators for this item.

@@ -135,7 +135,7 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 		entry.links = LinksImpl.fromRest(library, links);
 	}
 
-	protected void refresh(ZoteroRestItem item)
+	public void refresh(ZoteroRestItem item)
 	{
 		// Refresh the links
 		this.links = LinksImpl.fromRest(library, item.getLinks());

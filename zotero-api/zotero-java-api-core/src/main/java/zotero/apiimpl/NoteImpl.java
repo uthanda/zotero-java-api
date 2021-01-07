@@ -41,11 +41,11 @@ public class NoteImpl extends ItemImpl implements Note
 		getProperties().putValue(ZoteroKeys.ItemKeys.NOTE, content);
 	}
 
-	public static ItemImpl fromRest(LibraryImpl library, ZoteroRestItem item)
+	public static Note fromRest(LibraryImpl library, ZoteroRestItem item)
 	{
 		NoteImpl note = new NoteImpl(library);
 		
-		((PropertiesImpl)note.getProperties()).fromRest(library, item.getData());
+		note.refresh(item);
 		
 		return note;
 		

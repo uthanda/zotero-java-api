@@ -1,5 +1,7 @@
 package zotero.api;
 
+import zotero.api.batch.CreateItemsBatch;
+import zotero.api.batch.UpdateItemsBatch;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.iterators.CollectionIterator;
@@ -80,20 +82,6 @@ public abstract class Library
 	 * @return Retrieved collection iterator
 	 */
 	public abstract CollectionIterator fetchCollectionsTop();
-
-	/**
-	 * Fetches the items within a specific collection in the library
-	 * 
-	 * @return Retrieved item iterator
-	 */
-	public abstract ItemIterator fetchCollectionItems(String key);
-
-	/**
-	 * Fetches the top-level items within a specific collection in the library
-	 * 
-	 * @return Retrieved item iterator
-	 */
-	public abstract ItemIterator fetchCollectionItemsTop(String key);
 
 	/**
 	 * Fetches a specific item from the library
@@ -185,4 +173,8 @@ public abstract class Library
 	{
 		return LibraryImpl.create(userId, auth);
 	}
+
+	public abstract CreateItemsBatch createCreateItemsBatch();
+	
+	public abstract UpdateItemsBatch createUpdateItemsBatch();
 }

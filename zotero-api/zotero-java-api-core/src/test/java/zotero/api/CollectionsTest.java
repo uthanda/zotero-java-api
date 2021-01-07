@@ -27,7 +27,7 @@ import com.google.gson.Gson;
 
 import zotero.api.constants.LinkType;
 import zotero.api.iterators.CollectionIterator;
-import zotero.api.iterators.ItemIterator;
+import zotero.api.iterators.DocumentIterator;
 import zotero.api.util.MockRestService;
 import zotero.api.util.PassThruInputStream;
 import zotero.apiimpl.rest.ZoteroRest;
@@ -122,7 +122,7 @@ public class CollectionsTest
 	@Test
 	public void testFetchItems()
 	{
-		ItemIterator iterator = collectionNoSubCollections.fetchItems();
+		DocumentIterator iterator = collectionNoSubCollections.fetchDocuments();
 
 		assertEquals(7, iterator.getTotalCount());
 

@@ -12,7 +12,7 @@ import zotero.apiimpl.rest.request.builders.GetBuilder;
 import zotero.apiimpl.rest.response.JSONRestResponseBuilder;
 import zotero.apiimpl.rest.response.RestResponse;
 
-class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
+public abstract class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 {
 	private int totalCount;
 	private ZoteroRestItem[] page;
@@ -21,13 +21,17 @@ class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 	private BiFunction<LibraryImpl, ZoteroRestItem, T> builder;
 	private LibraryImpl library;
 
-	protected ZoteroIteratorImpl(RestResponse<ZoteroRestItem[]> response, BiFunction<LibraryImpl, ZoteroRestItem, T> builder, LibraryImpl library)
+	protected ZoteroIteratorImpl(BiFunction<LibraryImpl, ZoteroRestItem, T> builder, LibraryImpl library)
 	{
-		this.totalCount = response.getTotalResults();
-		this.page = response.getResponse();
-		this.response = response;
 		this.builder = builder;
 		this.library = library;
+	}
+
+	public void setResponse(RestResponse<ZoteroRestItem[]> response)
+	{
+		this.response = response;
+		this.totalCount = response.getTotalResults();
+		this.page = response.getResponse();
 	}
 
 	@Override
@@ -39,6 +43,7 @@ class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 	@Override
 	public T next()
 	{
+		// TODO fix the bug here where we're returning null when we shouldnt
 		if (index >= page.length)
 		{
 			String nextLink = response.getLink(NEXT);
@@ -71,4 +76,6 @@ class ZoteroIteratorImpl<T> implements ZoteroIterator<T>
 	{
 		return totalCount;
 	}
+	
+	public abstract void addQueryParams(GetBuilder<?,?> builder);
 }

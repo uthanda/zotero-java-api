@@ -39,7 +39,7 @@ import zotero.api.constants.RelationshipType;
 import zotero.api.constants.TagType;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.iterators.CollectionIterator;
-import zotero.api.iterators.ItemIterator;
+import zotero.api.iterators.NoteIterator;
 import zotero.api.util.MockRestService;
 import zotero.api.util.PassThruInputStream;
 import zotero.apiimpl.rest.ZoteroRest;
@@ -194,7 +194,7 @@ public class ItemsTest
 	@Test
 	public void testGetChildren()
 	{
-		ItemIterator i = item.fetchChildren();
+		NoteIterator i = item.fetchNotes();
 
 		assertEquals(2, i.getTotalCount());
 		assertTrue(i.hasNext());

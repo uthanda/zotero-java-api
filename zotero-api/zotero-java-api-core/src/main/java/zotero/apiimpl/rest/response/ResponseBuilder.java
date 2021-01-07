@@ -62,6 +62,19 @@ public abstract class ResponseBuilder<T>
 		parseLastVersionHeader(response);
 		parseLinks(response);
 
+		Header backoff = response.getFirstHeader("Backoff");
+		if(backoff != null) {
+			int value = Integer.parseInt(backoff.getValue());
+			try
+			{
+				Thread.sleep(value * 1000L);
+			}
+			catch (InterruptedException e)
+			{
+				Thread.currentThread().interrupt();
+			}
+		}
+		
 		HttpEntity entity = response.getEntity();
 
 		switch (response.getStatusLine().getStatusCode())

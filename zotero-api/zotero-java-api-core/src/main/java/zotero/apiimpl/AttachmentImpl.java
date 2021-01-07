@@ -157,7 +157,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 		getProperties().putValue(ZoteroKeys.AttachmentKeys.CONTENT_TYPE, type);
 	}
 
-	public static ItemImpl fromRest(LibraryImpl library, ZoteroRestItem item)
+	public static Attachment fromRest(LibraryImpl library, ZoteroRestItem item)
 	{
 		AttachmentImpl attachment = new AttachmentImpl(library);
 		attachment.refresh(item);
