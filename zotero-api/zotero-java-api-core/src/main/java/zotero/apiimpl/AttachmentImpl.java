@@ -31,6 +31,7 @@ import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.properties.Properties;
 import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.properties.PropertyEnumImpl;
+import zotero.apiimpl.properties.PropertyLongImpl;
 import zotero.apiimpl.properties.PropertyStringImpl;
 import zotero.apiimpl.rest.ZoteroRest;
 import zotero.apiimpl.rest.ZoteroRest.URLParameter;
@@ -76,7 +77,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 			{
 				properties.addProperty(new PropertyStringImpl(AttachmentKeys.FILENAME, null));
 				properties.addProperty(new PropertyStringImpl(AttachmentKeys.MD5, null));
-				properties.addProperty(new PropertyStringImpl(AttachmentKeys.MTIME, null));
+				properties.addProperty(new PropertyLongImpl(AttachmentKeys.MTIME, null, false));
 				break;
 			}
 			case IMPORTED_URL:
@@ -84,7 +85,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 				properties.addProperty(new PropertyStringImpl(EntityKeys.URL, null));
 				properties.addProperty(new PropertyStringImpl(AttachmentKeys.FILENAME, null));
 				properties.addProperty(new PropertyStringImpl(AttachmentKeys.MD5, null));
-				properties.addProperty(new PropertyStringImpl(AttachmentKeys.MTIME, null));
+				properties.addProperty(new PropertyLongImpl(AttachmentKeys.MTIME, null, false));
 				break;
 			}
 			case LINKED_FILE:
@@ -191,7 +192,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 			case IMPORTED_FILE:
 			{
 				String md5 = props.getString(ZoteroKeys.AttachmentKeys.MD5);
-				String mtime = props.getString(ZoteroKeys.AttachmentKeys.MTIME);
+				Long mtime = props.getLong(ZoteroKeys.AttachmentKeys.MTIME);
 				String filename = props.getString(ZoteroKeys.AttachmentKeys.FILENAME);
 				String contentType = props.getString(ZoteroKeys.AttachmentKeys.CONTENT_TYPE);
 
@@ -359,8 +360,7 @@ public class AttachmentImpl extends ItemImpl implements Attachment
 
 		if (isNew)
 		{
-			// builder.header(ZoteroRest.Headers.IF_NONE_MATCH, "*");
-			builder.header(ZoteroRest.Headers.IF_MATCH, md5);
+			builder.header(ZoteroRest.Headers.IF_NONE_MATCH, "*");
 		}
 		else
 		{

@@ -34,10 +34,13 @@ import zotero.api.collections.Relationships;
 import zotero.api.collections.Tags;
 import zotero.api.constants.CreatorType;
 import zotero.api.constants.ItemType;
+import zotero.api.constants.LinkMode;
 import zotero.api.constants.LinkType;
 import zotero.api.constants.RelationshipType;
 import zotero.api.constants.TagType;
+import zotero.api.constants.ZoteroKeys;
 import zotero.api.exceptions.ZoteroRuntimeException;
+import zotero.api.iterators.AttachmentIterator;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.NoteIterator;
 import zotero.api.util.MockRestService;
@@ -192,23 +195,56 @@ public class ItemsTest
 	}
 
 	@Test
-	public void testGetChildren()
+	public void testFetchNotes()
 	{
 		NoteIterator i = item.fetchNotes();
 
 		assertEquals(2, i.getTotalCount());
 		assertTrue(i.hasNext());
 
-		Item child = i.next();
+		Note child = i.next();
 		assertNotNull(child);
-		assertEquals(ItemType.ATTACHMENT, child.getItemType());
-		assertTrue(child instanceof Attachment);
+		assertEquals(ItemType.NOTE, child.getItemType());
+		assertEquals("Note1", child.getNoteContent());
+
+		child = i.next();
+		assertNotNull(child);
+		assertEquals(ItemType.NOTE, child.getItemType());
+		assertEquals("Note2", child.getNoteContent());
+
+		assertFalse(i.hasNext());
+	}
+	
+	@Test
+	public void testFetchAttachments()
+	{
+		AttachmentIterator i = item.fetchAttachments();
+		
+		assertEquals(2, i.getTotalCount());
+		assertTrue(i.hasNext());
+		
+		Item child = i.next();
+		assertEquals("KZT65H5M", child.getProperties().getString("key"));
+		assertEquals(LinkMode.LINKED_FILE, child.getProperties().getProperty(ZoteroKeys.AttachmentKeys.LINK_MODE).getValue());
+		assertEquals("2019 Toward a methodology for case modeling.pdf", child.getProperties().getString(ZoteroKeys.AttachmentKeys.TITLE));
+		assertEquals("application/pdf", child.getProperties().getString(ZoteroKeys.AttachmentKeys.CONTENT_TYPE));
+		assertEquals("attachments:2019/2019 Toward a methodology for case modeling2.pdf", child.getProperties().getString(ZoteroKeys.AttachmentKeys.PATH));
+		assertEquals(DatatypeConverter.parseDateTime("2020-12-10T06:27:05Z").getTime(), child.getProperties().getProperty(ZoteroKeys.ItemKeys.DATE_ADDED).getValue());
+		assertEquals(DatatypeConverter.parseDateTime("2020-12-10T06:27:07Z").getTime(), child.getProperties().getProperty(ZoteroKeys.ItemKeys.DATE_MODIFIED).getValue());
 
 		child = i.next();
 		assertNotNull(child);
 		assertEquals(ItemType.ATTACHMENT, child.getItemType());
-		assertTrue(child instanceof Attachment);
-
+		assertEquals("BV6GB7ZH", child.getProperties().getString("key"));
+		assertEquals(LinkMode.IMPORTED_FILE, child.getProperties().getProperty(ZoteroKeys.AttachmentKeys.LINK_MODE).getValue());
+		assertEquals("6891361.pdf", child.getProperties().getString(ZoteroKeys.AttachmentKeys.TITLE));
+		assertEquals("application/pdf", child.getProperties().getString(ZoteroKeys.AttachmentKeys.CONTENT_TYPE));
+		assertEquals("6891361.pdf", child.getProperties().getString(ZoteroKeys.AttachmentKeys.FILENAME));
+		assertEquals("046ed92f85028072fdeae68862559212", child.getProperties().getString(ZoteroKeys.AttachmentKeys.MD5));
+		assertEquals(1593890605000L, child.getProperties().getLong(ZoteroKeys.AttachmentKeys.MTIME).longValue());
+		assertEquals(DatatypeConverter.parseDateTime("2020-07-04T19:23:25Z").getTime(), child.getProperties().getProperty(ZoteroKeys.ItemKeys.DATE_ADDED).getValue());
+		assertEquals(DatatypeConverter.parseDateTime("2020-07-04T19:23:25Z").getTime(), child.getProperties().getProperty(ZoteroKeys.ItemKeys.DATE_MODIFIED).getValue());
+		
 		assertFalse(i.hasNext());
 	}
 
@@ -341,5 +377,11 @@ public class ItemsTest
 		delete.delete();
 
 		delete.getKey();
+	}
+	
+	@Test
+	public void testItemBatch()
+	{
+		
 	}
 }

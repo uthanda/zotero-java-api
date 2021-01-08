@@ -29,7 +29,7 @@ public class DocumentImpl extends ItemImpl implements Document
 	public DocumentImpl(LibraryImpl library, ItemType type)
 	{
 		super(library);
-		
+
 		initialize(library, type);
 	}
 
@@ -38,14 +38,14 @@ public class DocumentImpl extends ItemImpl implements Document
 	{
 		// Initialize the base
 		super.initialize(library, type);
-		
+
 		PropertiesImpl properties = (PropertiesImpl) getProperties();
-		
+
 		if (type == ItemType.ATTACHMENT)
 		{
 			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.UNSUPPORTED_ENUM_VALUE, "Cannot initalize an attachment using initalize document properties");
 		}
-	
+
 		properties.addProperty(new PropertyCreatorsImpl(new CreatorsImpl(library)));
 	}
 
@@ -54,7 +54,7 @@ public class DocumentImpl extends ItemImpl implements Document
 	{
 		checkDeletionStatus();
 
-		return super.getProperties().getDate(ZoteroKeys.DocumentKeys.DATE_ADDED);
+		return super.getProperties().getDate(ZoteroKeys.ItemKeys.DATE_ADDED);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class DocumentImpl extends ItemImpl implements Document
 	{
 		checkDeletionStatus();
 
-		return super.getProperties().getDate(ZoteroKeys.DocumentKeys.DATE_MODIFIED);
+		return super.getProperties().getDate(ZoteroKeys.ItemKeys.DATE_MODIFIED);
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class DocumentImpl extends ItemImpl implements Document
 	public final String getTitle()
 	{
 		checkDeletionStatus();
-	
+
 		return super.getProperties().getString(ZoteroKeys.ItemKeys.TITLE);
 	}
 
@@ -129,26 +129,25 @@ public class DocumentImpl extends ItemImpl implements Document
 	public final void setTitle(String title)
 	{
 		checkDeletionStatus();
-	
+
 		super.getProperties().putValue(ZoteroKeys.ItemKeys.TITLE, title);
 	}
 
 	@Override
 	public Note createNote()
 	{
-		return new NoteImpl((LibraryImpl)getLibrary(), getKey());
+		return new NoteImpl((LibraryImpl) getLibrary(), getKey());
 	}
 
 	public static Document fromRest(LibraryImpl library, ZoteroRestItem jsonItem)
 	{
 		DocumentImpl document = new DocumentImpl(library, ItemType.ARTWORK);
-		
-		document.numChildren = ((Double)jsonItem.getMeta().get(ZoteroKeys.MetaKeys.NUM_CHILDREN)).intValue();
+
+		document.numChildren = ((Double) jsonItem.getMeta().get(ZoteroKeys.MetaKeys.NUM_CHILDREN)).intValue();
 		document.creatorSummary = (String) jsonItem.getMeta().get(ZoteroKeys.MetaKeys.CREATOR_SUMMARY);
 		document.parsedDate = (String) jsonItem.getMeta().get(ZoteroKeys.MetaKeys.PARSED_DATE);
 		document.refresh(jsonItem);
-		
+
 		return document;
 	}
-
 }

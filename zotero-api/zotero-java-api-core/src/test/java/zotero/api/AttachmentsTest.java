@@ -139,7 +139,7 @@ public class AttachmentsTest
 		Attachment attachment = library.createAttachment(LinkMode.IMPORTED_FILE);
 		attachment.setTitle("Zotero Sample Attachment");
 		attachment.getProperties().putValue(ZoteroKeys.AttachmentKeys.FILENAME, "zotero.properties");
-		attachment.getProperties().putValue(ZoteroKeys.AttachmentKeys.MTIME, "1609673828440");
+		attachment.getProperties().putValue(ZoteroKeys.AttachmentKeys.MTIME, 1609673828440L);
 		attachment.getProperties().putValue(ZoteroKeys.AttachmentKeys.CONTENT_TYPE, "text/plain");
 		attachment.provideContent(new ByteArrayInputStream("testContent".getBytes()), 11L, "a9d008afc51e435b813611042192eb74");
 //		attachment.save();

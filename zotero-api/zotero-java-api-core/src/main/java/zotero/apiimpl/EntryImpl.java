@@ -40,28 +40,34 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 		this.library = library;
 		this.version = null;
 	}
-
-	@Override
-	public int hashCode()
-	{
-		return key.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (!(obj instanceof EntryImpl))
-		{
-			return false;
-		}
-
-		if (obj.getClass() != this.getClass())
-		{
-			return false;
-		}
-
-		return key.equals(((EntryImpl) obj).key);
-	}
+//
+//	@Override
+//	public int hashCode()
+//	{
+//		HashCodeBuilder builder = new HashCodeBuilder();
+//		
+//		builder.append(getKey());
+//		builder.append(version);
+//		builder.append(getProperties().hashCode());
+//
+//		return builder.hashCode();
+//	}
+//
+//	@Override
+//	public boolean equals(Object obj)
+//	{
+//		if (!(obj instanceof EntryImpl))
+//		{
+//			return false;
+//		}
+//
+//		if (obj.getClass() != this.getClass())
+//		{
+//			return false;
+//		}
+//
+//		return key.equals(((EntryImpl) obj).key);
+//	}
 
 	@Override
 	public final String getKey()

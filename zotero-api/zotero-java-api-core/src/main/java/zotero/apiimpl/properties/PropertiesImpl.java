@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,6 +24,7 @@ import zotero.api.properties.Properties;
 import zotero.api.properties.Property;
 import zotero.api.properties.PropertyDate;
 import zotero.api.properties.PropertyInteger;
+import zotero.api.properties.PropertyLong;
 import zotero.api.properties.PropertyString;
 import zotero.apiimpl.LibraryImpl;
 import zotero.apiimpl.rest.model.SerializationMode;
@@ -46,6 +48,12 @@ public final class PropertiesImpl implements Properties
 	public String getString(String key)
 	{
 		return ((PropertyString) getProperty(key)).getValue();
+	}
+
+	@Override
+	public Long getLong(String key)
+	{
+		return ((PropertyLong) getProperty(key)).getValue();
 	}
 
 	@Override
@@ -94,6 +102,12 @@ public final class PropertiesImpl implements Properties
 	public void putValue(String key, Integer value)
 	{
 		((PropertyInteger) getProperty(key)).setValue(value);
+	}
+
+	@Override
+	public void putValue(String key, Long value)
+	{
+		((PropertyLong) getProperty(key)).setValue(value);
 	}
 
 	@Override
@@ -174,6 +188,10 @@ public final class PropertiesImpl implements Properties
 		{
 			property = new PropertyEnumImpl<>(e.getKey(), LinkMode.class, LinkMode.fromZoteroType((String) e.getValue()));
 		}
+		else if (AttachmentKeys.MTIME.equals(e.getKey()))
+		{
+			property = new PropertyLongImpl(e.getKey(), value != null ? ((Double) value).longValue() : null, false);
+		}
 		else if (value instanceof Double)
 		{
 			property = new PropertyIntegerImpl(name, ((Double) value).intValue());
@@ -216,7 +234,7 @@ public final class PropertiesImpl implements Properties
 		return new Iterator<Property<?>>()
 		{
 			private Iterator<Property<?>> i = properties.values().iterator();
-			
+
 			@Override
 			public boolean hasNext()
 			{
@@ -229,5 +247,18 @@ public final class PropertiesImpl implements Properties
 				return i.next();
 			}
 		};
+	}
+
+	@Override
+	public int hashCode()
+	{
+		HashCodeBuilder builder = new HashCodeBuilder();
+
+		for (Property<?> prop : properties.values())
+		{
+			builder.append(prop.getValue());
+		}
+
+		return builder.hashCode();
 	}
 }

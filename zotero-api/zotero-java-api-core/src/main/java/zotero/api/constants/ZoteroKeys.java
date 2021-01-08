@@ -77,6 +77,8 @@ public class ZoteroKeys
 		public static final String TAGS = "tags";
 		public static final String ACCESS_DATE = "accessDate";
 		public static final String NOTE = "note";
+		public static final String DATE_MODIFIED = "dateModified";
+		public static final String DATE_ADDED = "dateAdded";
 
 		private ItemKeys() {}
 	}
@@ -181,8 +183,6 @@ public class ZoteroKeys
 		public static final String CODE_NUMBER = "codeNumber";
 		public static final String REFERENCES = "references";
 		public static final String STUDIO = "studio";
-		public static final String DATE_MODIFIED = "dateModified";
-		public static final String DATE_ADDED = "dateAdded";
 		public static final String CREATORS = "creators";
 		public static final String PRIORITY_NUMBERS = "priorityNumbers";
 		public static final String LABEL = "label";

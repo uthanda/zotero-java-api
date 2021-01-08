@@ -1,6 +1,9 @@
 package zotero.apiimpl.rest.response;
 
-import static zotero.apiimpl.rest.ZoteroRest.Headers.*;
+import static zotero.apiimpl.rest.ZoteroRest.Headers.LAST_MODIFIED_VERSION;
+import static zotero.apiimpl.rest.ZoteroRest.Headers.LINK;
+import static zotero.apiimpl.rest.ZoteroRest.Headers.RETRY_AFTER;
+import static zotero.apiimpl.rest.ZoteroRest.Headers.TOTAL_RESULTS;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,6 +15,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+
+import zotero.apiimpl.rest.ZoteroRest;
 
 public abstract class ResponseBuilder<T>
 {
@@ -62,8 +67,9 @@ public abstract class ResponseBuilder<T>
 		parseLastVersionHeader(response);
 		parseLinks(response);
 
-		Header backoff = response.getFirstHeader("Backoff");
-		if(backoff != null) {
+		if (response.containsHeader(ZoteroRest.Headers.BACKOFF))
+		{
+			Header backoff = response.getFirstHeader(ZoteroRest.Headers.BACKOFF);
 			int value = Integer.parseInt(backoff.getValue());
 			try
 			{
@@ -74,7 +80,7 @@ public abstract class ResponseBuilder<T>
 				Thread.currentThread().interrupt();
 			}
 		}
-		
+
 		HttpEntity entity = response.getEntity();
 
 		switch (response.getStatusLine().getStatusCode())

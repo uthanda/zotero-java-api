@@ -26,6 +26,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import com.google.gson.Gson;
 
 import zotero.api.constants.LinkType;
+import zotero.api.iterators.AttachmentIterator;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.DocumentIterator;
 import zotero.api.util.MockRestService;
@@ -120,19 +121,15 @@ public class CollectionsTest
 	}
 
 	@Test
-	public void testFetchItems()
+	public void testFetchDocuments()
 	{
 		DocumentIterator iterator = collectionNoSubCollections.fetchDocuments();
 
-		assertEquals(7, iterator.getTotalCount());
+		assertEquals(3, iterator.getTotalCount());
 
 		assertTrue(iterator.hasNext());
 		Item item = iterator.next();
 		assertEquals("B4ERDVS4", item.getKey());
-
-		assertTrue(iterator.hasNext());
-		item = iterator.next();
-		assertEquals("KZT65H5M", item.getKey());
 
 		assertTrue(iterator.hasNext());
 		item = iterator.next();
@@ -141,18 +138,6 @@ public class CollectionsTest
 		assertTrue(iterator.hasNext());
 		item = iterator.next();
 		assertEquals("RSWMDDEA", item.getKey());
-
-		assertTrue(iterator.hasNext());
-		item = iterator.next();
-		assertEquals("SY4RPB76", item.getKey());
-
-		assertTrue(iterator.hasNext());
-		item = iterator.next();
-		assertEquals("526R6IWN", item.getKey());
-
-		assertTrue(iterator.hasNext());
-		item = iterator.next();
-		assertEquals("QFV7K969", item.getKey());
 
 		assertFalse(iterator.hasNext());
 
@@ -164,6 +149,42 @@ public class CollectionsTest
 		catch (NoSuchElementException ex)
 		{
 
+		}
+	}
+	
+	@Test
+	public void testFetchAttachments()
+	{
+		AttachmentIterator iterator = collectionNoSubCollections.fetchAttachments();
+		
+		assertEquals(4, iterator.getTotalCount());
+		
+		assertTrue(iterator.hasNext());
+		Attachment item = iterator.next();
+		assertEquals("KZT65H5M", item.getKey());
+		
+		assertTrue(iterator.hasNext());
+		item = iterator.next();
+		assertEquals("SY4RPB76", item.getKey());
+		
+		assertTrue(iterator.hasNext());
+		item = iterator.next();
+		assertEquals("526R6IWN", item.getKey());
+		
+		assertTrue(iterator.hasNext());
+		item = iterator.next();
+		assertEquals("QFV7K969", item.getKey());
+		
+		assertFalse(iterator.hasNext());
+		
+		try
+		{
+			iterator.next();
+			fail("Reached EOR and did not get an exception");
+		}
+		catch (NoSuchElementException ex)
+		{
+			
 		}
 	}
 	

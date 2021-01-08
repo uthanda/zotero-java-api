@@ -25,10 +25,13 @@ import zotero.apiimpl.rest.ZoteroRest.URLParameter;
 import zotero.apiimpl.rest.model.SerializationMode;
 import zotero.apiimpl.rest.model.ZoteroRestData;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
+import zotero.apiimpl.rest.request.builders.GetBuilder;
+import zotero.apiimpl.rest.response.JSONRestResponseBuilder;
+import zotero.apiimpl.rest.response.RestResponse;
 import zotero.apiimpl.rest.schema.ZoteroSchema;
 import zotero.apiimpl.rest.schema.ZoteroSchema.ZoteroType;
 
-public class ItemImpl extends EntryImpl implements Item
+public abstract class ItemImpl extends EntryImpl implements Item
 {
 	protected ItemImpl(LibraryImpl library)
 	{
@@ -39,13 +42,13 @@ public class ItemImpl extends EntryImpl implements Item
 	{
 		ZoteroSchema schema = ZoteroSchema.getCurrentSchema();
 		ZoteroType zoteroType = null;
-		
+
 		PropertiesImpl properties = (PropertiesImpl) getProperties();
-		
+
 		properties.addProperty(new PropertyEnumImpl<>(ItemKeys.ITEM_TYPE, ItemType.class, type));
 
 		properties.addProperty(new PropertyRelationshipsImpl(new RelationshipsImpl(library)));
-		
+
 		properties.addProperty(new PropertyTagsImpl(new TagsImpl()));
 
 		for (ZoteroType itemType : schema.getTypes())
@@ -56,12 +59,12 @@ public class ItemImpl extends EntryImpl implements Item
 				break;
 			}
 		}
-	
+
 		if (zoteroType == null)
 		{
 			throw new ZoteroRuntimeException(ZoteroExceptionType.DATA, ZoteroExceptionCodes.Data.UNSUPPORTED_ENUM_VALUE, "Invalid type " + type.name());
 		}
-	
+
 		for (String key : zoteroType.getFields().keySet())
 		{
 			properties.addProperty(new PropertyStringImpl(key, null));
@@ -118,12 +121,6 @@ public class ItemImpl extends EntryImpl implements Item
 	}
 
 	@Override
-	public void refresh()
-	{
-		// TODO
-	}
-
-	@Override
 	public void save()
 	{
 		checkDeletionStatus();
@@ -159,13 +156,13 @@ public class ItemImpl extends EntryImpl implements Item
 	public ZoteroRestItem buildRestItem(SerializationMode mode)
 	{
 		ZoteroRestData data = new ZoteroRestData();
-		
+
 		PropertiesImpl.toRest(data, getProperties(), mode);
 
 		ZoteroRestItem item = new ZoteroRestItem();
 		item.setKey(getKey());
 		item.setData(data);
-		
+
 		if (getVersion() != null)
 		{
 			item.setVersion(getVersion());
@@ -177,11 +174,11 @@ public class ItemImpl extends EntryImpl implements Item
 	public static Item fromRest(LibraryImpl library, ZoteroRestItem jsonItem)
 	{
 		String zoteroType = (String) jsonItem.getData().get(ZoteroKeys.ItemKeys.ITEM_TYPE);
-	
+
 		ItemType itemType = ItemType.fromZoteroType(zoteroType);
-		
+
 		ItemImpl item;
-		
+
 		switch (itemType)
 		{
 			case ATTACHMENT:
@@ -200,12 +197,24 @@ public class ItemImpl extends EntryImpl implements Item
 				break;
 			}
 		}
-	
+
 		// Refresh the properties
 		item.refresh(jsonItem);
-	
+
 		EntryImpl.loadLinks(library, item, jsonItem.getLinks());
-	
+
 		return item;
+	}
+
+	@Override
+	public void refresh()
+	{
+		GetBuilder<ZoteroRestItem, ?> builder = GetBuilder.createBuilder(new JSONRestResponseBuilder<>(ZoteroRestItem.class));
+
+		builder.url(ZoteroRest.Items.SPECIFIC).urlParam(URLParameter.ITEM_KEY, getKey()).lastVersion(this.getVersion());
+
+		RestResponse<ZoteroRestItem> response = ((LibraryImpl) getLibrary()).performRequest(builder);
+
+		super.refresh(response.getResponse());
 	}
 }

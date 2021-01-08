@@ -15,7 +15,8 @@
 		<version.powermock>2.0.9</version.powermock>
 		<version.gson>2.8.6</version.gson>
 		<version.apache.httpcomponents>4.5.13</version.apache.httpcomponents>
-		<version.apache.commons-io>2.8.0</version.apache.commons-io>
+		<version.apache.commons.io>2.8.0</version.apache.commons.io>
+		<version.apache.commons.lang3>3.11</version.apache.commons.lang3>
 	</properties>
 	<build>
 		<plugins>
@@ -31,6 +32,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.2.0</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -80,7 +82,7 @@
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
-				<version>${version.apache.commons-io}</version>
+				<version>${version.apache.commons.io}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.powermock</groupId>
@@ -115,6 +117,11 @@
 				<artifactId>easymock</artifactId>
 				<version>${version.easymock}</version>
 				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${version.apache.commons.lang3}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

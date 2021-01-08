@@ -33,5 +33,9 @@ public enum PropertyType
 	/**
 	* 
 	*/
-	BOOLEAN
+	BOOLEAN,
+	/**
+	 * 
+	 */
+	LONG
 }
