@@ -30,7 +30,7 @@ public class BatchResponseImpl<R extends BatchHandle<T>, T> implements BatchResp
 	}
 
 	@Override
-	public int count()
+	public int getCount()
 	{
 		return results.size();
 	}

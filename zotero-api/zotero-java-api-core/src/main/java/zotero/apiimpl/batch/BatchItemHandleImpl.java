@@ -11,6 +11,7 @@ public class BatchItemHandleImpl implements BatchItemHandle
 	private String restItemKey = null;
 	private BatchResult result = BatchResult.UNEXECUTED;
 	private String message = null;
+	private int restItemIndex;
 
 	public BatchItemHandleImpl(ItemImpl item)
 	{
@@ -22,9 +23,10 @@ public class BatchItemHandleImpl implements BatchItemHandle
 		return restItemKey;
 	}
 
-	public void setRestItemKey(String restItemKey)
+	public void setRestItemKey(int restItemIndex)
 	{
-		this.restItemKey = restItemKey;
+		this.restItemIndex = restItemIndex;
+		this.restItemKey = Integer.toString(restItemIndex);
 	}
 
 	@Override
@@ -53,6 +55,12 @@ public class BatchItemHandleImpl implements BatchItemHandle
 	public Item getItem()
 	{
 		return item;
+	}
+
+	@Override
+	public int getIndex()
+	{
+		return restItemIndex;
 	}
 
 }

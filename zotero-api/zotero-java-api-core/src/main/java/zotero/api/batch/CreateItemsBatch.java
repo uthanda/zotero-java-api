@@ -1,6 +1,6 @@
 package zotero.api.batch;
 
-public interface CreateItemsBatch
+public interface CreateItemsBatch extends ItemBatch
 {
 	
 }

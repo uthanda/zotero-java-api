@@ -24,5 +24,9 @@ public enum ZoteroExceptionType
 	/**
 	 * 
 	 */
-	UNKNOWN
+	UNKNOWN,
+	/**
+	 * 
+	 */
+	API
 }

@@ -27,6 +27,16 @@ public final class ZoteroExceptionCodes
 		}
 	}
 
+	public static final class API
+	{
+		public static final int INVALID_BATCH_ITEM_TYPE = 0x0;
+		public static final int BATCH_SIZE_LIMIT_EXCEEDED = 0x1;
+
+		private API()
+		{
+		}
+	}
+
 	private ZoteroExceptionCodes()
 	{
 	}
@@ -56,6 +66,5 @@ public final class ZoteroExceptionCodes
 		public static final int INVALID_PROPERTY = 0x8;
 		public static final int MIME_NOT_RESOLVED = 0x9;
 		public static final int MD5_ERROR = 0xA;
-		public static final int BATCH_SIZE_LIMIT_EXCEEDED = 0xB;
 	}
 }
