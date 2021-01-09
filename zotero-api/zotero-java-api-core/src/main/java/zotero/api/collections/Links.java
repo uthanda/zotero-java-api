@@ -1,6 +1,7 @@
-package zotero.api;
+package zotero.api.collections;
 
 import zotero.api.constants.LinkType;
+import zotero.api.meta.Link;
 
 /**
  * Represents a collection links to the content or item within the Zotero web application.

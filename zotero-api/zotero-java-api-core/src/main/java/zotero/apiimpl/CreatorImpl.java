@@ -1,11 +1,11 @@
 package zotero.apiimpl;
 
 import zotero.api.constants.ZoteroKeys;
+import zotero.api.meta.Creator;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import zotero.api.Creator;
 import zotero.api.constants.CreatorType;
 import zotero.api.properties.PropertyEnum;
 import zotero.apiimpl.properties.PropertiesImpl;

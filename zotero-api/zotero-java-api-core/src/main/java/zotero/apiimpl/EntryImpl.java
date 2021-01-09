@@ -2,12 +2,12 @@ package zotero.apiimpl;
 
 import java.util.Arrays;
 
-import zotero.api.Entry;
 import zotero.api.Library;
-import zotero.api.Links;
+import zotero.api.collections.Links;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
 import zotero.api.exceptions.ZoteroRuntimeException;
+import zotero.api.meta.Entry;
 import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.rest.ZoteroRest.Collections;
 import zotero.apiimpl.rest.ZoteroRest.Items;

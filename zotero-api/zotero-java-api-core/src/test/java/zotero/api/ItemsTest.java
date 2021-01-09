@@ -27,6 +27,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.google.gson.Gson;
 
+import zotero.api.auth.ZoteroAPIKey;
 import zotero.api.collections.Collections;
 import zotero.api.collections.Creators;
 import zotero.api.collections.RelationSet;
@@ -43,6 +44,7 @@ import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.iterators.AttachmentIterator;
 import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.NoteIterator;
+import zotero.api.meta.Creator;
 import zotero.api.util.MockRestService;
 import zotero.api.util.PassThruInputStream;
 import zotero.apiimpl.rest.ZoteroRest;

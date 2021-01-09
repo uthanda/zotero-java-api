@@ -6,6 +6,7 @@ import zotero.api.collections.Collections;
 import zotero.api.collections.Relationships;
 import zotero.api.collections.Tags;
 import zotero.api.constants.ItemType;
+import zotero.api.meta.Entry;
 
 /**
  * An Item is a document or attachment that is stored in the library.

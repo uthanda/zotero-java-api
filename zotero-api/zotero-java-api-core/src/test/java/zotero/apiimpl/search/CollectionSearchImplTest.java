@@ -16,7 +16,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import zotero.api.Item;
 import zotero.api.Library;
-import zotero.api.ZoteroAPIKey;
+import zotero.api.auth.ZoteroAPIKey;
 import zotero.api.constants.ItemType;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.search.ItemSearch;

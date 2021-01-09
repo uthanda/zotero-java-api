@@ -1,4 +1,7 @@
-package zotero.api;
+package zotero.api.meta;
+
+import zotero.api.Library;
+import zotero.api.properties.PropertiesItem;
 
 /**
  * Represents a base entry for any item in a Zotero library. This provides the

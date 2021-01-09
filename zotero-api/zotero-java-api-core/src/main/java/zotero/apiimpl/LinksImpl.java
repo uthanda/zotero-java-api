@@ -4,7 +4,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import zotero.api.Links;
+import zotero.api.collections.Links;
 import zotero.api.constants.LinkType;
 import zotero.apiimpl.rest.model.ZoteroRestLinks;
 

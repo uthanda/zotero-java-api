@@ -1,6 +1,4 @@
-package zotero.api;
-
-import zotero.api.properties.Properties;
+package zotero.api.properties;
 
 /**
  * A properties item is an item that contains a collection of properties.

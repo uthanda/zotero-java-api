@@ -35,6 +35,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import zotero.api.auth.ZoteroAPIKey;
 import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.iterators.AttachmentIterator;

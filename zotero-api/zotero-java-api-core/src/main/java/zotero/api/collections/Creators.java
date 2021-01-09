@@ -1,7 +1,7 @@
 package zotero.api.collections;
 
-import zotero.api.Creator;
 import zotero.api.constants.CreatorType;
+import zotero.api.meta.Creator;
 import zotero.apiimpl.ChangeTracker;
 
 /**

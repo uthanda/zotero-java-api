@@ -5,6 +5,7 @@ import zotero.api.iterators.CollectionIterator;
 import zotero.api.iterators.DocumentIterator;
 import zotero.api.iterators.ItemIterator;
 import zotero.api.iterators.TagIterator;
+import zotero.api.meta.Entry;
 
 /**
  * A collection is a folder within the Zotero interface that can be used to 

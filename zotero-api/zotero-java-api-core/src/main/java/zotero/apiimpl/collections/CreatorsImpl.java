@@ -7,9 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import zotero.api.Creator;
 import zotero.api.collections.Creators;
 import zotero.api.constants.CreatorType;
+import zotero.api.meta.Creator;
 import zotero.apiimpl.CreatorImpl;
 import zotero.apiimpl.LibraryImpl;
 import zotero.apiimpl.properties.PropertyListImpl.ObservableList;

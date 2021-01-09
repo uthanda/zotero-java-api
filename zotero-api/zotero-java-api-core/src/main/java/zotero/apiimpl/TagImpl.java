@@ -3,8 +3,8 @@ package zotero.apiimpl;
 import java.util.HashMap;
 import java.util.Map;
 
-import zotero.api.Links;
 import zotero.api.Tag;
+import zotero.api.collections.Links;
 import zotero.api.constants.TagType;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;

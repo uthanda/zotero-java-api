@@ -24,7 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import zotero.api.Library;
-import zotero.api.ZoteroAPIKey;
+import zotero.api.auth.ZoteroAPIKey;
 import zotero.api.constants.RelationshipType;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.util.MockRestService;

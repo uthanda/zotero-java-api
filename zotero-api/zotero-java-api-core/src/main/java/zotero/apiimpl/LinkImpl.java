@@ -1,8 +1,8 @@
 package zotero.apiimpl;
 
-import zotero.api.Link;
 import zotero.api.constants.LinkType;
 import zotero.api.constants.ZoteroKeys;
+import zotero.api.meta.Link;
 import zotero.apiimpl.properties.PropertiesImpl;
 import zotero.apiimpl.properties.PropertyEnumImpl;
 import zotero.apiimpl.properties.PropertyIntegerImpl;
@@ -25,20 +25,15 @@ final class LinkImpl extends PropertiesItemImpl implements Link
 	}
 
 	@Override
-	public final String getHref()
+	public final String getURL()
 	{
 		return getProperties().getString(ZoteroKeys.LinkKeys.HREF);
 	}
 
-	public final void setHref(String href)
-	{
-		getProperties().putValue(ZoteroKeys.LinkKeys.HREF, href);
-	}
-
 	@Override
-	public final String getType()
+	public final LinkType getType()
 	{
-		return getProperties().getString(ZoteroKeys.LinkKeys.TYPE);
+		return (LinkType) getProperties().getProperty(ZoteroKeys.LinkKeys.TYPE).getValue();
 	}
 
 	@SuppressWarnings("unchecked")

@@ -27,7 +27,7 @@ import com.google.gson.Gson;
 import zotero.api.Collection;
 import zotero.api.Library;
 import zotero.api.Tag;
-import zotero.api.ZoteroAPIKey;
+import zotero.api.auth.ZoteroAPIKey;
 import zotero.api.collections.Collections;
 import zotero.api.collections.Creators;
 import zotero.api.constants.CreatorType;

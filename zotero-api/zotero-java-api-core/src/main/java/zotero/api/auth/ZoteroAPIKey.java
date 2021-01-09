@@ -1,4 +1,4 @@
-package zotero.api;
+package zotero.api.auth;
 
 import org.apache.http.HttpRequest;
 

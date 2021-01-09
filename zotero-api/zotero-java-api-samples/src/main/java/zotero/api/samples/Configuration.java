@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import zotero.api.ZoteroAPIKey;
+import zotero.api.auth.ZoteroAPIKey;
 
 public class Configuration
 {

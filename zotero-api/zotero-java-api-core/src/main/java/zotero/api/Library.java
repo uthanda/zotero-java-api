@@ -1,5 +1,6 @@
 package zotero.api;
 
+import zotero.api.auth.ZoteroAuth;
 import zotero.api.batch.CreateItemsBatch;
 import zotero.api.batch.UpdateItemsBatch;
 import zotero.api.constants.ItemType;
@@ -156,10 +157,27 @@ public abstract class Library
 	 */
 	public abstract Attachment createAttachment(Item parent, LinkMode mode);
 	
-	public abstract Tag createTag(String tag);
+	/**
+	 * Creates a new tag.
+	 * 
+	 * @param value Tag value
+	 * @return Tag object
+	 */
+	public abstract Tag createTag(String value);
 	
+	/**
+	 * Gets all the tags in the library
+	 * 
+	 * @return Tag iterator
+	 */
 	public abstract TagIterator fetchTagsAll();
 	
+	/**
+	 * Fetches tags of all types matching a specific name. 
+	 * 
+	 * @param name Name
+	 * @return Tag iterator
+	 */
 	public abstract TagIterator fetchTag(String name);
 
 	/**
@@ -174,7 +192,19 @@ public abstract class Library
 		return LibraryImpl.create(userId, auth);
 	}
 
+	/**
+	 * Create a new create item batch that is capable of committing
+	 * a number of items (attachments, notes, documents) in a single call.
+	 * 
+	 * @return Prepared batch
+	 */
 	public abstract CreateItemsBatch createCreateItemsBatch();
 	
+	/**
+	 * Create a new update item batch that is capable of committing
+	 * a number of items (attachments, notes, documents) in a single call.
+	 * 
+	 * @return Prepared batch
+	 */
 	public abstract UpdateItemsBatch createUpdateItemsBatch();
 }

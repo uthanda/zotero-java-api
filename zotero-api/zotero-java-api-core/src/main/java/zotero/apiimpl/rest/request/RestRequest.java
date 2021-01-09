@@ -12,7 +12,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 import zotero.api.Library;
-import zotero.api.ZoteroAuth;
+import zotero.api.auth.ZoteroAuth;
 import zotero.apiimpl.rest.ZoteroRest.API;
 import zotero.apiimpl.rest.ZoteroRest.Headers;
 import zotero.apiimpl.rest.ZoteroRest.URLParameter;

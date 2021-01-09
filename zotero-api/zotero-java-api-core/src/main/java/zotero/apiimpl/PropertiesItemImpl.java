@@ -1,7 +1,7 @@
 package zotero.apiimpl;
 
-import zotero.api.PropertiesItem;
 import zotero.api.properties.Properties;
+import zotero.api.properties.PropertiesItem;
 import zotero.apiimpl.properties.PropertiesImpl;
 
 public class PropertiesItemImpl implements PropertiesItem

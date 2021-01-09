@@ -21,9 +21,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import zotero.api.Document;
 import zotero.api.Library;
-import zotero.api.Links;
 import zotero.api.Tag;
-import zotero.api.ZoteroAPIKey;
+import zotero.api.auth.ZoteroAPIKey;
 import zotero.api.constants.LinkType;
 import zotero.api.constants.TagType;
 import zotero.api.constants.ZoteroKeys;
@@ -106,7 +105,7 @@ public class TagsTest
 		Links links = tag.getLinks();
 		
 		assertNotNull(links);
-		assertEquals("https://api.zotero.org/users/12345678/tags/followrefs", links.get(LinkType.SELF).getHref());
+		assertEquals("https://api.zotero.org/users/12345678/tags/followrefs", links.get(LinkType.SELF).getURL());
 	}
 	
 	@SuppressWarnings("unchecked")

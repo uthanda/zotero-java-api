@@ -6,7 +6,7 @@ import zotero.api.Document;
 import zotero.api.Item;
 import zotero.api.Library;
 import zotero.api.Tag;
-import zotero.api.ZoteroAuth;
+import zotero.api.auth.ZoteroAuth;
 import zotero.api.batch.CreateItemsBatch;
 import zotero.api.batch.UpdateItemsBatch;
 import zotero.api.constants.ItemType;

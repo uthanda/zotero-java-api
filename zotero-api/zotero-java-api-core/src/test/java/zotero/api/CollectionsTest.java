@@ -25,6 +25,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.google.gson.Gson;
 
+import zotero.api.auth.ZoteroAPIKey;
 import zotero.api.constants.LinkType;
 import zotero.api.iterators.AttachmentIterator;
 import zotero.api.iterators.CollectionIterator;
@@ -71,13 +72,13 @@ public class CollectionsTest
 	{
 		assertEquals(KEY_NO_SUBS, collectionNoSubCollections.getKey());
 		assertTrue(collectionNoSubCollections.getLinks().has(LinkType.SELF));
-		assertEquals("https://api.zotero.org/users/12345678/collections/FJ3SUIFZ", collectionNoSubCollections.getLinks().get(LinkType.SELF).getHref());
+		assertEquals("https://api.zotero.org/users/12345678/collections/FJ3SUIFZ", collectionNoSubCollections.getLinks().get(LinkType.SELF).getURL());
 		assertEquals("application/json", collectionNoSubCollections.getLinks().get(LinkType.SELF).getType());
 		assertTrue(collectionNoSubCollections.getLinks().has(LinkType.ALTERNATE));
-		assertEquals("https://www.zotero.org/uthanda/collections/FJ3SUIFZ", collectionNoSubCollections.getLinks().get(LinkType.ALTERNATE).getHref());
+		assertEquals("https://www.zotero.org/uthanda/collections/FJ3SUIFZ", collectionNoSubCollections.getLinks().get(LinkType.ALTERNATE).getURL());
 		assertEquals("text/html", collectionNoSubCollections.getLinks().get(LinkType.ALTERNATE).getType());
 		assertTrue(collectionNoSubCollections.getLinks().has(LinkType.UP));
-		assertEquals("https://api.zotero.org/users/12345678/collections/9DXQSYMF", collectionNoSubCollections.getLinks().get(LinkType.UP).getHref());
+		assertEquals("https://api.zotero.org/users/12345678/collections/9DXQSYMF", collectionNoSubCollections.getLinks().get(LinkType.UP).getURL());
 		assertEquals("application/json", collectionNoSubCollections.getLinks().get(LinkType.UP).getType());
 		assertEquals(0, collectionNoSubCollections.getNumberOfCollections());
 		assertEquals(3, collectionNoSubCollections.getNumberOfItems());
@@ -219,15 +220,15 @@ public class CollectionsTest
 		
 		// Test the link data
 		assertTrue(child.getLinks().has(LinkType.SELF));
-		assertEquals("https://api.zotero.org/users/12345678/collections/QP52ERNW", child.getLinks().get(LinkType.SELF).getHref());
+		assertEquals("https://api.zotero.org/users/12345678/collections/QP52ERNW", child.getLinks().get(LinkType.SELF).getURL());
 		assertEquals("application/json", child.getLinks().get(LinkType.SELF).getType());
 
 		assertTrue(child.getLinks().has(LinkType.ALTERNATE));
-		assertEquals("https://www.zotero.org/uthanda/collections/QP52ERNW", child.getLinks().get(LinkType.ALTERNATE).getHref());
+		assertEquals("https://www.zotero.org/uthanda/collections/QP52ERNW", child.getLinks().get(LinkType.ALTERNATE).getURL());
 		assertEquals("text/html", child.getLinks().get(LinkType.ALTERNATE).getType());
 
 		assertTrue(child.getLinks().has(LinkType.UP));
-		assertEquals("https://api.zotero.org/users/12345678/collections/FJ3SUIFZ", child.getLinks().get(LinkType.UP).getHref());
+		assertEquals("https://api.zotero.org/users/12345678/collections/FJ3SUIFZ", child.getLinks().get(LinkType.UP).getURL());
 		assertEquals("application/json", child.getLinks().get(LinkType.UP).getType());
 	}
 

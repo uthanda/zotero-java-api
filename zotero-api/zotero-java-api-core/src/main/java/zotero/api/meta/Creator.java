@@ -1,6 +1,7 @@
-package zotero.api;
+package zotero.api.meta;
 
 import zotero.api.constants.CreatorType;
+import zotero.api.properties.PropertiesItem;
 
 /**
  * A creator represents the creator, artist, or other person/entity
