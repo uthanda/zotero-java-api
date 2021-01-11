@@ -2,7 +2,7 @@ package zotero.apiimpl.batch;
 
 import java.util.List;
 
-import zotero.api.batch.UpdateItemsBatch;
+import zotero.api.batch.item.UpdateItemsBatch;
 import zotero.apiimpl.LibraryImpl;
 import zotero.apiimpl.rest.model.SerializationMode;
 import zotero.apiimpl.rest.model.ZoteroPostResponse;

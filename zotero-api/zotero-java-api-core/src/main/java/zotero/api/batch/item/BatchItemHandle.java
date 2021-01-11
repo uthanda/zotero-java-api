@@ -1,6 +1,7 @@
-package zotero.api.batch;
+package zotero.api.batch.item;
 
 import zotero.api.Item;
+import zotero.api.batch.BatchHandle;
 
 /**
  * Represents a handle to a specific item in the batch. This item can be a

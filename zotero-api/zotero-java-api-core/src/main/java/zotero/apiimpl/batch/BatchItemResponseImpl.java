@@ -4,8 +4,8 @@ import java.util.List;
 
 import zotero.apiimpl.ItemImpl;
 import zotero.api.Item;
-import zotero.api.batch.BatchItemResponse;
 import zotero.api.batch.BatchResult;
+import zotero.api.batch.item.BatchItemResponse;
 import zotero.apiimpl.rest.model.ZoteroPostResponse;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 

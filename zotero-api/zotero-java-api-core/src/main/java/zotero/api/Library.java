@@ -1,8 +1,11 @@
 package zotero.api;
 
+import java.util.List;
+
 import zotero.api.auth.ZoteroAuth;
-import zotero.api.batch.CreateItemsBatch;
-import zotero.api.batch.UpdateItemsBatch;
+import zotero.api.batch.item.CreateItemsBatch;
+import zotero.api.batch.item.RetrieveItemsBatch;
+import zotero.api.batch.item.UpdateItemsBatch;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.iterators.CollectionIterator;
@@ -85,6 +88,16 @@ public abstract class Library
 	public abstract CollectionIterator fetchCollectionsTop();
 
 	/**
+	 * Creates a new item of the type provided. The item is not persisted in
+	 * Zotero until the <code>save</code> method is called.
+	 * 
+	 * @param type
+	 *            Item type
+	 * @return Initialized item
+	 */
+	public abstract Document createDocument(ItemType type);
+
+	/**
 	 * Fetches a specific item from the library
 	 * 
 	 * @param key
@@ -94,14 +107,13 @@ public abstract class Library
 	public abstract Item fetchItem(String key);
 
 	/**
-	 * Creates a new item of the type provided. The item is not persisted in
-	 * Zotero until the <code>save</code> method is called.
+	 * Fetches a set of items from the library.
 	 * 
-	 * @param type
-	 *            Item type
-	 * @return Initialized item
+	 * @param keys
+	 *            Item keys
+	 * @return Batch of retrieved items
 	 */
-	public abstract Document createDocument(ItemType type);
+	public abstract RetrieveItemsBatch fetchItems(List<String> keys);
 
 	/**
 	 * Fetches all items in the library.

@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import zotero.api.Document;
 import zotero.api.Library;
-import zotero.api.batch.BatchItemHandle;
-import zotero.api.batch.BatchItemResponse;
-import zotero.api.batch.CreateItemsBatch;
+import zotero.api.batch.item.BatchItemHandle;
+import zotero.api.batch.item.BatchItemResponse;
+import zotero.api.batch.item.CreateItemsBatch;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.ZoteroKeys;
 import zotero.api.samples.Configuration;

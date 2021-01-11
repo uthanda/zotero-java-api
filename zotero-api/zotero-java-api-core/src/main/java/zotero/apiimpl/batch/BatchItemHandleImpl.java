@@ -1,8 +1,8 @@
 package zotero.apiimpl.batch;
 
 import zotero.api.Item;
-import zotero.api.batch.BatchItemHandle;
 import zotero.api.batch.BatchResult;
+import zotero.api.batch.item.BatchItemHandle;
 import zotero.apiimpl.ItemImpl;
 
 public class BatchItemHandleImpl implements BatchItemHandle

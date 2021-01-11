@@ -1,6 +1,7 @@
-package zotero.api.batch;
+package zotero.api.batch.item;
 
 import zotero.api.Item;
+import zotero.api.batch.Batch;
 import zotero.api.exceptions.ZoteroRuntimeException;
 
 /**
@@ -13,7 +14,7 @@ import zotero.api.exceptions.ZoteroRuntimeException;
  * @author Michael Oland
  * @since 1.0
  */
-public interface ItemBatch extends Batch<Item, BatchItemHandle>
+public interface ItemsBatch extends Batch<Item, BatchItemHandle>
 {
 	/**
 	 * Adds a new item to the batch. <strong>Note:</strong> linked file

@@ -1,6 +1,7 @@
-package zotero.api.batch;
+package zotero.api.batch.item;
 
 import zotero.api.Item;
+import zotero.api.batch.BatchResponse;
 
 /**
  * Represents the response from a batch item commit. It will contain each of the

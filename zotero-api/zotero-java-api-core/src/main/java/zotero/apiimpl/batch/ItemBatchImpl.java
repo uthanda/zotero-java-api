@@ -5,10 +5,10 @@ import java.util.List;
 
 import zotero.api.Attachment;
 import zotero.api.Item;
-import zotero.api.batch.BatchItemHandle;
-import zotero.api.batch.BatchItemResponse;
 import zotero.api.batch.BatchResult;
-import zotero.api.batch.ItemBatch;
+import zotero.api.batch.item.BatchItemHandle;
+import zotero.api.batch.item.BatchItemResponse;
+import zotero.api.batch.item.ItemsBatch;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
@@ -24,7 +24,7 @@ import zotero.apiimpl.rest.request.builders.BaseBuilder;
 import zotero.apiimpl.rest.response.JSONRestResponseBuilder;
 import zotero.apiimpl.rest.response.RestResponse;
 
-public abstract class ItemBatchImpl implements ItemBatch
+public abstract class ItemBatchImpl implements ItemsBatch
 {
 	private final List<BatchItemHandleImpl> items = new ArrayList<>();
 
