@@ -36,7 +36,7 @@ paths:
           description: Too Many Requests
       operationId: get-users-userId-categories
       parameters: []
-  '/users/{userId}/item/{itemId}':
+  '/users/{userId}/items/{itemId}':
     parameters:
       - schema:
           type: string
@@ -66,6 +66,24 @@ paths:
               - 3
           in: query
           name: v
+    post:
+      summary: ''
+      operationId: post-users-userId-items-itemId
+      responses:
+        '200':
+          description: OK
+    patch:
+      summary: ''
+      operationId: patch-users-userId-items-itemId
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: ''
+      operationId: delete-users-userId-items-itemId
+      responses:
+        '200':
+          description: OK
   '/users/{userId}/collections/top':
     parameters:
       - schema:
@@ -139,25 +157,101 @@ paths:
       operationId: get-users-userId-collections-collectionKey-collections
       tags:
         - Collections
+  '/users/{userId}/items':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Link:
+              schema:
+                type: string
+            Last-Modified-Version:
+              schema:
+                type: number
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/item'
+      operationId: users-get-items
+      parameters:
+        - schema:
+            type: string
+            uniqueItems: true
+          in: query
+          name: itemKey
+          description: A comma separated list of items to return
+        - schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/itemType'
+          in: query
+          name: itemType
+        - schema:
+            type: string
+            enum:
+              - asc
+              - dsc
+          in: query
+          name: direction
+          description: Sort direction
+        - schema:
+            type: integer
+            maximum: 100
+            minimum: 1
+          in: query
+          name: limit
+          description: Maximum number of items to return
+        - schema:
+            type: integer
+          in: query
+          name: start
+          description: Result set start index
+        - schema:
+            type: number
+          in: header
+          name: If-Modified-Since-Version
+          description: Latest version number of the items locally.  Only items newer will be returned.
+        - schema:
+            type: integer
+          in: query
+          name: v
+          description: API Version Number
+      description: ''
+    delete:
+      summary: ''
+      operationId: delete-users-userId-items
+      responses:
+        '200':
+          description: OK
 components:
   schemas:
     link:
       description: Link to an item
       type: object
+      x-examples:
+        example-1:
+          href: string
+          type: string
       properties:
         href:
           type: string
           minLength: 1
         type:
-          type: string
-          minLength: 1
+          $ref: '#/components/schemas/linkmode'
       required:
         - href
         - type
-      x-examples:
-        example-1:
-          href: string
-          type: string
     library:
       description: Library information
       type: object
@@ -201,15 +295,7 @@ components:
       type: object
       properties:
         creatorType:
-          type: string
-          minLength: 1
-          enum:
-            - author
-            - contributor
-            - editor
-            - artist
-            - translator
-            - reviewed-author
+          $ref: '#/components/schemas/creatorType'
         firstName:
           type: string
           minLength: 1
@@ -282,8 +368,7 @@ components:
         version:
           type: number
         itemType:
-          type: string
-          minLength: 1
+          $ref: '#/components/schemas/itemType'
         title:
           type: string
           minLength: 1
@@ -357,13 +442,8 @@ components:
             type: string
         relations:
           anyOf:
-            - properties:
-                'owl:sameAs':
-                  type: string
-                  minLength: 1
-              required:
-                - 'owl:sameAs'
-          type: object
+            - properties: {}
+              anyOf: []
         dateAdded:
           type: string
           minLength: 1
@@ -506,6 +586,128 @@ components:
           $ref: '#/components/schemas/link'
         up:
           $ref: '#/components/schemas/link'
+    creatorType:
+      title: creatorType
+      type: object
+      properties:
+        id:
+          type: string
+          enum:
+            - artist
+            - attorneyAgent
+            - author
+            - bookAuthor
+            - cartographer
+            - castMember
+            - commenter
+            - composer
+            - contributor
+            - cosponsor
+            - counsel
+            - director
+            - editor
+            - guest
+            - interviewee
+            - interviewer
+            - inventor
+            - performer
+            - podcaster
+            - presenter
+            - producer
+            - programmer
+            - recipient
+            - reviewedAuthor
+            - scriptwriter
+            - seriesEditor
+            - sponsor
+            - translator
+            - wordsBy
+    itemType:
+      title: itemType
+      type: object
+      properties:
+        id:
+          type: string
+          enum:
+            - artwork
+            - attachment
+            - audioRecording
+            - bill
+            - blogPost
+            - book
+            - bookSection
+            - case
+            - computerProgram
+            - conferencePaper
+            - dictionaryEntry
+            - document
+            - email
+            - encyclopediaArticle
+            - film
+            - forumPost
+            - hearing
+            - instantMessage
+            - interview
+            - journalArticle
+            - letter
+            - magazineArticle
+            - manuscript
+            - map
+            - newspaperArticle
+            - note
+            - patent
+            - podcast
+            - presentation
+            - radioBroadcast
+            - report
+            - statute
+            - thesis
+            - tvBroadcast
+            - videoRecording
+            - webpage
+    linkType:
+      title: linkType
+      type: object
+      properties:
+        id:
+          type: string
+          enum:
+            - self
+            - alternate
+            - enclosure
+            - attachment
+            - up
+    linkMode:
+      title: linkMode
+      type: object
+      properties:
+        id:
+          type: string
+          enum:
+            - imported_file
+            - imported_url
+            - linked_file
+            - linked_url
+    formatTypes:
+      title: formatTypes
+      type: object
+      properties:
+        id:
+          type: string
+          enum:
+            - bibtex
+            - biblatex
+            - bookmarks
+            - coins
+            - csljson
+            - mods
+            - refer
+            - rdf_bibliontology
+            - rdf_dc
+            - rdf_zotero
+            - ris
+            - tei
+            - wikipedia
   securitySchemes:
     Zotero-API-Key:
       name: API Key

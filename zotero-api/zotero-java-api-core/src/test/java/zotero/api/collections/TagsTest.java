@@ -123,9 +123,9 @@ public class TagsTest
 		// Cleared should be false
 		assertEquals(Boolean.FALSE, TagsImpl.toRest(tags));
 		
-		TagImpl tag = new TagImpl("Foo", TagType.USER, 0, null, null);
+		TagImpl tag = new TagImpl("Foo", TagType.CUSTOM, 0, null, null);
 		tags.add(tag);
-		tag = new TagImpl("Bar", TagType.AUTOMATIC, 0, null, null);
+		tag = new TagImpl("Bar", TagType.SHARED, 0, null, null);
 		tags.add(tag);
 		
 		// Dirty should result in REST data
@@ -133,8 +133,8 @@ public class TagsTest
 		
 		assertEquals(2, rest.size());
 
-		assertEquals(TagType.USER.getZoteroType(), rest.get(0).get(ZoteroKeys.TagKeys.TYPE));
-		assertEquals(TagType.AUTOMATIC.getZoteroType(), rest.get(1).get(ZoteroKeys.TagKeys.TYPE));
+		assertEquals(TagType.CUSTOM.getZoteroType(), rest.get(0).get(ZoteroKeys.TagKeys.TYPE));
+		assertEquals(TagType.SHARED.getZoteroType(), rest.get(1).get(ZoteroKeys.TagKeys.TYPE));
 		
 		assertEquals("Foo", rest.get(0).get(ZoteroKeys.TagKeys.TAG));
 		assertEquals("Bar", rest.get(1).get(ZoteroKeys.TagKeys.TAG));

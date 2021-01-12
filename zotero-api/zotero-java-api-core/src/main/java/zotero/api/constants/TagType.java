@@ -5,11 +5,11 @@ public enum TagType
 	/**
 	 * Tags applied automatically by import or other means
 	 */
-	AUTOMATIC(1),
+	SHARED(1),
 	/**
 	 * Tags created by users
 	 */
-	USER(0);
+	CUSTOM(0);
 
 	private final int zoteroType;
 
@@ -28,9 +28,9 @@ public enum TagType
 		switch (zoteroType)
 		{
 			case 1:
-				return TagType.AUTOMATIC;
+				return TagType.SHARED;
 			case 0:
-				return TagType.USER;
+				return TagType.CUSTOM;
 			default:
 				throw new EnumConstantNotPresentException(RelationshipType.class, Integer.toString(zoteroType));
 		}

@@ -1,4 +1,4 @@
-package zotero.apiimpl.batch;
+package zotero.apiimpl.batch.items;
 
 import java.util.ArrayList;
 import java.util.List;

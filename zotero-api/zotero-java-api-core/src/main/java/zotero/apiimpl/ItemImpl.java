@@ -37,7 +37,7 @@ public abstract class ItemImpl extends EntryImpl implements Item
 	{
 		super(library);
 	}
-
+	
 	public void initialize(LibraryImpl library, ItemType type) throws ZoteroRuntimeException
 	{
 		ZoteroSchema schema = ZoteroSchema.getCurrentSchema();

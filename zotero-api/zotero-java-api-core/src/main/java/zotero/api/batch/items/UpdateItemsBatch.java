@@ -1,4 +1,4 @@
-package zotero.api.batch.item;
+package zotero.api.batch.items;
 
 /**
  * This batch will update one or more items in a single call to the repository.
@@ -8,6 +8,6 @@ package zotero.api.batch.item;
  * @author Michael Oland
  * @since 1.0
  */
-public interface DeleteItemsBatch extends ItemsBatch
+public interface UpdateItemsBatch extends ItemsBatch
 {
 }

@@ -1,4 +1,4 @@
-package zotero.api.batch.item;
+package zotero.api.batch.items;
 
 import zotero.api.Item;
 import zotero.api.batch.BatchResponse;

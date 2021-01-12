@@ -1,19 +1,18 @@
-package zotero.apiimpl.batch;
+package zotero.apiimpl.batch.items;
 
 import zotero.api.Item;
 import zotero.api.batch.BatchResult;
-import zotero.api.batch.item.BatchItemHandle;
-import zotero.apiimpl.ItemImpl;
+import zotero.api.batch.items.BatchItemHandle;
 
 public class BatchItemHandleImpl implements BatchItemHandle
 {
-	private final ItemImpl item;
+	private Item item;
 	private String restItemKey = null;
 	private BatchResult result = BatchResult.UNEXECUTED;
 	private String message = null;
 	private int restItemIndex;
 
-	public BatchItemHandleImpl(ItemImpl item)
+	public BatchItemHandleImpl(Item item)
 	{
 		this.item = item;
 	}
@@ -63,4 +62,8 @@ public class BatchItemHandleImpl implements BatchItemHandle
 		return restItemIndex;
 	}
 
+	void replaceItem(Item replacement)
+	{
+		this.item = replacement;
+	}
 }

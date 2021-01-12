@@ -7,8 +7,13 @@ import zotero.api.Item;
 import zotero.api.Library;
 import zotero.api.Tag;
 import zotero.api.auth.ZoteroAuth;
-import zotero.api.batch.item.CreateItemsBatch;
-import zotero.api.batch.item.UpdateItemsBatch;
+import zotero.api.batch.collections.CreateCollectionsBatch;
+import zotero.api.batch.collections.DeleteCollectionsBatch;
+import zotero.api.batch.collections.UpdateCollectionsBatch;
+import zotero.api.batch.items.CreateItemsBatch;
+import zotero.api.batch.items.DeleteItemsBatch;
+import zotero.api.batch.items.RetrieveItemsBatch;
+import zotero.api.batch.items.UpdateItemsBatch;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.constants.ZoteroExceptionCodes;
@@ -21,8 +26,10 @@ import zotero.api.iterators.TagIterator;
 import zotero.api.iterators.ZoteroIterator;
 import zotero.api.search.CollectionSearch;
 import zotero.api.search.ItemSearch;
-import zotero.apiimpl.batch.CreateItemsBatchImpl;
-import zotero.apiimpl.batch.UpdateItemsBatchImpl;
+import zotero.apiimpl.batch.items.CreateItemsBatchImpl;
+import zotero.apiimpl.batch.items.DeleteItemsBatchImpl;
+import zotero.apiimpl.batch.items.RetrieveItemsBatchImpl;
+import zotero.apiimpl.batch.items.UpdateItemsBatchImpl;
 import zotero.apiimpl.iterators.CollectionIteratorImpl;
 import zotero.apiimpl.iterators.ItemIteratorImpl;
 import zotero.apiimpl.iterators.TagIteratorImpl;
@@ -285,8 +292,41 @@ public final class LibraryImpl extends Library
 	}
 
 	@Override
+	public RetrieveItemsBatch createRetrieveItemsBatch()
+	{
+		return new RetrieveItemsBatchImpl(this);
+	}
+
+	@Override
 	public UpdateItemsBatch createUpdateItemsBatch()
 	{
 		return new UpdateItemsBatchImpl(this);
+	}
+
+	@Override
+	public DeleteItemsBatch createDeleteItemsBatch()
+	{
+		return new DeleteItemsBatchImpl(this);
+	}
+
+	@Override
+	public CreateCollectionsBatch createCreateCollectionsBatch()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UpdateCollectionsBatch createUpdateCollectionsBatch()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DeleteCollectionsBatch createDeleteCollectionsBatch()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

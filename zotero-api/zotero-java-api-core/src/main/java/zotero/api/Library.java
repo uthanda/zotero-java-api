@@ -1,11 +1,13 @@
 package zotero.api;
 
-import java.util.List;
-
 import zotero.api.auth.ZoteroAuth;
-import zotero.api.batch.item.CreateItemsBatch;
-import zotero.api.batch.item.RetrieveItemsBatch;
-import zotero.api.batch.item.UpdateItemsBatch;
+import zotero.api.batch.collections.CreateCollectionsBatch;
+import zotero.api.batch.collections.DeleteCollectionsBatch;
+import zotero.api.batch.collections.UpdateCollectionsBatch;
+import zotero.api.batch.items.CreateItemsBatch;
+import zotero.api.batch.items.DeleteItemsBatch;
+import zotero.api.batch.items.RetrieveItemsBatch;
+import zotero.api.batch.items.UpdateItemsBatch;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
 import zotero.api.iterators.CollectionIterator;
@@ -44,6 +46,18 @@ import zotero.apiimpl.LibraryImpl;
  */
 public abstract class Library
 {
+	/**
+	 * Creates a new library with the provided API key and user
+	 * 
+	 * @param userId User Id of the library to access
+	 * @param auth Authentication object to use when authenticating.
+	 * @return
+	 */
+	public static final Library createLibrary(String userId, ZoteroAuth auth)
+	{
+		return LibraryImpl.create(userId, auth);
+	}
+
 	public static final String API_VERSION = "0.1-SNAPSHOT";
 
 	/**
@@ -105,15 +119,6 @@ public abstract class Library
 	 * @return Retrieved item
 	 */
 	public abstract Item fetchItem(String key);
-
-	/**
-	 * Fetches a set of items from the library.
-	 * 
-	 * @param keys
-	 *            Item keys
-	 * @return Batch of retrieved items
-	 */
-	public abstract RetrieveItemsBatch fetchItems(List<String> keys);
 
 	/**
 	 * Fetches all items in the library.
@@ -193,18 +198,6 @@ public abstract class Library
 	public abstract TagIterator fetchTag(String name);
 
 	/**
-	 * Creates a new library with the provided API key and user
-	 * 
-	 * @param userId User Id of the library to access
-	 * @param auth Authentication object to use when authenticating.
-	 * @return
-	 */
-	public static final Library createLibrary(String userId, ZoteroAuth auth)
-	{
-		return LibraryImpl.create(userId, auth);
-	}
-
-	/**
 	 * Create a new create item batch that is capable of committing
 	 * a number of items (attachments, notes, documents) in a single call.
 	 * 
@@ -213,10 +206,51 @@ public abstract class Library
 	public abstract CreateItemsBatch createCreateItemsBatch();
 	
 	/**
+	 * Fetches a set of items from the library.
+	 * 
+	 * @param keys
+	 *            Item keys
+	 * @return Batch of retrieved items
+	 */
+	public abstract RetrieveItemsBatch createRetrieveItemsBatch();
+
+	/**
 	 * Create a new update item batch that is capable of committing
 	 * a number of items (attachments, notes, documents) in a single call.
 	 * 
 	 * @return Prepared batch
 	 */
 	public abstract UpdateItemsBatch createUpdateItemsBatch();
+	
+	/**
+	 * Create a new delete item batch that is capable of deleting
+	 * a number of items (attachments, notes, documents) in a single call.
+	 * 
+	 * @return Prepared batch
+	 */
+	public abstract DeleteItemsBatch createDeleteItemsBatch();
+	
+	/**
+	 * Create a new create item batch that is capable of committing
+	 * a number of items (attachments, notes, documents) in a single call.
+	 * 
+	 * @return Prepared batch
+	 */
+	public abstract CreateCollectionsBatch createCreateCollectionsBatch();
+
+	/**
+	 * Create a new update item batch that is capable of committing
+	 * a number of items (attachments, notes, documents) in a single call.
+	 * 
+	 * @return Prepared batch
+	 */
+	public abstract UpdateCollectionsBatch createUpdateCollectionsBatch();
+
+	/**
+	 * Create a new update item batch that is capable of committing
+	 * a number of items (attachments, notes, documents) in a single call.
+	 * 
+	 * @return Prepared batch
+	 */
+	public abstract DeleteCollectionsBatch createDeleteCollectionsBatch();
 }

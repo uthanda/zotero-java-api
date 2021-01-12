@@ -273,7 +273,8 @@ public final class ZoteroRest
 	{
 		private Batching() {}
 		
-		public static final int MAX_BATCH_COUNT = 50;
+		public static final int MAX_BATCH_COMMIT_COUNT = 50;
+		public static final int MAX_BATCH_RETRIEVE_COUNT = 50;
 	}
 
 	private ZoteroRest()

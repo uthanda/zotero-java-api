@@ -24,7 +24,7 @@ public class TagImpl implements Tag
 
 	public TagImpl(String tag, LibraryImpl library)
 	{
-		this(tag, TagType.USER, 0, null, library);
+		this(tag, TagType.CUSTOM, 0, null, library);
 	}
 
 	public TagImpl(String tag, TagType type, int numItems, Links links, LibraryImpl library)

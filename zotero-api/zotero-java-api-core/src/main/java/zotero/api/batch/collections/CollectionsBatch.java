@@ -1,5 +1,6 @@
-package zotero.api.batch.item;
+package zotero.api.batch.collections;
 
+import zotero.api.Collection;
 import zotero.api.Item;
 import zotero.api.batch.Batch;
 import zotero.api.exceptions.ZoteroRuntimeException;
@@ -14,7 +15,7 @@ import zotero.api.exceptions.ZoteroRuntimeException;
  * @author Michael Oland
  * @since 1.0
  */
-public interface ItemsBatch extends Batch<Item, BatchItemHandle>
+public interface CollectionsBatch extends Batch<Collection, BatchCollectionHandle>
 {
 	/**
 	 * Adds a new item to the batch. <strong>Note:</strong> linked file
@@ -28,7 +29,7 @@ public interface ItemsBatch extends Batch<Item, BatchItemHandle>
 	 * @return A handle to the batch item that can be used later to determine
 	 *         the result for that item
 	 */
-	BatchItemHandle add(Item item) throws ZoteroRuntimeException;
+	BatchCollectionHandle add(Item item) throws ZoteroRuntimeException;
 
 	/**
 	 * Executes the batch and commits the items.
@@ -36,5 +37,5 @@ public interface ItemsBatch extends Batch<Item, BatchItemHandle>
 	 * @throws ZoteroRuntimeException
 	 *             Thrown if there is a remote or I/O error.
 	 */
-	BatchItemResponse commit() throws ZoteroRuntimeException;
+	BatchCollectionResponse commit() throws ZoteroRuntimeException;
 }

@@ -13,9 +13,9 @@ public class TagTest
 	@Test
 	public void testCompare()
 	{
-		TagImpl one = new TagImpl("Foo", TagType.AUTOMATIC, 0, null, null);
-		TagImpl two = new TagImpl("Foo", TagType.USER, 0, null, null);
-		TagImpl three = new TagImpl("Foo", TagType.USER, 0, null, null);
+		TagImpl one = new TagImpl("Foo", TagType.SHARED, 0, null, null);
+		TagImpl two = new TagImpl("Foo", TagType.CUSTOM, 0, null, null);
+		TagImpl three = new TagImpl("Foo", TagType.CUSTOM, 0, null, null);
 		
 		assertNotEquals(one, two);
 		assertNotEquals(one, three);

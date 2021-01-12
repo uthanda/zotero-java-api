@@ -1,11 +1,11 @@
-package zotero.apiimpl.batch;
+package zotero.apiimpl.batch.items;
 
 import java.util.List;
 
 import zotero.apiimpl.ItemImpl;
 import zotero.api.Item;
 import zotero.api.batch.BatchResult;
-import zotero.api.batch.item.BatchItemResponse;
+import zotero.api.batch.items.BatchItemResponse;
 import zotero.apiimpl.rest.model.ZoteroPostResponse;
 import zotero.apiimpl.rest.model.ZoteroRestItem;
 
@@ -28,7 +28,7 @@ public class BatchItemResponseImpl extends BatchResponseImpl<BatchItemHandleImpl
 		return new BatchItemResponseImpl(results, hasErrors);
 	}
 
-	public static boolean processHandle(ZoteroPostResponse response, BatchItemHandleImpl handle)
+	private static boolean processHandle(ZoteroPostResponse response, BatchItemHandleImpl handle)
 	{
 		if(handle.getResult() == BatchResult.INVALID)
 		{

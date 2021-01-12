@@ -166,7 +166,7 @@ public class ItemsTest
 		assertEquals(1, tags.size());
 		Tag tag = tags.iterator().next();
 		assertEquals("followrefs", tag.getTag());
-		assertEquals(TagType.USER, tag.getType());
+		assertEquals(TagType.CUSTOM, tag.getType());
 	}
 
 	@Test

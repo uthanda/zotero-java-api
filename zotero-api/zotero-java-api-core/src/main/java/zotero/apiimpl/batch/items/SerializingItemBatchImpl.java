@@ -1,18 +1,10 @@
-package zotero.apiimpl.batch;
+package zotero.apiimpl.batch.items;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import zotero.api.Attachment;
-import zotero.api.Item;
 import zotero.api.batch.BatchResult;
-import zotero.api.batch.item.BatchItemHandle;
-import zotero.api.batch.item.BatchItemResponse;
-import zotero.api.batch.item.ItemsBatch;
-import zotero.api.constants.ItemType;
-import zotero.api.constants.LinkMode;
-import zotero.api.constants.ZoteroExceptionCodes;
-import zotero.api.constants.ZoteroExceptionType;
+import zotero.api.batch.items.BatchItemResponse;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.apiimpl.ItemImpl;
 import zotero.apiimpl.LibraryImpl;
@@ -24,84 +16,58 @@ import zotero.apiimpl.rest.request.builders.BaseBuilder;
 import zotero.apiimpl.rest.response.JSONRestResponseBuilder;
 import zotero.apiimpl.rest.response.RestResponse;
 
-public abstract class ItemBatchImpl implements ItemsBatch
+public abstract class SerializingItemBatchImpl extends ItemBatchImpl
 {
-	private final List<BatchItemHandleImpl> items = new ArrayList<>();
+	private LibraryImpl library;
 
-	private final LibraryImpl library;
-
-	protected ItemBatchImpl(LibraryImpl library)
+	protected SerializingItemBatchImpl(LibraryImpl library, int maxCount)
 	{
+		super(maxCount);
 		this.library = library;
 	}
 
-	@Override
-	public int getCount()
-	{
-		return items.size();
-	}
+	protected abstract BaseBuilder<ZoteroPostResponse, ?, JSONRestResponseBuilder<ZoteroPostResponse>> getBuilder(List<ZoteroRestItem> list);
 
-	@Override
-	public BatchItemHandle add(Item item)
-	{
-		if (item.getItemType() == ItemType.ATTACHMENT && ((Attachment) item).getLinkMode() == LinkMode.IMPORTED_FILE)
-		{
-			throw new ZoteroRuntimeException(ZoteroExceptionType.API, ZoteroExceptionCodes.API.INVALID_BATCH_ITEM_TYPE, "Batch commital of imported file attachments is not supported.");
-		}
-
-		if (items.size() >= ZoteroRest.Batching.MAX_BATCH_COUNT)
-		{
-			throw new ZoteroRuntimeException(ZoteroExceptionType.API, ZoteroExceptionCodes.API.BATCH_SIZE_LIMIT_EXCEEDED, "Too many items in the batch. Maximum allowed is " + ZoteroRest.Batching.MAX_BATCH_COUNT);
-		}
-
-		ItemImpl ii = (ItemImpl) item;
-
-		// Would be nice if we could check if the item is dirty before
-		// committing here. Avoid API calls if we can
-
-		BatchItemHandleImpl handle = new BatchItemHandleImpl(ii);
-
-		this.items.add(handle);
-
-		return handle;
-	}
+	protected abstract SerializationMode getSerializationMode();
 
 	@Override
 	public BatchItemResponse commit()
 	{
 		List<ZoteroRestItem> list = buildRestItems();
-
+	
 		BaseBuilder<ZoteroPostResponse, ?, JSONRestResponseBuilder<ZoteroPostResponse>> builder = getBuilder(list);
-
+	
 		builder.url(ZoteroRest.Items.ALL);
-
+	
 		RestResponse<ZoteroPostResponse> response = library.performRequest(builder);
-
-		return BatchItemResponseImpl.create(items, response.getResponse());
+	
+		return BatchItemResponseImpl.create(getItems(), response.getResponse());
 	}
 
 	private List<ZoteroRestItem> buildRestItems()
 	{
 		SerializationMode mode = getSerializationMode();
-
+	
 		List<ZoteroRestItem> list = new ArrayList<>();
-
+	
+		List<BatchItemHandleImpl> items = getItems();
+		
 		for (int i = 0; i < items.size(); i++)
 		{
 			buildItem(list, items.get(i), mode);
 		}
-
+	
 		return list;
 	}
 
 	private void buildItem(List<ZoteroRestItem> list, BatchItemHandleImpl handle, SerializationMode mode)
 	{
 		ItemImpl item = (ItemImpl) handle.getItem();
-
+	
 		int restKey = list.size();
-
+	
 		// Do we want to try this on insert into the batch?
-
+	
 		try
 		{
 			// Try building the rest item
@@ -119,10 +85,7 @@ public abstract class ItemBatchImpl implements ItemsBatch
 			// Note the error
 			handle.setMessage(e.getLocalizedMessage());
 		}
-
+	
 	}
 
-	public abstract BaseBuilder<ZoteroPostResponse, ?, JSONRestResponseBuilder<ZoteroPostResponse>> getBuilder(List<ZoteroRestItem> list);
-
-	protected abstract SerializationMode getSerializationMode();
 }

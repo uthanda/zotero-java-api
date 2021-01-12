@@ -1,6 +1,6 @@
-package zotero.api.batch.item;
+package zotero.api.batch.collections;
 
-import zotero.api.Item;
+import zotero.api.Collection;
 import zotero.api.batch.BatchHandle;
 
 /**
@@ -11,7 +11,7 @@ import zotero.api.batch.BatchHandle;
  * @author Michael Oland
  * @since 1.0
  */
-public interface BatchItemHandle extends BatchHandle<Item>
+public interface BatchCollectionHandle extends BatchHandle<Collection>
 {
 
 }

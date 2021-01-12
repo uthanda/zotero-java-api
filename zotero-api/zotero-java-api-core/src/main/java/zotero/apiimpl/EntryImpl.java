@@ -40,34 +40,6 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 		this.library = library;
 		this.version = null;
 	}
-//
-//	@Override
-//	public int hashCode()
-//	{
-//		HashCodeBuilder builder = new HashCodeBuilder();
-//		
-//		builder.append(getKey());
-//		builder.append(version);
-//		builder.append(getProperties().hashCode());
-//
-//		return builder.hashCode();
-//	}
-//
-//	@Override
-//	public boolean equals(Object obj)
-//	{
-//		if (!(obj instanceof EntryImpl))
-//		{
-//			return false;
-//		}
-//
-//		if (obj.getClass() != this.getClass())
-//		{
-//			return false;
-//		}
-//
-//		return key.equals(((EntryImpl) obj).key);
-//	}
 
 	@Override
 	public final String getKey()
@@ -141,8 +113,24 @@ abstract class EntryImpl extends PropertiesItemImpl implements Entry
 		entry.links = LinksImpl.fromRest(library, links);
 	}
 
+	/**
+	 * An internal method that will update the properties of an item. If the
+	 * parameter item is null, then that will indicate the item has been
+	 * deleted.
+	 * 
+	 * @param item Rest item or null for a deleted item
+	 */
 	public void refresh(ZoteroRestItem item)
 	{
+		if(item == null) {
+			this.links = null;
+			this.key = null;
+			this.version = null;
+			this.replace(null);
+			this.deleted = true;
+			return;
+		}
+		
 		// Refresh the links
 		this.links = LinksImpl.fromRest(library, item.getLinks());
 		this.key = item.getKey();
