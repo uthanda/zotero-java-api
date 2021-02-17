@@ -8,7 +8,7 @@ package zotero.api.batch;
  * @author Michael Oland
  * @since 1.0
  *
- * @param <T>
+ * @param <T> Response type
  */
 public interface BatchResponse<T>
 {

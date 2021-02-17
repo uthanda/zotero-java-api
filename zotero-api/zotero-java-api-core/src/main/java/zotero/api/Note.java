@@ -2,13 +2,13 @@ package zotero.api;
 
 /**
  * A note is a way of storing text and other information either stand-alone or
- * as a child of another item, such as a {@link Document] or {@link Attachment}.
+ * as a child of another item, such as a {@link zotero.api.Document} or
+ * {@link zotero.api.Attachment}
  * 
  * @author Michael Oland
  * @since 1.0
  */
-public interface Note extends Item
-{
+public interface Note extends Item {
 	/**
 	 * Gets the note content.
 	 * 

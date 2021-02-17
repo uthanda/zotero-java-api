@@ -26,6 +26,8 @@ public interface CollectionsBatch extends Batch<Collection, BatchCollectionHandl
 	 *             commit a linked attachment or exceeding the number of
 	 *             allowable items in a batch.
 	 * 
+	 * @param item The item to add to the batch
+	 * 
 	 * @return A handle to the batch item that can be used later to determine
 	 *         the result for that item
 	 */

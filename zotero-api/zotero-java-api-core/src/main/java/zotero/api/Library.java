@@ -44,17 +44,15 @@ import zotero.apiimpl.LibraryImpl;
  * @author Michael Oland
  * @since 1.0
  */
-public abstract class Library
-{
+public abstract class Library {
 	/**
 	 * Creates a new library with the provided API key and user
 	 * 
 	 * @param userId User Id of the library to access
-	 * @param auth Authentication object to use when authenticating.
-	 * @return
+	 * @param auth   Authentication object to use when authenticating.
+	 * @return An instantiation of Library that is ready to be used
 	 */
-	public static final Library createLibrary(String userId, ZoteroAuth auth)
-	{
+	public static final Library createLibrary(String userId, ZoteroAuth auth) {
 		return LibraryImpl.create(userId, auth);
 	}
 
@@ -69,11 +67,10 @@ public abstract class Library
 
 	/**
 	 * Creates a new collection as the child of the provided collection. The
-	 * collection is not persisted in Zotero until the <code>save</code> method
-	 * is called.
+	 * collection is not persisted in Zotero until the <code>save</code> method is
+	 * called.
 	 * 
-	 * @param parent
-	 *            Parent collection.
+	 * @param parent Parent collection.
 	 * @return Initialized collection
 	 */
 	public abstract Collection createCollection(Collection parent);
@@ -81,8 +78,7 @@ public abstract class Library
 	/**
 	 * Fetches the collection with the provided key from Zotero.
 	 * 
-	 * @param key
-	 *            Collection key
+	 * @param key Collection key
 	 * @return Retrieved collection
 	 */
 	public abstract Collection fetchCollection(String key);
@@ -102,11 +98,10 @@ public abstract class Library
 	public abstract CollectionIterator fetchCollectionsTop();
 
 	/**
-	 * Creates a new item of the type provided. The item is not persisted in
-	 * Zotero until the <code>save</code> method is called.
+	 * Creates a new item of the type provided. The item is not persisted in Zotero
+	 * until the <code>save</code> method is called.
 	 * 
-	 * @param type
-	 *            Item type
+	 * @param type Item type
 	 * @return Initialized item
 	 */
 	public abstract Document createDocument(ItemType type);
@@ -114,8 +109,7 @@ public abstract class Library
 	/**
 	 * Fetches a specific item from the library
 	 * 
-	 * @param key
-	 *            Item key
+	 * @param key Item key
 	 * @return Retrieved item
 	 */
 	public abstract Item fetchItem(String key);
@@ -142,16 +136,16 @@ public abstract class Library
 	public abstract ItemIterator fetchItemsTrash();
 
 	/**
-	 * Creates an item search object that call be completed
-	 * to execute a search against the library.
+	 * Creates an item search object that call be completed to execute a search
+	 * against the library.
 	 * 
 	 * @return Item search builder
 	 */
 	public abstract ItemSearch createItemSearch();
 
 	/**
-	 * Creates a collection search object that call be completed
-	 * to execute a search against the library.
+	 * Creates a collection search object that call be completed to execute a search
+	 * against the library.
 	 * 
 	 * @return Collection search builder
 	 */
@@ -169,11 +163,11 @@ public abstract class Library
 	 * Creates an attachment as a child of the provided item.
 	 * 
 	 * @param parent Parent item
-	 * @param mode Link mode for the attachment.
+	 * @param mode   Link mode for the attachment.
 	 * @return Created attachment
 	 */
 	public abstract Attachment createAttachment(Item parent, LinkMode mode);
-	
+
 	/**
 	 * Creates a new tag.
 	 * 
@@ -181,16 +175,16 @@ public abstract class Library
 	 * @return Tag object
 	 */
 	public abstract Tag createTag(String value);
-	
+
 	/**
 	 * Gets all the tags in the library
 	 * 
 	 * @return Tag iterator
 	 */
 	public abstract TagIterator fetchTagsAll();
-	
+
 	/**
-	 * Fetches tags of all types matching a specific name. 
+	 * Fetches tags of all types matching a specific name.
 	 * 
 	 * @param name Name
 	 * @return Tag iterator
@@ -198,57 +192,55 @@ public abstract class Library
 	public abstract TagIterator fetchTag(String name);
 
 	/**
-	 * Create a new create item batch that is capable of committing
-	 * a number of items (attachments, notes, documents) in a single call.
+	 * Create a new create item batch that is capable of committing a number of
+	 * items (attachments, notes, documents) in a single call.
 	 * 
 	 * @return Prepared batch
 	 */
 	public abstract CreateItemsBatch createCreateItemsBatch();
-	
+
 	/**
 	 * Fetches a set of items from the library.
 	 * 
-	 * @param keys
-	 *            Item keys
 	 * @return Batch of retrieved items
 	 */
 	public abstract RetrieveItemsBatch createRetrieveItemsBatch();
 
 	/**
-	 * Create a new update item batch that is capable of committing
-	 * a number of items (attachments, notes, documents) in a single call.
+	 * Create a new update item batch that is capable of committing a number of
+	 * items (attachments, notes, documents) in a single call.
 	 * 
 	 * @return Prepared batch
 	 */
 	public abstract UpdateItemsBatch createUpdateItemsBatch();
-	
+
 	/**
-	 * Create a new delete item batch that is capable of deleting
-	 * a number of items (attachments, notes, documents) in a single call.
+	 * Create a new delete item batch that is capable of deleting a number of items
+	 * (attachments, notes, documents) in a single call.
 	 * 
 	 * @return Prepared batch
 	 */
 	public abstract DeleteItemsBatch createDeleteItemsBatch();
-	
+
 	/**
-	 * Create a new create item batch that is capable of committing
-	 * a number of items (attachments, notes, documents) in a single call.
+	 * Create a new create item batch that is capable of committing a number of
+	 * items (attachments, notes, documents) in a single call.
 	 * 
 	 * @return Prepared batch
 	 */
 	public abstract CreateCollectionsBatch createCreateCollectionsBatch();
 
 	/**
-	 * Create a new update item batch that is capable of committing
-	 * a number of items (attachments, notes, documents) in a single call.
+	 * Create a new update item batch that is capable of committing a number of
+	 * items (attachments, notes, documents) in a single call.
 	 * 
 	 * @return Prepared batch
 	 */
 	public abstract UpdateCollectionsBatch createUpdateCollectionsBatch();
 
 	/**
-	 * Create a new update item batch that is capable of committing
-	 * a number of items (attachments, notes, documents) in a single call.
+	 * Create a new update item batch that is capable of committing a number of
+	 * items (attachments, notes, documents) in a single call.
 	 * 
 	 * @return Prepared batch
 	 */
