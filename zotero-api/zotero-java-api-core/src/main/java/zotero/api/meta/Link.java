@@ -1,6 +1,5 @@
 package zotero.api.meta;
 
-import zotero.api.constants.LinkType;
 import zotero.api.properties.PropertiesItem;
 
 /**
@@ -13,5 +12,5 @@ public interface Link extends PropertiesItem
 {
 	String getURL();
 
-	LinkType getType();
+	String getType();
 }

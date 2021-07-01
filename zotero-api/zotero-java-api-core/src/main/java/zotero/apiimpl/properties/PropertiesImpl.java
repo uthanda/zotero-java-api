@@ -14,11 +14,14 @@ import org.apache.logging.log4j.Logger;
 import zotero.api.Library;
 import zotero.api.constants.ItemType;
 import zotero.api.constants.LinkMode;
+import zotero.api.constants.LinkType;
 import zotero.api.constants.ZoteroExceptionCodes;
 import zotero.api.constants.ZoteroExceptionType;
+import zotero.api.constants.ZoteroKeys;
 import zotero.api.constants.ZoteroKeys.AttachmentKeys;
 import zotero.api.constants.ZoteroKeys.DocumentKeys;
 import zotero.api.constants.ZoteroKeys.ItemKeys;
+import zotero.api.constants.ZoteroKeys.LinkKeys;
 import zotero.api.exceptions.ZoteroRuntimeException;
 import zotero.api.properties.Properties;
 import zotero.api.properties.Property;
@@ -140,25 +143,29 @@ public final class PropertiesImpl implements Properties
 			Property<?> property = null;
 
 			// Deal with known properties
-			switch (e.getKey())
+			switch (name)
 			{
 				case DocumentKeys.CREATORS:
 				{
+					logger.debug("Processing PropertyCreatorImpl for " + DocumentKeys.CREATORS);
 					property = PropertyCreatorsImpl.fromRest(library, value);
 					break;
 				}
 				case ItemKeys.TAGS:
 				{
+					logger.debug("Processing PropertyCreatorImpl for " + ItemKeys.TAGS);
 					property = PropertyTagsImpl.fromRest(library, value);
 					break;
 				}
 				case ItemKeys.COLLECTIONS:
 				{
+					logger.debug("Processing PropertyCreatorImpl for " + ItemKeys.COLLECTIONS);
 					property = PropertyCollectionsImpl.fromRest(library, value);
 					break;
 				}
 				case ItemKeys.RELATIONS:
 				{
+					logger.debug("Processing PropertyCreatorImpl for " + ItemKeys.RELATIONS);
 					property = PropertyRelationshipsImpl.fromRest(library, value);
 					break;
 				}
@@ -176,6 +183,7 @@ public final class PropertiesImpl implements Properties
 	protected static Property<?> createSimpleProperty(ZoteroSchema schema, Map.Entry<String, Object> e, String name, Object value)
 	{
 		Property<?> property;
+
 		if (value instanceof String && schema.getDateKeys().contains(name))
 		{
 			property = PropertyDateImpl.fromRest(name, value);

@@ -31,9 +31,9 @@ final class LinkImpl extends PropertiesItemImpl implements Link
 	}
 
 	@Override
-	public final LinkType getType()
+	public final String getType()
 	{
-		return (LinkType) getProperties().getProperty(ZoteroKeys.LinkKeys.TYPE).getValue();
+		return (String) getProperties().getProperty(ZoteroKeys.LinkKeys.TYPE).getValue();
 	}
 
 	@SuppressWarnings("unchecked")
