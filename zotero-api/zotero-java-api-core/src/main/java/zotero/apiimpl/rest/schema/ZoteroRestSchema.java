@@ -12,8 +12,6 @@ public class ZoteroRestSchema
 	private ZoteroRestSchema.Meta meta;
 	private Map<String, Localization> locales;
 	private CitationStyleLanguage csl;
-
-	
 	
 	public static class CitationStyleLanguage
 	{

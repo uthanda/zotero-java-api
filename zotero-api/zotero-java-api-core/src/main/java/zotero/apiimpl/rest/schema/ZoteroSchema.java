@@ -1,17 +1,14 @@
 package zotero.apiimpl.rest.schema;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -150,61 +147,6 @@ public class ZoteroSchema
 		{
 			return primaryCreatorType;
 		}
-	}
-
-	public static void main(String[] args) throws IOException
-	{
-		ZoteroSchema schema = fromStream(ZoteroSchema.class.getResourceAsStream("/zoteroschema.json"));
-
-		for (ZoteroType e : schema.types)
-		{
-			generateClass(e, schema.jsonSchema.getLocales().get("en-US"));
-		}
-	}
-
-	private static void generateClass(ZoteroType e, ZoteroRestSchema.Localization localization) throws IOException
-	{
-		String name = localization.itemTypes.get(e.id);
-		String className = name.replace(" ", "");
-		className = className.replace("-", "");
-
-		PrintWriter writer = new PrintWriter(new FileWriter("src/main/java/litreview/zotero/api/model/v3/" + className + ".java"));
-		writer.println("package litreview.zotero.api.model.v3;");
-
-		writer.println();
-		writer.println("import java.util.Date;");
-		writer.println();
-
-		writer.println("public class " + className + " extends Item");
-		writer.println("{");
-
-		for (Entry<String, ZoteroField> field : e.fields.entrySet())
-		{
-			String fieldName = localization.fields.get(field.getKey());
-			String javaFieldName = fieldName.replace("# of ", "NumberOf");
-			javaFieldName = javaFieldName.replace(" ", "");
-			javaFieldName = javaFieldName.replace("/", "Or");
-			javaFieldName = javaFieldName.replace(".", "");
-
-			writer.println();
-			writer.println("\tprivate " + field.getValue().type.getSimpleName() + " " + field.getValue().name + ";");
-
-			writer.println();
-			writer.println("\tpublic final " + field.getValue().type.getSimpleName() + " get" + javaFieldName + "()");
-			writer.println("\t{");
-			writer.println("\t\treturn " + field.getKey() + ";");
-			writer.println("\t}");
-
-			writer.println();
-			writer.println("\tpublic final void set" + javaFieldName + "(" + field.getValue().type.getSimpleName() + " value)");
-			writer.println("\t{");
-			writer.println("\t\t" + field.getKey() + " =  value;");
-			writer.println("\t}");
-		}
-
-		writer.println("}");
-
-		writer.close();
 	}
 
 	public static ZoteroSchema getCurrentSchema()
