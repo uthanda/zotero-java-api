@@ -21,6 +21,10 @@
 			<id>github</id>
 			<url>https://maven.pkg.github.com/uthanda/zotero-java-api</url>
 		</snapshotRepository>
+		<repository>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/uthanda/zotero-java-api</url>
+		</repository>
 	</distributionManagement>
 	<build>
 		<plugins>
