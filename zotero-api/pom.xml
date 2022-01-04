@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.uthanda</groupId>
 	<artifactId>zotero-java-api</artifactId>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
 		<version.log4j2>2.17.1</version.log4j2>
