@@ -3,14 +3,14 @@
   <parent>
     <groupId>com.uthanda</groupId>
     <artifactId>zotero-java-api</artifactId>
-    <version>0.8</version>
+    <version>0.9-SNAPSHOT</version>
   </parent>
   <artifactId>zotero-java-api-samples</artifactId>
   <dependencies>
   	<dependency>
   		<groupId>com.uthanda</groupId>
   		<artifactId>zotero-java-api-core</artifactId>
-  		<version>0.8</version>
+  		<version>0.9-SNAPSHOT</version>
   	</dependency>
   </dependencies>
 </project>

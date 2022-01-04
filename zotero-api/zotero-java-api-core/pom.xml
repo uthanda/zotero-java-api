@@ -69,6 +69,6 @@
 	<parent>
 		<groupId>com.uthanda</groupId>
 		<artifactId>zotero-java-api</artifactId>
-		<version>0.8</version>
+		<version>0.9-SNAPSHOT</version>
 	</parent>
 </project>
