@@ -13,7 +13,7 @@ You can use the API in your project by adding the following:
 <dependency>
   <groupId>com.uthanda</groupId>
   <artifactId>zotero-java-api-core</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.8</version>
 </dependency>
 ```
 
