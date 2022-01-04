@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.uthanda</groupId>
 	<artifactId>zotero-java-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.8</version>
 	<packaging>pom</packaging>
 	<properties>
 		<version.log4j2>2.17.1</version.log4j2>
@@ -140,6 +140,6 @@
 	<scm>
 		<connection>scm:git:https://github.com/uthanda/zotero-java-api.git</connection>
 		<url>https://github.com/uthanda/zotero-java-api</url>
-		<tag>HEAD</tag>
+		<tag>zotero-java-api-0.8</tag>
 	</scm>
 </project>
