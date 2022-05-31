@@ -11,7 +11,7 @@
 		<version.jaxb>2.3.1</version.jaxb>
 		<version.jre>1.8</version.jre>
 		<version.powermock>2.0.9</version.powermock>
-		<version.gson>2.8.6</version.gson>
+		<version.gson>2.8.9</version.gson>
 		<version.apache.httpcomponents>4.5.13</version.apache.httpcomponents>
 		<version.apache.commons.io>2.8.0</version.apache.commons.io>
 		<version.apache.commons.lang3>3.11</version.apache.commons.lang3>
