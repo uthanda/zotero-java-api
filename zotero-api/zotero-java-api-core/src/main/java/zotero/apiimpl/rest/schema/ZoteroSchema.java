@@ -29,7 +29,6 @@ public class ZoteroSchema
 	private static ZoteroSchema currentSchema;
 	private int majorVersion;
 	private int minorVersion;
-	private ZoteroRestSchema jsonSchema;
 	private Map<String, ZoteroField> fields = new HashMap<>();
 	private List<ZoteroType> types;
 	
@@ -46,7 +45,6 @@ public class ZoteroSchema
 
 		ZoteroSchema zoteroSchema = new ZoteroSchema();
 		zoteroSchema.majorVersion = schema.getVersion().intValue();
-		zoteroSchema.jsonSchema = schema;
 
 		logger.debug("Schema version {}.{}", zoteroSchema.majorVersion, zoteroSchema.minorVersion);
 

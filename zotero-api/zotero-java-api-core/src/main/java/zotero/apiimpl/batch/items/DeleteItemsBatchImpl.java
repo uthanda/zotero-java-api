@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import zotero.api.Item;
 import zotero.api.batch.items.BatchItemResponse;
 import zotero.api.batch.items.DeleteItemsBatch;
 import zotero.api.exceptions.ZoteroRuntimeException;
@@ -12,7 +11,6 @@ import zotero.apiimpl.ItemImpl;
 import zotero.apiimpl.LibraryImpl;
 import zotero.apiimpl.rest.ZoteroRest;
 import zotero.apiimpl.rest.request.builders.DeleteBuilder;
-import zotero.apiimpl.rest.response.RestResponse;
 import zotero.apiimpl.rest.response.SuccessResponseBuilder;
 
 public class DeleteItemsBatchImpl extends ItemBatchImpl implements DeleteItemsBatch
@@ -36,7 +34,7 @@ public class DeleteItemsBatchImpl extends ItemBatchImpl implements DeleteItemsBa
 		
 		builder.url(ZoteroRest.Items.ALL).queryParam("itemKey", ids.stream().collect(Collectors.joining(",")));
 		
-		RestResponse<?> response = library.performRequest(builder);
+		library.performRequest(builder);
 		
 		iterator().forEachRemaining(handle -> ((ItemImpl)handle.getItem()).refresh(null));
 		
